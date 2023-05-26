@@ -1,15 +1,6 @@
 name: Tests
 
-on:
-  commit:
-    - main
-    - dev
-  push:
-    - main
-    - dev
-  pull_request:
-    - main
-    - dev
+on: [push, pull_request]
 
 jobs:
   build:
