@@ -1,6 +1,9 @@
 name: Tests
 
 on:
+  commit:
+    - main
+    - dev
   push:
     - main
     - dev
