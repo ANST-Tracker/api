@@ -18,9 +18,9 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    password: postgres
-    username: postgres
-    url: jdbc:postgresql://localhost:5433/
+    password: ${POSTGRES_USERNAME}
+    username: ${POSTGRES_PASSWORD}
+    url: ${POSTGRES_URL}
   jpa:
     hibernate:
       ddl-auto: update
@@ -33,17 +33,17 @@ spring:
     schemas: public
   data:
     redis:
-      url: redis://localhost:6379
+      url: ${REDIS_URL}
 
 security:
   jwt:
     block-valid-access: true
-    storage: accessTokens
+    storage: ${JWT_ACCESS_STORAGE}
     access:
-      secret: access
+      secret: ${JWT_ACCESS_SECRET}
       expiration: 10m
     refresh:
-      secret: refresh
+      secret: ${JWT_REFRESH_SECRET}
       expiration: 168h
 
 pageable:
