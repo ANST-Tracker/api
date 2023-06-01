@@ -13,10 +13,10 @@ import com.example.todolistcoursework.model.enums.ERole;
 import com.example.todolistcoursework.model.exception.AuthException;
 import com.example.todolistcoursework.model.exception.ClientException;
 import com.example.todolistcoursework.model.exception.ServerException;
-import com.example.todolistcoursework.dao.DeviceRepository;
-import com.example.todolistcoursework.dao.RefreshTokenRepository;
-import com.example.todolistcoursework.dao.RoleRepository;
-import com.example.todolistcoursework.dao.UserRepository;
+import com.example.todolistcoursework.repository.DeviceRepository;
+import com.example.todolistcoursework.repository.RefreshTokenRepository;
+import com.example.todolistcoursework.repository.RoleRepository;
+import com.example.todolistcoursework.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -70,7 +70,8 @@ public class UserService {
             deviceRepository.save(modelDevice);
         }
 
-        var curDevice = deviceRepository.findByDeviceToken(loginRequest.getDeviceToken()).get();
+        var curDevice = deviceRepository.findByDeviceToken(loginRequest.getDeviceToken())
+                .orElseThrow(() -> new ServerException("Device should exist but not found"));
         var tokens = jwtService.generateAccessRefreshTokens(user, curDevice.getId(), ERole.USER);
         var refreshToken = new RefreshToken();
         refreshToken.setToken(tokens.getRefreshToken());
