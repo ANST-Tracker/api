@@ -78,7 +78,7 @@ jobs:
           ssh-add - <<< "${{ secrets.SSH_KEY_PROD }}"
           ssh -o StrictHostKeyChecking=no -tt root@${{ secrets.HOST_IP_PROD }} << EOT
             cd deploy
-            docker pull allokanic/api
-            docker-compose restart api
+            docker-compose pull
+            docker-compose up -d
             exit
           EOT
