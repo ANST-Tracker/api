@@ -27,8 +27,8 @@ jobs:
 
       - name: Upload coverage #https://app.codecov.io/gh/ANST-Tracker/api
         uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   build-push-image:
     name: docker push
