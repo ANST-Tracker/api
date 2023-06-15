@@ -1,0 +1,27 @@
+name: send-updates
+
+on:
+#  push:
+#    branches:
+#      - '*'
+  workflow_call:
+    inputs:
+      message:
+        required: true
+        type: string
+    secrets:
+      TG_ALLOKANIC_ID:
+        required: true
+      TG_BOT_TOKEN:
+        required: true
+
+jobs:
+  send_update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: send telegram message on action
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TG_ALLOKANIC_ID }}
+          token: ${{ secrets.TG_BOT_TOKEN }}
+          message: ${{ inputs.message }}

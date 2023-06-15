@@ -64,6 +64,15 @@ jobs:
           push: true
           tags: allokanic/api:latest
 
+  send-info:
+    needs: build-push-image
+    uses: ./.github/workflows/template-telegram.yaml
+    with:
+      message: |
+        Cluster: DEV 
+        API status: redeploying started
+    secrets: inherit
+
   run-on-cloud:
     runs-on: ubuntu-latest
     name: run on cloud
@@ -79,3 +88,22 @@ jobs:
             docker-compose up -d
             exit
           EOT
+
+  success-notify:
+    needs: run-on-cloud
+    uses: ./.github/workflows/template-telegram.yaml
+    with:
+      message: |
+        Cluster: DEV 
+        API status: redeploying success
+    secrets: inherit
+
+  error-notify:
+    needs: run-on-cloud
+    if: ${{ failure() && needs.run-on-cloud.result == 'failure' }}
+    uses: ./.github/workflows/template-telegram.yaml
+    with:
+      message: |
+        Cluster: DEV 
+        API status: redeploying error
+    secrets: inherit
