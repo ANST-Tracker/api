@@ -75,7 +75,7 @@ jobs:
 
   run-on-cloud:
     runs-on: ubuntu-latest
-    name: run on cloud
+    name: send-info
     needs: build-push-image
     steps:
       - name: pull and rerun image
