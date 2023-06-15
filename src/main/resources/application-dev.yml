@@ -11,7 +11,9 @@ server:
     include-message: always
     include-binding-errors: always
     include-stacktrace: on_param
-    include-exception: true
+    include-exception: false
+  servlet:
+    context-path: /
 
 spring:
   datasource:
