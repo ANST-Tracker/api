@@ -3,10 +3,12 @@ package com.anst.sd.api.security;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
+@Builder(toBuilder = true)
 public class ErrorInfo {
 
     private Long timestamp;
@@ -18,12 +20,6 @@ public class ErrorInfo {
         this.type = errorType;
         this.message = message;
     }
-
-    public ErrorInfo(Long timestamp, ErrorType errorType) {
-        this.timestamp = timestamp;
-        this.type = errorType;
-    }
-
 
     public enum ErrorType {
         CLIENT("client"),

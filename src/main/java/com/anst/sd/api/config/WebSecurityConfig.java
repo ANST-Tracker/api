@@ -1,11 +1,14 @@
 package com.anst.sd.api.config;
 
 import com.anst.sd.api.security.AuthTokenFilter;
+import com.anst.sd.api.security.ErrorInfo;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,6 +20,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.time.Instant;
 
 @Configuration
 @EnableWebSecurity
@@ -31,6 +36,7 @@ public class WebSecurityConfig {
             "/v3/api-docs/**",
     };
     private final AuthTokenFilter jwtFilter;
+    private final ObjectMapper objectMapper;
 
     @Bean
     @Order(SecurityProperties.BASIC_AUTH_ORDER)
@@ -50,7 +56,17 @@ public class WebSecurityConfig {
                 .and()
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
-                .disable()
+                .authenticationEntryPoint((request, response, authException) -> {
+                    var errorInfo = ErrorInfo.builder()
+                            .timestamp(Instant.now().toEpochMilli())
+                            .type(ErrorInfo.ErrorType.AUTH)
+                            .message("Unauthorized")
+                            .build();
+                    response.getOutputStream().print(objectMapper.writeValueAsString(errorInfo));
+                    response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                    response.flushBuffer();
+                })
+                .and()
                 .build();
     }
 

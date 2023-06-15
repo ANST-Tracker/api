@@ -10,12 +10,15 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.Instant;
+
+import static com.anst.sd.api.model.constant.ErrorMessages.INTERNAL_SERVER_ERROR;
 
 @ControllerAdvice
 public class AdviceController extends ResponseEntityExceptionHandler {
@@ -33,7 +36,8 @@ public class AdviceController extends ResponseEntityExceptionHandler {
 
         var errorInfo = new ErrorInfo(
                 Instant.now().toEpochMilli(),
-                ErrorInfo.ErrorType.CLIENT);
+                ErrorInfo.ErrorType.SERVER,
+                INTERNAL_SERVER_ERROR);
 
         return super.handleExceptionInternal(ex, errorInfo, headers, statusCode, request);
     }
@@ -63,5 +67,23 @@ public class AdviceController extends ResponseEntityExceptionHandler {
                 ex.getErrorType(),
                 ex.getMessage());
         return new ResponseEntity<>(errorInfo, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex) {
+        var errorInfo = new ErrorInfo(
+                Instant.now().toEpochMilli(),
+                ErrorInfo.ErrorType.CLIENT,
+                ex.getMessage());
+        return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Object> handleRuntimeException(RuntimeException ex) {
+        var errorInfo = new ErrorInfo(
+                Instant.now().toEpochMilli(),
+                ErrorInfo.ErrorType.SERVER,
+                ex.getMessage());
+        return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
     }
 }

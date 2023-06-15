@@ -1,6 +1,7 @@
 package com.anst.sd.api.controller;
 
 import com.anst.sd.api.model.dto.response.CurrentVersionResponse;
+import com.anst.sd.api.model.exception.ClientException;
 import com.anst.sd.api.util.PropertiesReader;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
