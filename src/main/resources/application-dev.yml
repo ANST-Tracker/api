@@ -4,7 +4,7 @@ pom:
 logging:
   level:
     root: info
-    com.example.todolistcoursework: DEBUG
+    com.anst.sd.api: DEBUG
 
 server:
   error:
