@@ -1,6 +1,7 @@
 package com.anst.sd.api.service;
 
-import com.anst.sd.api.security.JwtAuth;
+import com.anst.sd.api.app.impl.AuthService;
+import com.anst.sd.api.fw.security.JwtAuth;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

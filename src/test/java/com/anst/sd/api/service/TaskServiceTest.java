@@ -1,15 +1,16 @@
 package com.anst.sd.api.service;
 
-import com.anst.sd.api.builder.TaskMapper;
-import com.anst.sd.api.model.constant.AuthErrorMessages;
-import com.anst.sd.api.model.constant.ClientErrorMessages;
-import com.anst.sd.api.model.dto.response.TaskInfo;
-import com.anst.sd.api.model.entity.Task;
-import com.anst.sd.api.model.entity.User;
-import com.anst.sd.api.model.exception.AuthException;
-import com.anst.sd.api.model.exception.ClientException;
-import com.anst.sd.api.dao.TaskRepository;
-import com.anst.sd.api.dao.UserRepository;
+import com.anst.sd.api.adapter.rest.task.dto.TaskMapper;
+import com.anst.sd.api.app.api.AuthErrorMessages;
+import com.anst.sd.api.app.api.ClientErrorMessages;
+import com.anst.sd.api.adapter.rest.task.dto.TaskInfo;
+import com.anst.sd.api.app.impl.task.TaskService;
+import com.anst.sd.api.domain.task.Task;
+import com.anst.sd.api.domain.user.User;
+import com.anst.sd.api.app.api.AuthException;
+import com.anst.sd.api.app.api.ClientException;
+import com.anst.sd.api.adapter.persistence.TaskJpaRepository;
+import com.anst.sd.api.adapter.persistence.UserJpaRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,9 +28,9 @@ import static org.mockito.Mockito.*;
 @WithMockUser(username = "anton", roles = "USER")
 class TaskServiceTest {
     @Mock
-    public TaskRepository taskRepository;
+    public TaskJpaRepository taskJpaRepository;
     @Mock
-    public UserRepository userRepository;
+    public UserJpaRepository userJpaRepository;
     @InjectMocks
     public TaskService taskService;
 //    @Value("${pageable.size}")
@@ -72,8 +73,8 @@ class TaskServiceTest {
         Task actualTask = createTaskByDefault();
         TaskInfo expectedTask = createTaskInfoByDefault();
         //when
-        when(taskRepository.save(any(Task.class))).thenReturn(actualTask);
-        when(userRepository.findById(anyLong())).thenReturn(Optional.ofNullable(user));
+        when(taskJpaRepository.save(any(Task.class))).thenReturn(actualTask);
+        when(userJpaRepository.findById(anyLong())).thenReturn(Optional.ofNullable(user));
         assert user != null;
         TaskInfo afterResponse = taskService.createTask(user.getId(), actualTask);
         //then
@@ -88,7 +89,7 @@ class TaskServiceTest {
         user.setId(2L);
         Task actualTask = createTaskByDefault();
         //when
-        doReturn(Optional.empty()).when(userRepository).findById(anyLong());
+        doReturn(Optional.empty()).when(userJpaRepository).findById(anyLong());
         //then
         AuthException thrown = assertThrows(AuthException.class, () -> taskService.createTask(1L, actualTask));
         assertEquals(AuthErrorMessages.USER_NOT_FOUND, thrown.getMessage());
@@ -100,7 +101,7 @@ class TaskServiceTest {
         Task actualTask = createTaskByDefault();
         TaskInfo expectedTask = createTaskInfoByDefault();
         //when
-        when(taskRepository.findById(anyLong())).thenReturn(Optional.ofNullable(actualTask));
+        when(taskJpaRepository.findById(anyLong())).thenReturn(Optional.ofNullable(actualTask));
         TaskInfo afterResponse = taskService.getTask(1L, 1L);
         //then
         assertNotNull(afterResponse);
@@ -112,7 +113,7 @@ class TaskServiceTest {
         //given
 
         //when
-        doReturn(Optional.empty()).when(taskRepository).findById(anyLong());
+        doReturn(Optional.empty()).when(taskJpaRepository).findById(anyLong());
         //then
         ClientException thrown = assertThrows(ClientException.class, () -> taskService.getTask(1L,1L));
         assertEquals(ClientErrorMessages.USER_DOESNT_HAVE_CURRENT_TASK, thrown.getMessage());
@@ -126,8 +127,8 @@ class TaskServiceTest {
         updatedTask.setData("new data");
         TaskInfo oldInfo = createTaskInfoByDefault();
         //when
-        when(taskRepository.findById(anyLong())).thenReturn(Optional.of(actualTask));
-        when(taskRepository.save(any(Task.class))).thenReturn(updatedTask);
+        when(taskJpaRepository.findById(anyLong())).thenReturn(Optional.of(actualTask));
+        when(taskJpaRepository.save(any(Task.class))).thenReturn(updatedTask);
         TaskInfo newInfo = taskService.updateTask(1L, actualTask);
         //then
         assertNotEquals(oldInfo,newInfo);
@@ -139,7 +140,7 @@ class TaskServiceTest {
         //given
         Task actualTask = createTaskByDefault();
         //when
-        doReturn(Optional.empty()).when(taskRepository).findById(anyLong());
+        doReturn(Optional.empty()).when(taskJpaRepository).findById(anyLong());
         //then
        ClientException thrown = assertThrows(ClientException.class, () -> taskService.updateTask(1L,actualTask));
        assertEquals(ClientErrorMessages.USER_DOESNT_HAVE_CURRENT_TASK, thrown.getMessage());
@@ -150,10 +151,10 @@ class TaskServiceTest {
         //given
         Task actualTask = createTaskByDefault();
         //when
-        when(taskRepository.findById(anyLong())).thenReturn(Optional.ofNullable(actualTask));
+        when(taskJpaRepository.findById(anyLong())).thenReturn(Optional.ofNullable(actualTask));
         taskService.deleteTask(1L, 1L);
         //then
-        verify(taskRepository, times(1)).deleteById(1L);
+        verify(taskJpaRepository, times(1)).deleteById(1L);
     }
 
     @Test
@@ -161,7 +162,7 @@ class TaskServiceTest {
         //given
         //Task actualTask = createTaskByDefault();
         //when
-        when(taskRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(taskJpaRepository.findById(anyLong())).thenReturn(Optional.empty());
         //then
         ClientException thrown = assertThrows(ClientException.class, () -> taskService.deleteTask(1L, 1L));
         assertEquals(ClientErrorMessages.USER_DOESNT_HAVE_CURRENT_TASK, thrown.getMessage());
