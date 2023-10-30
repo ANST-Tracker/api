@@ -1,4 +1,4 @@
-package com.anst.sd.api.adapter.rest.dto;
+package com.anst.sd.api.app.api;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

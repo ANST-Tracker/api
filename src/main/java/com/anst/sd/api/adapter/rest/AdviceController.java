@@ -3,7 +3,7 @@ package com.anst.sd.api.adapter.rest;
 import com.anst.sd.api.app.api.AuthException;
 import com.anst.sd.api.app.api.ClientException;
 import com.anst.sd.api.app.api.ServerException;
-import com.anst.sd.api.adapter.rest.dto.ErrorInfo;
+import com.anst.sd.api.app.api.ErrorInfo;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;

@@ -1,6 +1,6 @@
 package com.anst.sd.api.fw.security;
 
-import com.anst.sd.api.adapter.rest.dto.ErrorInfo;
+import com.anst.sd.api.app.api.ErrorInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
