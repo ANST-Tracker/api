@@ -1,60 +1,73 @@
 package arch;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
-import com.tngtech.archunit.core.importer.ClassFileImporter;
-import com.tngtech.archunit.lang.ArchRule;
-import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
-import org.junit.Before;
-import org.junit.Test;
+import com.tngtech.archunit.core.importer.ImportOption;
+import com.tngtech.archunit.junit.AnalyzeClasses;
+import com.tngtech.archunit.junit.ArchTest;
+import com.tngtech.archunit.library.Architectures;
 
+@AnalyzeClasses(
+        packages = "com.anst.sd.api",
+        importOptions = {ImportOption.DoNotIncludeTests.class}
+)
 public class ArchitectureTest {
-    private static final String FW_LAYER = "..sd.api.fw..";
-    private static final String APP_LAYER = "..sd.api.app..";
-    private static final String API_LAYER = "..sd.api.app.api..";
-    private static final String IMPL_LAYER = "..sd.api.app.impl..";
-    private static final String DOMAIN_LAYER = "..domain..";
-    private JavaClasses importedClasses;
+    public static final String FW_LAYER = "FW";
+    public static final String ADAPTER_LAYER = "ADAPTER";
+    public static final String APP_API_LAYER = "API";
+    public static final String APP_IMPL_LAYER = "IMPL";
+    public static final String DOMAIN_LAYER = "DOMAIN";
 
-    @Before
-    public void setup() {
-        importedClasses = new ClassFileImporter()
-                .importPackages("com.anst.sd.api");
+    @ArchTest
+    public void adapterLayerTest(JavaClasses classes) {
+        getLayers()
+                .whereLayer(ADAPTER_LAYER)
+                .mayOnlyBeAccessedByLayers(FW_LAYER)
+                .check(classes);
     }
 
-    @Test
-    public void fwShouldOnlyAccessApp() {
-        ArchRule rule = ArchRuleDefinition
-                .classes()
-                .that()
-                .resideInAnyPackage(FW_LAYER)
-                .should()
-                .onlyAccessClassesThat()
-                .resideInAnyPackage("..security..", "..aspect..", "..spring..", "org.springframework..", "org.aspectj..", "lombok..", "jakarta..", "org.redisson..", "com.fasterxml..", "io.swagger..", "java..", "org.slf4j..", APP_LAYER);
-        rule.check(importedClasses);
+    @ArchTest
+    public void appApiLayerTest(JavaClasses classes) {
+        getLayers()
+                .whereLayer(APP_API_LAYER)
+                .mayOnlyAccessLayers(DOMAIN_LAYER)
+                .check(classes);
     }
 
-    @Test
-    public void apiShouldOnlyAccessDomain() {
-        ArchRule rule = ArchRuleDefinition
-                .classes()
-                .that()
-                .resideInAPackage(API_LAYER)
-                .should()
-                .onlyAccessClassesThat()
-                .resideInAnyPackage(API_LAYER, IMPL_LAYER, DOMAIN_LAYER, "java..", "org.springframework..", "lombok..", "com.fasterxml.jackson..");
-        rule.check(importedClasses);
+    @ArchTest
+    public void appImplLayerTest(JavaClasses classes) {
+        getLayers()
+                .whereLayer(APP_IMPL_LAYER)
+                .mayOnlyBeAccessedByLayers(FW_LAYER)
+                .check(classes);
     }
 
-    @Test
-    public void domainShouldNotAccessOtherPackages() {
-        ArchRule rule = ArchRuleDefinition
-                .classes()
-                .that()
-                .resideInAnyPackage(DOMAIN_LAYER)
-                .should()
-                .onlyAccessClassesThat()
-                .resideInAnyPackage(
-                        DOMAIN_LAYER, "java..", "org.hibernate..");
-        rule.check(importedClasses);
+    @ArchTest
+    public void domainLayerTest(JavaClasses classes) {
+        getLayers()
+                .whereLayer(DOMAIN_LAYER)
+                .mayNotAccessAnyLayer()
+                .check(classes);
+    }
+
+    @ArchTest
+    public void fwTest(JavaClasses classes) {
+        getLayers()
+                .whereLayer(FW_LAYER)
+                .mayNotBeAccessedByAnyLayer()
+                .check(classes);
+    }
+
+    // ===================================================================================================================
+    // = Implementation
+    // ===================================================================================================================
+
+    private Architectures.LayeredArchitecture getLayers() {
+        return Architectures.layeredArchitecture()
+                .consideringOnlyDependenciesInLayers()
+                .layer(ADAPTER_LAYER).definedBy("..adapter..")
+                .layer(APP_API_LAYER).definedBy("..app.api..")
+                .layer(APP_IMPL_LAYER).definedBy("..app.impl..")
+                .layer(DOMAIN_LAYER).definedBy("..domain..")
+                .layer(FW_LAYER).definedBy("..fw..");
     }
 }
