@@ -1,9 +1,6 @@
 name: send-updates
 
 on:
-#  push:
-#    branches:
-#      - '*'
   workflow_call:
     inputs:
       message:
