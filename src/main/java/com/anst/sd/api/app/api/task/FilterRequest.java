@@ -1,6 +1,5 @@
-package com.anst.sd.api.adapter.rest.task.dto;
+package com.anst.sd.api.app.api.task;
 
-import com.anst.sd.api.app.api.task.SortOrder;
 import com.anst.sd.api.domain.task.TaskStatus;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

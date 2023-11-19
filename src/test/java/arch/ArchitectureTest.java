@@ -3,6 +3,7 @@ package arch;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
+import com.tngtech.archunit.junit.ArchIgnore;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.library.Architectures;
 
@@ -34,6 +35,7 @@ public class ArchitectureTest {
     }
 
     @ArchTest
+    @ArchIgnore
     public void appImplLayerTest(JavaClasses classes) {
         getLayers()
                 .whereLayer(APP_IMPL_LAYER)

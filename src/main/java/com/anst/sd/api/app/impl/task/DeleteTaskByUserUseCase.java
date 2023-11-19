@@ -1,7 +1,5 @@
 package com.anst.sd.api.app.impl.task;
 
-import com.anst.sd.api.adapter.rest.task.dto.TaskInfo;
-import com.anst.sd.api.adapter.rest.task.dto.TaskMapper;
 import com.anst.sd.api.app.api.ClientException;
 import com.anst.sd.api.app.api.task.DeleteTaskByUserInBound;
 import com.anst.sd.api.app.api.task.TaskRepository;
@@ -24,11 +22,11 @@ public class DeleteTaskByUserUseCase implements DeleteTaskByUserInBound {
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public TaskInfo deleteTask(Long userId, Long id) {
+    public Optional<Task> deleteTask(Long userId, Long id) {
         Optional<Task> task = taskRepository.findById(id);
         if (task.isPresent() && task.get().getUser().getId().equals(userId)) {
             taskRepository.deleteById(id);
-            return TaskMapper.toApi(task.get());
+            return task;
         } else {
             throw new ClientException(USER_DOESNT_HAVE_CURRENT_TASK);
         }

@@ -1,10 +1,10 @@
-package com.anst.sd.api.adapter.rest.dto;
+package com.anst.sd.api.adapter.rest.security.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class RefreshRequest {
+public class RefreshRequestDto {
     @NotBlank
     private String refreshToken;
 }

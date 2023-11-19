@@ -13,5 +13,6 @@ import java.util.List;
 @Repository
 public interface TaskJpaRepositoryOutBound extends JpaRepository<Task, Long>, PagingAndSortingRepository<Task, Long> {
     Page<Task> findTasksByUserId(Long userId, Pageable page);
+
     Page<Task> findTasksByUserIdAndStatusIn(Long userId, List<TaskStatus> status, Pageable page);
 }

@@ -18,12 +18,12 @@ public class TaskRepositoryImpl implements TaskRepository {
 
     @Override
     public Page<Task> findTasksByUserId(Long userId, Pageable page) {
-        return repository.findTasksByUserId(userId,page);
+        return repository.findTasksByUserId(userId, page);
     }
 
     @Override
     public Page<Task> findTasksByUserIdAndStatusIn(Long userId, List<TaskStatus> status, Pageable page) {
-        return repository.findTasksByUserIdAndStatusIn(userId,status,page);
+        return repository.findTasksByUserIdAndStatusIn(userId, status, page);
     }
 
     @Override

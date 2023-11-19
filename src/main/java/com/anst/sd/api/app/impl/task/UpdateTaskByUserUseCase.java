@@ -1,7 +1,5 @@
 package com.anst.sd.api.app.impl.task;
 
-import com.anst.sd.api.adapter.rest.task.dto.TaskInfo;
-import com.anst.sd.api.adapter.rest.task.dto.TaskMapper;
 import com.anst.sd.api.app.api.ClientException;
 import com.anst.sd.api.app.api.task.TaskRepository;
 import com.anst.sd.api.app.api.task.UpdateTaskByUserInBound;
@@ -25,7 +23,7 @@ public class UpdateTaskByUserUseCase implements UpdateTaskByUserInBound {
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public TaskInfo updateTask(Long userId, Task request) {
+    public Task updateTask(Long userId, Task request) {
         Optional<Task> task = taskRepository.findById(request.getId());
         if (task.isPresent() && task.get().getUser().getId().equals(userId)) {
             Task existingTask = task.get();
@@ -33,8 +31,7 @@ public class UpdateTaskByUserUseCase implements UpdateTaskByUserInBound {
             existingTask.setModified(LocalDateTime.now());
             existingTask.setDescription(request.getDescription());
             existingTask.setStatus(request.getStatus());
-            var result = taskRepository.save(existingTask);
-            return TaskMapper.toApi(result);
+            return taskRepository.save(existingTask);
         } else {
             throw new ClientException(USER_DOESNT_HAVE_CURRENT_TASK);
         }

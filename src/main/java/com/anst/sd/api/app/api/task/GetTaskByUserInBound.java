@@ -1,7 +1,9 @@
 package com.anst.sd.api.app.api.task;
 
-import com.anst.sd.api.adapter.rest.task.dto.TaskInfo;
+import com.anst.sd.api.domain.task.Task;
+
+import java.util.Optional;
 
 public interface GetTaskByUserInBound {
-    TaskInfo getTask(Long userId, Long id);
+    Optional<Task> getTask(Long userId, Long id);
 }

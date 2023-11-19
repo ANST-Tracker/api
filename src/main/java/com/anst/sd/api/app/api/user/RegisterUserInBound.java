@@ -1,8 +1,8 @@
 package com.anst.sd.api.app.api.user;
 
-import com.anst.sd.api.adapter.rest.dto.SignupRequest;
-import com.anst.sd.api.adapter.rest.user.dto.UserInfoResponse;
+import com.anst.sd.api.app.api.security.SignupRequest;
+import com.anst.sd.api.domain.user.User;
 
 public interface RegisterUserInBound {
-    UserInfoResponse registerUser(SignupRequest signupRequest);
+    User registerUser(SignupRequest signupRequest);
 }

@@ -1,11 +1,8 @@
 package com.anst.sd.api.adapter.rest.task;
 
-import com.anst.sd.api.adapter.rest.task.dto.TaskMapper;
-import com.anst.sd.api.adapter.rest.task.dto.TaskInfo;
+import com.anst.sd.api.adapter.rest.task.dto.*;
 import com.anst.sd.api.app.api.task.*;
-import com.anst.sd.api.adapter.rest.task.dto.CreateTaskRequest;
-import com.anst.sd.api.adapter.rest.task.dto.FilterRequest;
-import com.anst.sd.api.adapter.rest.task.dto.UpdateTaskRequest;
+import com.anst.sd.api.domain.task.Task;
 import com.anst.sd.api.security.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @RequestMapping("/task")
@@ -32,21 +30,28 @@ public class TaskController {
     private final FilterTasksByUserInBound filterTasksByUserInBound;
     private final JwtService jwtService;
     private final CreateTaskByUserInBound createTaskByUserInBound;
+    private final TaskInfoDtoMapper taskInfoDtoMapper;
+    private final TaskDomainMapper taskDomainMapper;
+    private final TaskDtoMapper taskDtoMapper;
+    private final FilterRequestDomainMapper filterRequestDomainMapper;
+
     @Operation(
             summary = "Create a new task",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Task created successfully",
-                            content = @Content(schema = @Schema(implementation = TaskInfo.class))),
+                            content = @Content(schema = @Schema(implementation = TaskInfoDto.class))),
                     @ApiResponse(
                             responseCode = "400",
                             description = "Invalid input data")
             })
     @PostMapping("/create")
-    public ResponseEntity<TaskInfo> createTask(@Valid @RequestBody CreateTaskRequest request) {
-        return ResponseEntity.ok
-                (createTaskByUserInBound.createTask(jwtService.getJwtAuth().getUserId(), TaskMapper.toModel(request)));
+    public ResponseEntity<TaskInfoDto> createTask(@Valid @RequestBody CreateTaskRequest request) {
+        Task task = taskDomainMapper.mapToDomain(request);
+        Task result = createTaskByUserInBound.createTask(jwtService.getJwtAuth().getUserId(), task);
+        TaskInfoDto response = taskInfoDtoMapper.mapToDto(result);
+        return ResponseEntity.ok(response);
     }
 
     @Operation(
@@ -55,14 +60,16 @@ public class TaskController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Task received successfully",
-                            content = @Content(schema = @Schema(implementation = TaskInfo.class))),
+                            content = @Content(schema = @Schema(implementation = TaskInfoDto.class))),
                     @ApiResponse(
                             responseCode = "404",
                             description = "Task not found")
             })
     @GetMapping("/{id}")
-    public ResponseEntity<TaskInfo> getTask(@Parameter(description = "Task ID") @PathVariable Long id) {
-        return ResponseEntity.ok(getTaskByUserInBound.getTask(jwtService.getJwtAuth().getUserId(), id));
+    public ResponseEntity<TaskInfoDto> getTask(@Parameter(description = "Task ID") @PathVariable Long id) {
+        Optional<Task> task = getTaskByUserInBound.getTask(jwtService.getJwtAuth().getUserId(), id);
+        TaskInfoDto response = taskDtoMapper.mapToDto(task.get());
+        return ResponseEntity.ok(response);
     }
 
     @Operation(
@@ -71,15 +78,17 @@ public class TaskController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Task updated successfully",
-                            content = @Content(schema = @Schema(implementation = TaskInfo.class))),
+                            content = @Content(schema = @Schema(implementation = TaskInfoDto.class))),
                     @ApiResponse(
                             responseCode = "400",
                             description = "Invalid input data")
             })
     @PutMapping("/update")
-    public ResponseEntity<TaskInfo> updateTask(@Valid @RequestBody UpdateTaskRequest request) {
-        return ResponseEntity.ok(updateTaskByUserInBound.updateTask(jwtService.getJwtAuth().getUserId(),
-                TaskMapper.toModel(request)));
+    public ResponseEntity<TaskInfoDto> updateTask(@Valid @RequestBody UpdateTaskRequestDto request) {
+        Task task = taskDomainMapper.mapToDomain(request);
+        Task result = updateTaskByUserInBound.updateTask(jwtService.getJwtAuth().getUserId(), task);
+        TaskInfoDto response = taskDtoMapper.mapToDto(result);
+        return ResponseEntity.ok(response);
     }
 
     @Operation(
@@ -88,14 +97,16 @@ public class TaskController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Task deleted successfully",
-                            content = @Content(schema = @Schema(implementation = TaskInfo.class))),
+                            content = @Content(schema = @Schema(implementation = TaskInfoDto.class))),
                     @ApiResponse(
                             responseCode = "404",
                             description = "Task not found")
             })
     @DeleteMapping("/{id}")
-    public ResponseEntity<TaskInfo> deleteTask(@Parameter(description = "Task ID") @PathVariable Long id) {
-        return ResponseEntity.ok(deleteTaskByUserInBound.deleteTask(jwtService.getJwtAuth().getUserId(), id));
+    public ResponseEntity<TaskInfoDto> deleteTask(@Parameter(description = "Task ID") @PathVariable Long id) {
+        Optional<Task> task = deleteTaskByUserInBound.deleteTask(jwtService.getJwtAuth().getUserId(), id);
+        TaskInfoDto response = taskDtoMapper.mapToDto(task.get());
+        return ResponseEntity.ok(response);
     }
 
     @Operation(
@@ -107,8 +118,10 @@ public class TaskController {
                             useReturnTypeSchema = true)
             })
     @GetMapping("/list")
-    public ResponseEntity<List<TaskInfo>> getTasks(Integer page) {
-        return ResponseEntity.ok(getTasksByUserInBound.getTasks(jwtService.getJwtAuth().getUserId(), page));
+    public ResponseEntity<List<TaskInfoDto>> getTasks(Integer page) {
+        List<Task> tasks = getTasksByUserInBound.getTasks(jwtService.getJwtAuth().getUserId(), page);
+        List<TaskInfoDto> response = taskDtoMapper.mapToDto(tasks);
+        return ResponseEntity.ok(response);
     }
 
     @Operation(
@@ -120,7 +133,10 @@ public class TaskController {
                             useReturnTypeSchema = true)
             })
     @GetMapping(value = "/filter")
-    public ResponseEntity<List<TaskInfo>> searchTasks(@RequestBody FilterRequest filterRequest) {
-        return ResponseEntity.ok(filterTasksByUserInBound.filterTasks(jwtService.getJwtAuth().getUserId(), filterRequest));
+    public ResponseEntity<List<TaskInfoDto>> searchTasks(@RequestBody FilterRequestDto filterRequestDto) {
+        FilterRequest domain = filterRequestDomainMapper.mapToDomain(filterRequestDto);
+        List<Task> process = filterTasksByUserInBound.filterTasks(jwtService.getJwtAuth().getUserId(), domain);
+        List<TaskInfoDto> result = taskInfoDtoMapper.mapToDto(process);
+        return ResponseEntity.ok(result);
     }
 }

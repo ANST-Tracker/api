@@ -1,10 +1,10 @@
 package com.anst.sd.api.app.impl.user;
 
-import com.anst.sd.api.adapter.rest.dto.JwtResponse;
-import com.anst.sd.api.adapter.rest.dto.LoginRequest;
 import com.anst.sd.api.app.api.DeviceRepository;
 import com.anst.sd.api.app.api.RefreshTokenRepository;
 import com.anst.sd.api.app.api.ServerException;
+import com.anst.sd.api.app.api.security.JwtResponse;
+import com.anst.sd.api.app.api.security.LoginRequest;
 import com.anst.sd.api.app.api.user.LoginUserInBound;
 import com.anst.sd.api.app.api.user.UserRepository;
 import com.anst.sd.api.domain.Device;

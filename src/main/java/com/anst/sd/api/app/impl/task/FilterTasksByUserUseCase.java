@@ -1,10 +1,10 @@
 package com.anst.sd.api.app.impl.task;
 
-import com.anst.sd.api.adapter.rest.task.dto.FilterRequest;
-import com.anst.sd.api.adapter.rest.task.dto.TaskInfo;
+import com.anst.sd.api.app.api.task.FilterRequest;
 import com.anst.sd.api.app.api.task.FilterTasksByOrderInBound;
 import com.anst.sd.api.app.api.task.FilterTasksByUserInBound;
 import com.anst.sd.api.app.api.task.TaskRepository;
+import com.anst.sd.api.domain.task.Task;
 import com.anst.sd.api.domain.task.TaskStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ public class FilterTasksByUserUseCase implements FilterTasksByUserInBound {
     private Integer pageSize;
 
     @Override
-    public List<TaskInfo> filterTasks(Long userId, FilterRequest filterRequest) {
+    public List<Task> filterTasks(Long userId, FilterRequest filterRequest) {
         var pageNumber = filterRequest.getPage();
         if (pageNumber == null || pageNumber < 0) {
             pageNumber = 0;

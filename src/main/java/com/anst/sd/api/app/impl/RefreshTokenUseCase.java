@@ -1,6 +1,5 @@
 package com.anst.sd.api.app.impl;
 
-import com.anst.sd.api.adapter.rest.dto.RefreshRequest;
 import com.anst.sd.api.app.api.DeviceRepository;
 import com.anst.sd.api.app.api.RefreshTokenInBound;
 import com.anst.sd.api.app.api.RefreshTokenRepository;
@@ -24,19 +23,19 @@ public class RefreshTokenUseCase implements RefreshTokenInBound {
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Override
-    public RefreshResponse refresh(RefreshRequest request) {
-        if (!jwtService.validateRefreshToken(request.getRefreshToken())) {
+    public RefreshResponse refresh(String refreshToken) {
+        if (!jwtService.validateRefreshToken(refreshToken)) {
             throw new AuthException(AuthErrorMessages.INVALID_REFRESH_TOKEN);
         }
 
-        var claims = jwtService.getRefreshClaims(request.getRefreshToken());
+        var claims = jwtService.getRefreshClaims(refreshToken);
         var user = userRepository.findById(Long.parseLong(claims.getUserId()))
                 .orElseThrow(() -> new AuthException(AuthErrorMessages.USER_NOT_FOUND));
         var device = deviceRepository.findById(Long.parseLong(claims.getDeviceId()))
                 .orElseThrow(() -> new AuthException(AuthErrorMessages.DEVICE_NOT_FOUND));
         var role = claims.getRole();
 
-        var currentRefreshToken = refreshTokenRepository.findByToken(request.getRefreshToken());
+        var currentRefreshToken = refreshTokenRepository.findByToken(refreshToken);
 
         if (currentRefreshToken.isEmpty()) {
             throw new AuthException(AuthErrorMessages.REFRESH_TOKEN_DOESNT_EXISTS);

@@ -1,7 +1,9 @@
 package com.anst.sd.api.app.api.user;
 
-import com.anst.sd.api.adapter.rest.user.dto.UserInfoResponse;
+import com.anst.sd.api.domain.user.User;
+
+import java.util.Optional;
 
 public interface DeleteUserInBound {
-    UserInfoResponse deleteUser(Long userId);
+    Optional<User> deleteUser(Long userId);
 }

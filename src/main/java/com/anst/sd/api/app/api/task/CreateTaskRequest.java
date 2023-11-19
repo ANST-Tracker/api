@@ -1,20 +1,19 @@
-package com.anst.sd.api.adapter.rest.task.dto;
+package com.anst.sd.api.app.api.task;
 
-import com.anst.sd.api.domain.task.TaskStatus;
 import lombok.AccessLevel;
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
 
 @Data
-@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class TaskInfo {
-    Long id;
+public class CreateTaskRequest {
     String data;
     LocalDateTime deadline;
-    TaskStatus status;
     String description;
 }

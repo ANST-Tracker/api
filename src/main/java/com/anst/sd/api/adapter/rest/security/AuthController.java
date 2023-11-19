@@ -1,13 +1,16 @@
-package com.anst.sd.api.adapter.rest;
+package com.anst.sd.api.adapter.rest.security;
 
-import com.anst.sd.api.adapter.rest.dto.JwtResponse;
-import com.anst.sd.api.adapter.rest.dto.LoginRequest;
-import com.anst.sd.api.adapter.rest.dto.RefreshRequest;
-import com.anst.sd.api.adapter.rest.dto.SignupRequest;
+import com.anst.sd.api.adapter.rest.security.dto.JwtResponseDto;
+import com.anst.sd.api.adapter.rest.security.dto.RefreshRequestDto;
+import com.anst.sd.api.adapter.rest.security.dto.SignUpRequestDomainMapper;
+import com.anst.sd.api.adapter.rest.security.dto.SignupRequestDto;
+import com.anst.sd.api.adapter.rest.user.dto.UserDtoMapper;
+import com.anst.sd.api.adapter.rest.user.dto.UserInfoResponse;
 import com.anst.sd.api.app.api.ClientException;
 import com.anst.sd.api.app.api.RefreshTokenInBound;
-import com.anst.sd.api.app.api.user.DeleteUserInBound;
-import com.anst.sd.api.app.api.user.GetUserInfoInBound;
+import com.anst.sd.api.app.api.security.JwtResponse;
+import com.anst.sd.api.app.api.security.LoginRequest;
+import com.anst.sd.api.app.api.security.SignupRequest;
 import com.anst.sd.api.app.api.user.LoginUserInBound;
 import com.anst.sd.api.app.api.user.RegisterUserInBound;
 import com.anst.sd.api.domain.user.User;
@@ -36,8 +39,8 @@ public class AuthController {
     private final RefreshTokenInBound refreshTokenInBound;
     private final LoginUserInBound loginUserInBound;
     private final RegisterUserInBound registerUserInBound;
-    private final GetUserInfoInBound getUserInfoInBound;
-    private final DeleteUserInBound deleteUserInBound;
+    private final UserDtoMapper userDtoMapper;
+    private final SignUpRequestDomainMapper signUpRequestDomainMapper;
 
     @Operation(summary = "Refresh an access token")
     @ApiResponses(value = {
@@ -55,9 +58,9 @@ public class AuthController {
                     )
             )})
     @PostMapping("/refresh")
-    public ResponseEntity<?> refreshToken(
-            @Valid @RequestBody RefreshRequest request) {
-        return ResponseEntity.ok(refreshTokenInBound.refresh(request));
+    public ResponseEntity<RefreshResponse> refreshToken(
+            @Valid @RequestBody RefreshRequestDto request) {
+        return ResponseEntity.ok(refreshTokenInBound.refresh(request.getRefreshToken()));
     }
 
     @Operation(summary = "User authentication")
@@ -66,7 +69,7 @@ public class AuthController {
                     responseCode = "200",
                     description = "User authenticated successfully",
                     content = @Content(
-                            array = @ArraySchema(schema = @Schema(implementation = JwtResponse.class))
+                            array = @ArraySchema(schema = @Schema(implementation = JwtResponseDto.class))
                     )),
             @ApiResponse(
                     responseCode = "409",
@@ -76,7 +79,7 @@ public class AuthController {
                     )
             )})
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(
+    public ResponseEntity<JwtResponse> authenticateUser(
             @Valid @RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(loginUserInBound.loginUser(loginRequest));
     }
@@ -97,9 +100,13 @@ public class AuthController {
                     )
             )})
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(
-            @Valid @RequestBody SignupRequest signUpRequest) {
-        return ResponseEntity.ok(registerUserInBound.registerUser(signUpRequest));
+    public ResponseEntity<UserInfoResponse> registerUser(
+            @Valid @RequestBody SignupRequestDto signUpRequestDto) {
+        SignupRequest domain = signUpRequestDomainMapper.mapToDomain(signUpRequestDto);
+        User registeredUser = registerUserInBound.registerUser(domain);
+        UserInfoResponse response = userDtoMapper.mapToDto(registeredUser);
+        return ResponseEntity.ok(response);
+
     }
 }
 

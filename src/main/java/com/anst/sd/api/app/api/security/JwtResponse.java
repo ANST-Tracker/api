@@ -1,4 +1,4 @@
-package com.anst.sd.api.adapter.rest.dto;
+package com.anst.sd.api.app.api.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

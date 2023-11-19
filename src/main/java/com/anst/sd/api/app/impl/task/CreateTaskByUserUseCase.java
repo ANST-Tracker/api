@@ -1,7 +1,5 @@
 package com.anst.sd.api.app.impl.task;
 
-import com.anst.sd.api.adapter.rest.task.dto.TaskInfo;
-import com.anst.sd.api.adapter.rest.task.dto.TaskMapper;
 import com.anst.sd.api.app.api.task.CreateTaskByUserInBound;
 import com.anst.sd.api.app.api.task.GetUserInTaskInBound;
 import com.anst.sd.api.app.api.task.TaskRepository;
@@ -22,11 +20,11 @@ public class CreateTaskByUserUseCase implements CreateTaskByUserInBound {
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public TaskInfo createTask(Long userId, Task task) {
+    public Task createTask(Long userId, Task task) {
         User user = getUserInTaskInBound.getUser(userId);
         task.setUser(user);
         task.setCreated(task.getCreated());
         taskRepository.save(task);
-        return TaskMapper.toApi(task);
+        return task;
     }
 }

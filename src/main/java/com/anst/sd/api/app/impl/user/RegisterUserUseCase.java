@@ -1,11 +1,9 @@
 package com.anst.sd.api.app.impl.user;
 
-import com.anst.sd.api.adapter.rest.dto.SignupRequest;
-import com.anst.sd.api.adapter.rest.user.dto.UserInfoResponse;
-import com.anst.sd.api.adapter.rest.user.dto.UserMapper;
 import com.anst.sd.api.app.api.ClientException;
 import com.anst.sd.api.app.api.RoleRepository;
 import com.anst.sd.api.app.api.ServerException;
+import com.anst.sd.api.app.api.security.SignupRequest;
 import com.anst.sd.api.app.api.user.RegisterUserInBound;
 import com.anst.sd.api.app.api.user.UserRepository;
 import com.anst.sd.api.domain.Role;
@@ -36,7 +34,7 @@ public class RegisterUserUseCase implements RegisterUserInBound {
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public UserInfoResponse registerUser(SignupRequest signupRequest) {
+    public User registerUser(SignupRequest signupRequest) {
         if (userRepository.existsByUsername(signupRequest.getUsername())) {
             throw new ClientException(USERNAME_ALREADY_TAKEN);
         }
@@ -56,8 +54,6 @@ public class RegisterUserUseCase implements RegisterUserInBound {
                 .orElseThrow(() -> new ServerException(INTERNAL_SERVER_ERROR));
         roles.add(userRole);
         user.setRoles(roles);
-        var registeredUser = userRepository.save(user);
-
-        return UserMapper.toApi(registeredUser);
+        return userRepository.save(user);
     }
 }

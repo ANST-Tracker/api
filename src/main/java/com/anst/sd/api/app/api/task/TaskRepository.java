@@ -10,9 +10,13 @@ import java.util.Optional;
 
 public interface TaskRepository {
     Page<Task> findTasksByUserId(Long userId, Pageable page);
+
     Page<Task> findTasksByUserIdAndStatusIn(Long userId, List<TaskStatus> status, Pageable page);
+
     Task save(Task task);
+
     Optional<Task> findById(Long id);
+
     void deleteById(Long id);
 
 }
