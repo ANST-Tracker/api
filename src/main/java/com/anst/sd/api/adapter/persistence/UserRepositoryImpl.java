@@ -10,7 +10,7 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
-    private final UserJpaRepository repository;
+    private final UserJpaRepositoryOutBound repository;
 
     @Override
     public Optional<User> findByUsername(String username) {

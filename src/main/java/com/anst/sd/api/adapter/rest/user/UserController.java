@@ -1,9 +1,10 @@
 package com.anst.sd.api.adapter.rest.user;
 
 import com.anst.sd.api.adapter.rest.user.dto.UserInfoResponse;
-import com.anst.sd.api.app.api.AuthException;
-import com.anst.sd.api.app.impl.user.UserService;
-import com.anst.sd.api.app.impl.AuthService;
+import com.anst.sd.api.app.api.user.DeleteUserInBound;
+import com.anst.sd.api.app.api.user.GetUserInfoInBound;
+import com.anst.sd.api.security.AuthException;
+import com.anst.sd.api.security.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,8 +18,9 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
-    private final AuthService authService;
-    private final UserService userService;
+    private final DeleteUserInBound deleteUserInBound;
+    private final GetUserInfoInBound getUserInfoInBound;
+    private final JwtService jwtService;
 
     @Operation(summary = "Get current user information")
     @ApiResponses({
@@ -35,7 +37,7 @@ public class UserController {
     })
     @GetMapping("/current")
     public ResponseEntity<UserInfoResponse> getCurrentUser() {
-        return ResponseEntity.ok(userService.getUserInfo(authService.getJwtAuth().getUserId()));
+        return ResponseEntity.ok(getUserInfoInBound.getUserInfo(jwtService.getJwtAuth().getUserId()));
     }
 
     @Operation(summary = "Delete current user")
@@ -50,6 +52,6 @@ public class UserController {
     })
     @DeleteMapping("/current")
     public ResponseEntity<UserInfoResponse> deleteCurrentUser() {
-        return ResponseEntity.ok(userService.deleteUser(authService.getJwtAuth().getUserId()));
+        return ResponseEntity.ok(deleteUserInBound.deleteUser(jwtService.getJwtAuth().getUserId()));
     }
 }

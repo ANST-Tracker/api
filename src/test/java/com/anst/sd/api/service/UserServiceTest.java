@@ -2,7 +2,7 @@
 //
 //import com.anst.sd.api.adapter.rest.user.dto.UserMapper;
 //import com.anst.sd.api.adapter.rest.user.dto.UserInfoResponse;
-//import com.anst.sd.api.app.impl.JwtService;
+//import com.anst.sd.api.fw.security.JwtService;
 //import com.anst.sd.api.app.impl.user.UserService;
 //import com.anst.sd.api.domain.user.User;
 //import com.anst.sd.api.adapter.rest.dto.LoginRequest;
@@ -11,7 +11,7 @@
 //import com.anst.sd.api.domain.Device;
 //import com.anst.sd.api.domain.RefreshToken;
 //import com.anst.sd.api.domain.Role;
-//import com.anst.sd.api.app.api.user.ERole;
+//import com.anst.sd.api.fw.security.ERole;
 //import com.anst.sd.api.adapter.persistence.DeviceJpaRepository;
 //import com.anst.sd.api.adapter.persistence.RefreshTokenJpaRepository;
 //import com.anst.sd.api.adapter.persistence.RoleJpaRepository;

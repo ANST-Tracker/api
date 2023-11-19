@@ -1,6 +1,6 @@
 package com.anst.sd.api.domain;
 
-import com.anst.sd.api.app.api.user.ERole;
+import com.anst.sd.api.security.ERole;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;

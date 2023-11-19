@@ -7,7 +7,7 @@
 //import com.anst.sd.api.app.impl.task.TaskService;
 //import com.anst.sd.api.domain.task.Task;
 //import com.anst.sd.api.domain.user.User;
-//import com.anst.sd.api.app.api.AuthException;
+//import com.anst.sd.api.fw.security.AuthException;
 //import com.anst.sd.api.app.api.ClientException;
 //import com.anst.sd.api.adapter.persistence.TaskJpaRepository;
 //import com.anst.sd.api.adapter.persistence.UserJpaRepository;

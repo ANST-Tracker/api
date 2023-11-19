@@ -1,37 +1,29 @@
 package com.anst.sd.api.app.impl;
 
-import com.anst.sd.api.app.api.AuthErrorMessages;
+import com.anst.sd.api.adapter.rest.dto.RefreshRequest;
 import com.anst.sd.api.app.api.DeviceRepository;
+import com.anst.sd.api.app.api.RefreshTokenInBound;
 import com.anst.sd.api.app.api.RefreshTokenRepository;
 import com.anst.sd.api.app.api.user.UserRepository;
 import com.anst.sd.api.domain.RefreshToken;
-import com.anst.sd.api.app.api.AuthException;
-import com.anst.sd.api.adapter.rest.dto.RefreshRequest;
-import com.anst.sd.api.adapter.rest.dto.RefreshResponse;
-import com.anst.sd.api.fw.security.JwtAuth;
+import com.anst.sd.api.security.AuthErrorMessages;
+import com.anst.sd.api.security.AuthException;
+import com.anst.sd.api.security.JwtService;
+import com.anst.sd.api.security.RefreshResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class RefreshTokenUseCase implements RefreshTokenInBound {
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final DeviceRepository deviceRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
-    public JwtAuth getJwtAuth() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication instanceof JwtAuth) {
-            return ((JwtAuth) authentication);
-        } else {
-            return JwtAuth.builder().build();
-        }
-    }
+    @Override
     public RefreshResponse refresh(RefreshRequest request) {
         if (!jwtService.validateRefreshToken(request.getRefreshToken())) {
             throw new AuthException(AuthErrorMessages.INVALID_REFRESH_TOKEN);
@@ -55,7 +47,7 @@ public class AuthService {
             throw new AuthException(AuthErrorMessages.SUSPICIOUS_ACTIVITY);
         }
 
-        var tokens = jwtService.generateAccessRefreshTokens(user, device.getId(), role);
+        var tokens = jwtService.generateAccessRefreshTokens(user.getUsername(), user.getId(), device.getId(), role);
         var newRefresh = new RefreshToken();
         newRefresh.setUser(user);
         newRefresh.setDevice(device);

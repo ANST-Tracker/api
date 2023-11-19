@@ -15,9 +15,8 @@ public class ErrorInfo {
     private String message;
     private ErrorType type;
 
-    public ErrorInfo(Long timestamp, ErrorType errorType, String message) {
+    public ErrorInfo(Long timestamp, String message) {
         this.timestamp = timestamp;
-        this.type = errorType;
         this.message = message;
     }
 

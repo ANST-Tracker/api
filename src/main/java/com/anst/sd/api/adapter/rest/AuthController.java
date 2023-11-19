@@ -1,15 +1,18 @@
 package com.anst.sd.api.adapter.rest;
 
-import com.anst.sd.api.domain.user.User;
-import com.anst.sd.api.app.api.AuthException;
+import com.anst.sd.api.adapter.rest.dto.JwtResponse;
 import com.anst.sd.api.adapter.rest.dto.LoginRequest;
 import com.anst.sd.api.adapter.rest.dto.RefreshRequest;
 import com.anst.sd.api.adapter.rest.dto.SignupRequest;
-import com.anst.sd.api.adapter.rest.dto.JwtResponse;
-import com.anst.sd.api.adapter.rest.dto.RefreshResponse;
 import com.anst.sd.api.app.api.ClientException;
-import com.anst.sd.api.app.impl.AuthService;
-import com.anst.sd.api.app.impl.user.UserService;
+import com.anst.sd.api.app.api.RefreshTokenInBound;
+import com.anst.sd.api.app.api.user.DeleteUserInBound;
+import com.anst.sd.api.app.api.user.GetUserInfoInBound;
+import com.anst.sd.api.app.api.user.LoginUserInBound;
+import com.anst.sd.api.app.api.user.RegisterUserInBound;
+import com.anst.sd.api.domain.user.User;
+import com.anst.sd.api.security.AuthException;
+import com.anst.sd.api.security.RefreshResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -30,8 +33,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final UserService userService;
-    private final AuthService authService;
+    private final RefreshTokenInBound refreshTokenInBound;
+    private final LoginUserInBound loginUserInBound;
+    private final RegisterUserInBound registerUserInBound;
+    private final GetUserInfoInBound getUserInfoInBound;
+    private final DeleteUserInBound deleteUserInBound;
 
     @Operation(summary = "Refresh an access token")
     @ApiResponses(value = {
@@ -51,7 +57,7 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity<?> refreshToken(
             @Valid @RequestBody RefreshRequest request) {
-        return ResponseEntity.ok(authService.refresh(request));
+        return ResponseEntity.ok(refreshTokenInBound.refresh(request));
     }
 
     @Operation(summary = "User authentication")
@@ -72,7 +78,7 @@ public class AuthController {
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(
             @Valid @RequestBody LoginRequest loginRequest) {
-        return ResponseEntity.ok(userService.loginUser(loginRequest));
+        return ResponseEntity.ok(loginUserInBound.loginUser(loginRequest));
     }
 
     @Operation(summary = "User registration")
@@ -93,7 +99,7 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(
             @Valid @RequestBody SignupRequest signUpRequest) {
-        return ResponseEntity.ok(userService.registerUser(signUpRequest));
+        return ResponseEntity.ok(registerUserInBound.registerUser(signUpRequest));
     }
 }
 

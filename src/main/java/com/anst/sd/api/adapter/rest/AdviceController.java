@@ -1,9 +1,9 @@
 package com.anst.sd.api.adapter.rest;
 
-import com.anst.sd.api.app.api.AuthException;
 import com.anst.sd.api.app.api.ClientException;
-import com.anst.sd.api.app.api.ServerException;
 import com.anst.sd.api.app.api.ErrorInfo;
+import com.anst.sd.api.app.api.ServerException;
+import com.anst.sd.api.security.AuthException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -36,7 +36,6 @@ public class AdviceController extends ResponseEntityExceptionHandler {
 
         var errorInfo = new ErrorInfo(
                 Instant.now().toEpochMilli(),
-                ErrorInfo.ErrorType.SERVER,
                 INTERNAL_SERVER_ERROR);
 
         return super.handleExceptionInternal(ex, errorInfo, headers, statusCode, request);
@@ -46,7 +45,6 @@ public class AdviceController extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleClientException(ClientException ex) {
         var errorInfo = new ErrorInfo(
                 ex.getTimestamp(),
-                ex.getErrorType(),
                 ex.getMessage());
         return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
     }
@@ -55,7 +53,6 @@ public class AdviceController extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleAuthException(AuthException ex) {
         var errorInfo = new ErrorInfo(
                 ex.getTimestamp(),
-                ex.getErrorType(),
                 ex.getMessage());
         return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
     }
@@ -64,7 +61,6 @@ public class AdviceController extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleServerException(ServerException ex) {
         var errorInfo = new ErrorInfo(
                 ex.getTimestamp(),
-                ex.getErrorType(),
                 ex.getMessage());
         return new ResponseEntity<>(errorInfo, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -73,7 +69,6 @@ public class AdviceController extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex) {
         var errorInfo = new ErrorInfo(
                 Instant.now().toEpochMilli(),
-                ErrorInfo.ErrorType.CLIENT,
                 ex.getMessage());
         return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
     }
@@ -82,7 +77,6 @@ public class AdviceController extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleRuntimeException(RuntimeException ex) {
         var errorInfo = new ErrorInfo(
                 Instant.now().toEpochMilli(),
-                ErrorInfo.ErrorType.SERVER,
                 ex.getMessage());
         return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
     }

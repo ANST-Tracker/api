@@ -2,11 +2,11 @@ package com.anst.sd.api.adapter.rest.task;
 
 import com.anst.sd.api.adapter.rest.task.dto.TaskMapper;
 import com.anst.sd.api.adapter.rest.task.dto.TaskInfo;
-import com.anst.sd.api.app.impl.task.TaskService;
+import com.anst.sd.api.app.api.task.*;
 import com.anst.sd.api.adapter.rest.task.dto.CreateTaskRequest;
 import com.anst.sd.api.adapter.rest.task.dto.FilterRequest;
 import com.anst.sd.api.adapter.rest.task.dto.UpdateTaskRequest;
-import com.anst.sd.api.app.impl.AuthService;
+import com.anst.sd.api.security.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -25,9 +25,13 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class TaskController {
-    private final TaskService taskService;
-    private final AuthService authService;
-
+    private final GetTasksByUserInBound getTasksByUserInBound;
+    private final GetTaskByUserInBound getTaskByUserInBound;
+    private final UpdateTaskByUserInBound updateTaskByUserInBound;
+    private final DeleteTaskByUserInBound deleteTaskByUserInBound;
+    private final FilterTasksByUserInBound filterTasksByUserInBound;
+    private final JwtService jwtService;
+    private final CreateTaskByUserInBound createTaskByUserInBound;
     @Operation(
             summary = "Create a new task",
             responses = {
@@ -42,7 +46,7 @@ public class TaskController {
     @PostMapping("/create")
     public ResponseEntity<TaskInfo> createTask(@Valid @RequestBody CreateTaskRequest request) {
         return ResponseEntity.ok
-                (taskService.createTask(authService.getJwtAuth().getUserId(), TaskMapper.toModel(request)));
+                (createTaskByUserInBound.createTask(jwtService.getJwtAuth().getUserId(), TaskMapper.toModel(request)));
     }
 
     @Operation(
@@ -58,7 +62,7 @@ public class TaskController {
             })
     @GetMapping("/{id}")
     public ResponseEntity<TaskInfo> getTask(@Parameter(description = "Task ID") @PathVariable Long id) {
-        return ResponseEntity.ok(taskService.getTask(authService.getJwtAuth().getUserId(), id));
+        return ResponseEntity.ok(getTaskByUserInBound.getTask(jwtService.getJwtAuth().getUserId(), id));
     }
 
     @Operation(
@@ -74,7 +78,7 @@ public class TaskController {
             })
     @PutMapping("/update")
     public ResponseEntity<TaskInfo> updateTask(@Valid @RequestBody UpdateTaskRequest request) {
-        return ResponseEntity.ok(taskService.updateTask(authService.getJwtAuth().getUserId(),
+        return ResponseEntity.ok(updateTaskByUserInBound.updateTask(jwtService.getJwtAuth().getUserId(),
                 TaskMapper.toModel(request)));
     }
 
@@ -91,7 +95,7 @@ public class TaskController {
             })
     @DeleteMapping("/{id}")
     public ResponseEntity<TaskInfo> deleteTask(@Parameter(description = "Task ID") @PathVariable Long id) {
-        return ResponseEntity.ok(taskService.deleteTask(authService.getJwtAuth().getUserId(), id));
+        return ResponseEntity.ok(deleteTaskByUserInBound.deleteTask(jwtService.getJwtAuth().getUserId(), id));
     }
 
     @Operation(
@@ -104,7 +108,7 @@ public class TaskController {
             })
     @GetMapping("/list")
     public ResponseEntity<List<TaskInfo>> getTasks(Integer page) {
-        return ResponseEntity.ok(taskService.getTasks(authService.getJwtAuth().getUserId(), page));
+        return ResponseEntity.ok(getTasksByUserInBound.getTasks(jwtService.getJwtAuth().getUserId(), page));
     }
 
     @Operation(
@@ -117,6 +121,6 @@ public class TaskController {
             })
     @GetMapping(value = "/filter")
     public ResponseEntity<List<TaskInfo>> searchTasks(@RequestBody FilterRequest filterRequest) {
-        return ResponseEntity.ok(taskService.filterTasks(authService.getJwtAuth().getUserId(), filterRequest));
+        return ResponseEntity.ok(filterTasksByUserInBound.filterTasks(jwtService.getJwtAuth().getUserId(), filterRequest));
     }
 }

@@ -10,7 +10,7 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class RefreshTokenRepositoryImpl implements RefreshTokenRepository {
-    private final RefreshTokenJpaRepository repository;
+    private final RefreshTokenJpaRepositoryOutBound repository;
 
     @Override
     public Optional<RefreshToken> findByToken(String token) {

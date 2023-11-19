@@ -11,7 +11,7 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class DeviceRepositoryImpl implements DeviceRepository {
-    private final DeviceJpaRepository repository;
+    private final DeviceJpaRepositoryOutBound repository;
 
     @Override
     public Optional<Device> findByDeviceToken(UUID token) {

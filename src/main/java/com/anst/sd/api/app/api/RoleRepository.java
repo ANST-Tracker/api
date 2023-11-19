@@ -1,7 +1,7 @@
 package com.anst.sd.api.app.api;
 
 import com.anst.sd.api.domain.Role;
-import com.anst.sd.api.app.api.user.ERole;
+import com.anst.sd.api.security.ERole;
 
 import java.util.Optional;
 
