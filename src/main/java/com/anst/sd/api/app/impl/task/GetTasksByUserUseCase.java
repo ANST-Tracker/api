@@ -24,9 +24,11 @@ public class GetTasksByUserUseCase implements GetTasksByUserInBound {
 
     @Override
     public List<Task> getTasks(Long userId, Integer page) {
+        log.info("Get user tasks by userId {}", userId);
         if (page == null || page < 0) page = 0;
         PageRequest pageRequest = PageRequest.of(page, pageSize, Sort.by("created").descending());
         var pageResponse = taskRepository.findTasksByUserId(userId, pageRequest);
+        log.debug("All tasks by userId {} has been received", userId);
         return pageResponse.stream()
                 .sorted(Comparator.comparingInt(a -> TaskStatus.getPriority(a.getStatus()))).toList();
     }

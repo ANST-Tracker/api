@@ -20,10 +20,12 @@ public class GetUserInfoUseCase implements GetUserInfoInBound {
 
     @Override
     public Optional<User> getUserInfo(Long userId) {
+        log.info("Getting user info for id {}", userId);
         var user = userRepository.findById(userId);
         if (user.isEmpty()) {
             throw new AuthException(USER_DOESNT_EXISTS);
         }
+        log.debug("Got result for user info by id {}", userId);
         return user;
     }
 }

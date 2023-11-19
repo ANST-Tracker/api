@@ -24,6 +24,7 @@ public class UpdateTaskByUserUseCase implements UpdateTaskByUserInBound {
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public Task updateTask(Long userId, Task request) {
+        log.info("Update task by userId {}", userId);
         Optional<Task> task = taskRepository.findById(request.getId());
         if (task.isPresent() && task.get().getUser().getId().equals(userId)) {
             Task existingTask = task.get();
@@ -31,8 +32,10 @@ public class UpdateTaskByUserUseCase implements UpdateTaskByUserInBound {
             existingTask.setModified(LocalDateTime.now());
             existingTask.setDescription(request.getDescription());
             existingTask.setStatus(request.getStatus());
+            log.debug("Task with userId {} has been updated", userId);
             return taskRepository.save(existingTask);
         } else {
+            log.warn("User does not have task with id {}", request.getId());
             throw new ClientException(USER_DOESNT_HAVE_CURRENT_TASK);
         }
     }

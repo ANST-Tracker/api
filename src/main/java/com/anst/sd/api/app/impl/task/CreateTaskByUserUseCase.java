@@ -21,10 +21,12 @@ public class CreateTaskByUserUseCase implements CreateTaskByUserInBound {
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public Task createTask(Long userId, Task task) {
+        log.info("Create task by user with userId {}", userId);
         User user = getUserInTaskInBound.getUser(userId);
         task.setUser(user);
         task.setCreated(task.getCreated());
         taskRepository.save(task);
+        log.debug("Task has been created with id {}", task.getId());
         return task;
     }
 }

@@ -20,10 +20,13 @@ public class GetUserInTaskUseCase implements GetUserInTaskInBound {
 
     @Override
     public User getUser(Long userId) {
+        log.info("Get user by userId {}", userId);
         Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty()) {
+            log.warn("User not found with userId {}", userId);
             throw new AuthException(USER_NOT_FOUND);
         }
+        log.debug("Got user by userId {}", user);
         return user.get();
     }
 }

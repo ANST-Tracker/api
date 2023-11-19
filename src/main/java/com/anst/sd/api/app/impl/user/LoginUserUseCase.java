@@ -41,7 +41,10 @@ public class LoginUserUseCase implements LoginUserInBound {
         User user = userRepository.findByUsername(loginRequest.getUsername())
                 .orElseThrow(() -> new AuthException(USER_DOESNT_EXISTS));
 
+        log.info("Logging user with id {}", user.getId());
+
         if (user.getPassword() != null && !passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+            log.warn("User with id {} has bad credentials", user.getId());
             throw new AuthException(INVALID_PASSWORD);
         }
 
@@ -69,6 +72,7 @@ public class LoginUserUseCase implements LoginUserInBound {
         refreshToken.setDevice(curDevice);
         refreshTokenRepository.save(refreshToken);
 
+        log.debug("User has logged in account with id {}", user.getId());
         return new JwtResponse(
                 tokens.getAccessToken(),
                 tokens.getRefreshToken());

@@ -20,10 +20,13 @@ public class GetTaskByUserUseCase implements GetTaskByUserInBound {
 
     @Override
     public Optional<Task> getTask(Long userId, Long id) {
+        log.info("Get task by userId {}", userId);
         Optional<Task> task = taskRepository.findById(id);
         if (task.isPresent() && task.get().getUser().getId().equals(userId)) {
+            log.debug("Task id {} has been received by userId {}",id,userId);
             return task;
         } else {
+            log.warn("User does not have task with id {}", id);
             throw new ClientException(USER_DOESNT_HAVE_CURRENT_TASK);
         }
     }

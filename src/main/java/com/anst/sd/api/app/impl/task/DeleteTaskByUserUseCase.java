@@ -24,10 +24,13 @@ public class DeleteTaskByUserUseCase implements DeleteTaskByUserInBound {
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public Optional<Task> deleteTask(Long userId, Long id) {
         Optional<Task> task = taskRepository.findById(id);
+        log.info("Delete task with userId {}", userId);
         if (task.isPresent() && task.get().getUser().getId().equals(userId)) {
             taskRepository.deleteById(id);
+            log.debug("Task has been deleted");
             return task;
         } else {
+            log.warn("User does not have current task. Deletion failed");
             throw new ClientException(USER_DOESNT_HAVE_CURRENT_TASK);
         }
     }

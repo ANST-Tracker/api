@@ -35,6 +35,7 @@ public class RegisterUserUseCase implements RegisterUserInBound {
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public User registerUser(SignupRequest signupRequest) {
+        log.info("User registration processing");
         if (userRepository.existsByUsername(signupRequest.getUsername())) {
             throw new ClientException(USERNAME_ALREADY_TAKEN);
         }
@@ -54,6 +55,7 @@ public class RegisterUserUseCase implements RegisterUserInBound {
                 .orElseThrow(() -> new ServerException(INTERNAL_SERVER_ERROR));
         roles.add(userRole);
         user.setRoles(roles);
+        log.debug("User has been registered with id {}", user.getId());
         return userRepository.save(user);
     }
 }

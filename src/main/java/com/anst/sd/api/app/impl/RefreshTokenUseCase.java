@@ -24,6 +24,7 @@ public class RefreshTokenUseCase implements RefreshTokenInBound {
 
     @Override
     public RefreshResponse refresh(String refreshToken) {
+        log.info("Refresh token valid process started");
         if (!jwtService.validateRefreshToken(refreshToken)) {
             throw new AuthException(AuthErrorMessages.INVALID_REFRESH_TOKEN);
         }
@@ -38,11 +39,13 @@ public class RefreshTokenUseCase implements RefreshTokenInBound {
         var currentRefreshToken = refreshTokenRepository.findByToken(refreshToken);
 
         if (currentRefreshToken.isEmpty()) {
+            log.warn("Refresh token does not exists");
             throw new AuthException(AuthErrorMessages.REFRESH_TOKEN_DOESNT_EXISTS);
         }
 
         refreshTokenRepository.deleteById(currentRefreshToken.get().getId());
         if (!jwtService.validateAccessTokenLifetime(device.getId())) {
+            log.warn("Suspicious activity detected");
             throw new AuthException(AuthErrorMessages.SUSPICIOUS_ACTIVITY);
         }
 
@@ -52,6 +55,7 @@ public class RefreshTokenUseCase implements RefreshTokenInBound {
         newRefresh.setDevice(device);
         newRefresh.setToken(tokens.getRefreshToken());
 
+        log.debug("Refresh token has been updated");
         refreshTokenRepository.save(newRefresh);
 
         return tokens;

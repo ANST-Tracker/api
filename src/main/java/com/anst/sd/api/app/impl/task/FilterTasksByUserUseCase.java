@@ -26,6 +26,7 @@ public class FilterTasksByUserUseCase implements FilterTasksByUserInBound {
 
     @Override
     public List<Task> filterTasks(Long userId, FilterRequest filterRequest) {
+        log.info("Task filter has been started by userId {}", userId);
         var pageNumber = filterRequest.getPage();
         if (pageNumber == null || pageNumber < 0) {
             pageNumber = 0;
@@ -38,6 +39,7 @@ public class FilterTasksByUserUseCase implements FilterTasksByUserInBound {
         var pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by("created").descending());
         var tasks = taskRepository.findTasksByUserIdAndStatusIn(userId, statuses, pageRequest);
 
+        log.debug("Tasks has been sorted");
         return filterTasksByOrderInBound.filter(filterRequest, tasks.stream().toList());
     }
 }

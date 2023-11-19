@@ -23,10 +23,12 @@ public class DeleteUserUseCase implements DeleteUserInBound {
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public Optional<User> deleteUser(Long userId) {
+        log.info("Deleting user with id {}", userId);
         var user = userRepository.findById(userId);
         if (user.isEmpty()) {
             throw new AuthException(USER_DOESNT_EXISTS);
         }
+        log.debug("Deleted user with id {}", userId);
         userRepository.deleteById(userId);
         return user;
     }

@@ -18,10 +18,11 @@ public class FilterTasksByOrderUseCase implements FilterTasksByOrderInBound {
 
     @Override
     public List<Task> filter(FilterRequest filterRequest, List<Task> tasks) {
+        log.info("Task filter process started");
         if (filterRequest.getOrders() != null)
             for (var el : filterRequest.getOrders())
                 tasks = filterTasksBySortOrderInBound.filterInternal(tasks, el);
-
+        log.debug("Tasks has been sorted");
         return tasks;
     }
 }
