@@ -8,8 +8,6 @@
 - **Major** 
 > mvn build-helper:parse-version versions:set -DnewVersion=${parsedVersion.nextMajorVersion}.0.0 versions:commit
 
-## UML-Diagram of project
-![UML_TODO](https://github.com/pestrikv/to-do-list-coursework/blob/master/UML_to-do-coursework.jpg)
 
 
 
