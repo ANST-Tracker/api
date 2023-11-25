@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class FilterTasksByUserUseCase implements FilterTasksByUserInBound {
     private Integer pageSize;
 
     @Override
+    @Transactional(readOnly = true)
     public List<Task> filterTasks(Long userId, FilterRequest filterRequest) {
         log.info("Task filter has been started by userId {}", userId);
         var pageNumber = filterRequest.getPage();
@@ -39,7 +41,6 @@ public class FilterTasksByUserUseCase implements FilterTasksByUserInBound {
         var pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by("created").descending());
         var tasks = taskRepository.findTasksByUserIdAndStatusIn(userId, statuses, pageRequest);
 
-        log.debug("Tasks has been sorted");
         return filterTasksByOrderInBound.filter(filterRequest, tasks.stream().toList());
     }
 }

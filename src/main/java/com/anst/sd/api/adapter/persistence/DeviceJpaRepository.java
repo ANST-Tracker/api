@@ -8,6 +8,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface DeviceJpaRepositoryOutBound extends JpaRepository<Device, Long> {
+public interface DeviceJpaRepository extends JpaRepository<Device, Long> {
     Optional<Device> findByDeviceToken(UUID token);
 }

@@ -1,8 +1,9 @@
 package com.anst.sd.api.app.api.user;
 
 import com.anst.sd.api.app.api.security.JwtResponse;
-import com.anst.sd.api.app.api.security.LoginRequest;
+
+import java.util.UUID;
 
 public interface LoginUserInBound {
-    JwtResponse loginUser(LoginRequest loginRequest);
+    JwtResponse loginUser(String username, String password, UUID deviceToken);
 }

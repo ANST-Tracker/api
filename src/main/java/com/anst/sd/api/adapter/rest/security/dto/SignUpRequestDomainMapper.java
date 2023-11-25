@@ -1,7 +1,7 @@
 package com.anst.sd.api.adapter.rest.security.dto;
 
-import com.anst.sd.api.app.api.security.SignupRequest;
+import com.anst.sd.api.domain.user.User;
 
 public interface SignUpRequestDomainMapper {
-    SignupRequest mapToDomain(SignupRequestDto source);
+    User mapToDomain(SignupRequestDto source);
 }

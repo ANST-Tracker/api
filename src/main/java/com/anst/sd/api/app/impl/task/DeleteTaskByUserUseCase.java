@@ -7,7 +7,6 @@ import com.anst.sd.api.domain.task.Task;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -21,16 +20,14 @@ public class DeleteTaskByUserUseCase implements DeleteTaskByUserInBound {
     private final TaskRepository taskRepository;
 
     @Override
-    @Transactional(isolation = Isolation.SERIALIZABLE)
+    @Transactional
     public Optional<Task> deleteTask(Long userId, Long id) {
         Optional<Task> task = taskRepository.findById(id);
         log.info("Delete task with userId {}", userId);
         if (task.isPresent() && task.get().getUser().getId().equals(userId)) {
             taskRepository.deleteById(id);
-            log.debug("Task has been deleted");
             return task;
         } else {
-            log.warn("User does not have current task. Deletion failed");
             throw new ClientException(USER_DOESNT_HAVE_CURRENT_TASK);
         }
     }

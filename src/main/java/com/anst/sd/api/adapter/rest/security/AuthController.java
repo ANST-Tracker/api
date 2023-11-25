@@ -1,16 +1,10 @@
 package com.anst.sd.api.adapter.rest.security;
 
-import com.anst.sd.api.adapter.rest.security.dto.JwtResponseDto;
-import com.anst.sd.api.adapter.rest.security.dto.RefreshRequestDto;
-import com.anst.sd.api.adapter.rest.security.dto.SignUpRequestDomainMapper;
-import com.anst.sd.api.adapter.rest.security.dto.SignupRequestDto;
+import com.anst.sd.api.adapter.rest.security.dto.*;
 import com.anst.sd.api.adapter.rest.user.dto.UserDtoMapper;
-import com.anst.sd.api.adapter.rest.user.dto.UserInfoResponse;
+import com.anst.sd.api.adapter.rest.user.dto.UserInfoResponseDto;
 import com.anst.sd.api.app.api.ClientException;
 import com.anst.sd.api.app.api.RefreshTokenInBound;
-import com.anst.sd.api.app.api.security.JwtResponse;
-import com.anst.sd.api.app.api.security.LoginRequest;
-import com.anst.sd.api.app.api.security.SignupRequest;
 import com.anst.sd.api.app.api.user.LoginUserInBound;
 import com.anst.sd.api.app.api.user.RegisterUserInBound;
 import com.anst.sd.api.domain.user.User;
@@ -41,6 +35,7 @@ public class AuthController {
     private final RegisterUserInBound registerUserInBound;
     private final UserDtoMapper userDtoMapper;
     private final SignUpRequestDomainMapper signUpRequestDomainMapper;
+    private final JwtResponseDtoMapper jwtResponseDtoMapper;
 
     @Operation(summary = "Refresh an access token")
     @ApiResponses(value = {
@@ -79,9 +74,10 @@ public class AuthController {
                     )
             )})
     @PostMapping("/signin")
-    public ResponseEntity<JwtResponse> authenticateUser(
-            @Valid @RequestBody LoginRequest loginRequest) {
-        return ResponseEntity.ok(loginUserInBound.loginUser(loginRequest));
+    public ResponseEntity<JwtResponseDto> authenticateUser(
+            @Valid @RequestBody LoginRequestDto loginRequestDto) {
+        return ResponseEntity.ok(jwtResponseDtoMapper.mapToDto(loginUserInBound.loginUser(loginRequestDto.getUsername(),
+                loginRequestDto.getPassword(), loginRequestDto.getDeviceToken())));
     }
 
     @Operation(summary = "User registration")
@@ -100,11 +96,11 @@ public class AuthController {
                     )
             )})
     @PostMapping("/signup")
-    public ResponseEntity<UserInfoResponse> registerUser(
+    public ResponseEntity<UserInfoResponseDto> registerUser(
             @Valid @RequestBody SignupRequestDto signUpRequestDto) {
-        SignupRequest domain = signUpRequestDomainMapper.mapToDomain(signUpRequestDto);
-        User registeredUser = registerUserInBound.registerUser(domain);
-        UserInfoResponse response = userDtoMapper.mapToDto(registeredUser);
+        User mappedUser = signUpRequestDomainMapper.mapToDomain(signUpRequestDto);
+        User registeredUser = registerUserInBound.registerUser(mappedUser);
+        UserInfoResponseDto response = userDtoMapper.mapToDto(registeredUser);
         return ResponseEntity.ok(response);
 
     }

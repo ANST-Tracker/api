@@ -5,5 +5,5 @@ import org.mapstruct.Mapper;
 
 @Mapper
 public interface UserDtoMapper {
-    UserInfoResponse mapToDto(User source);
+    UserInfoResponseDto mapToDto(User source);
 }

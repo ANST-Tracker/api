@@ -1,26 +1,20 @@
 package com.anst.sd.api.adapter.rest;
 
 import com.anst.sd.api.adapter.rest.dto.CurrentVersionResponseDto;
-import com.anst.sd.api.app.impl.PropertiesReader;
+import com.anst.sd.api.app.api.GetPropertyInBound;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 public class VersionController {
-    private final String version;
-
-    public VersionController(@Value("${pom.propertiesFileName}") String pomPropertiesFile) throws IOException {
-        version = new PropertiesReader(pomPropertiesFile)
-                .getProperty("product.version");
-    }
+    private final GetPropertyInBound getPropertyInBound;
 
     @Operation(
             summary = "Get current version of the application",
@@ -31,6 +25,6 @@ public class VersionController {
             })
     @GetMapping("/version")
     public ResponseEntity<CurrentVersionResponseDto> getCurrentVersion() {
-        return ResponseEntity.ok(new CurrentVersionResponseDto(version));
+        return ResponseEntity.ok(new CurrentVersionResponseDto(getPropertyInBound.getProperty("version")));
     }
 }

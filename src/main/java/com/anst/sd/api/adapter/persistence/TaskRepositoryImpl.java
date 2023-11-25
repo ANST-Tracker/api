@@ -14,7 +14,7 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class TaskRepositoryImpl implements TaskRepository {
-    private final TaskJpaRepositoryOutBound repository;
+    private final TaskJpaRepository repository;
 
     @Override
     public Page<Task> findTasksByUserId(Long userId, Pageable page) {

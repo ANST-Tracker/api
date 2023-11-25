@@ -25,7 +25,6 @@ public class GetUserInfoUseCase implements GetUserInfoInBound {
         if (user.isEmpty()) {
             throw new AuthException(USER_DOESNT_EXISTS);
         }
-        log.debug("Got result for user info by id {}", userId);
         return user;
     }
 }

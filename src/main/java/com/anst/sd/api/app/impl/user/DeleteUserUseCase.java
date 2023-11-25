@@ -28,7 +28,6 @@ public class DeleteUserUseCase implements DeleteUserInBound {
         if (user.isEmpty()) {
             throw new AuthException(USER_DOESNT_EXISTS);
         }
-        log.debug("Deleted user with id {}", userId);
         userRepository.deleteById(userId);
         return user;
     }

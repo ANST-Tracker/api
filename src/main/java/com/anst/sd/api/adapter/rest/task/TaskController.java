@@ -30,9 +30,8 @@ public class TaskController {
     private final FilterTasksByUserInBound filterTasksByUserInBound;
     private final JwtService jwtService;
     private final CreateTaskByUserInBound createTaskByUserInBound;
-    private final TaskInfoDtoMapper taskInfoDtoMapper;
-    private final TaskDomainMapper taskDomainMapper;
     private final TaskDtoMapper taskDtoMapper;
+    private final TaskDomainMapper taskDomainMapper;
     private final FilterRequestDomainMapper filterRequestDomainMapper;
 
     @Operation(
@@ -47,10 +46,10 @@ public class TaskController {
                             description = "Invalid input data")
             })
     @PostMapping("/create")
-    public ResponseEntity<TaskInfoDto> createTask(@Valid @RequestBody CreateTaskRequest request) {
+    public ResponseEntity<TaskInfoDto> createTask(@Valid @RequestBody CreateTaskRequestDto request) {
         Task task = taskDomainMapper.mapToDomain(request);
         Task result = createTaskByUserInBound.createTask(jwtService.getJwtAuth().getUserId(), task);
-        TaskInfoDto response = taskInfoDtoMapper.mapToDto(result);
+        TaskInfoDto response = taskDtoMapper.mapToDto(result);
         return ResponseEntity.ok(response);
     }
 
@@ -136,7 +135,7 @@ public class TaskController {
     public ResponseEntity<List<TaskInfoDto>> searchTasks(@RequestBody FilterRequestDto filterRequestDto) {
         FilterRequest domain = filterRequestDomainMapper.mapToDomain(filterRequestDto);
         List<Task> process = filterTasksByUserInBound.filterTasks(jwtService.getJwtAuth().getUserId(), domain);
-        List<TaskInfoDto> result = taskInfoDtoMapper.mapToDto(process);
+        List<TaskInfoDto> result = taskDtoMapper.mapToDto(process);
         return ResponseEntity.ok(result);
     }
 }

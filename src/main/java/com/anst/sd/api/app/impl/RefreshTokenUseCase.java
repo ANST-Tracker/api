@@ -12,6 +12,7 @@ import com.anst.sd.api.security.RefreshResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -23,6 +24,7 @@ public class RefreshTokenUseCase implements RefreshTokenInBound {
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Override
+    @Transactional
     public RefreshResponse refresh(String refreshToken) {
         log.info("Refresh token valid process started");
         if (!jwtService.validateRefreshToken(refreshToken)) {
@@ -39,13 +41,11 @@ public class RefreshTokenUseCase implements RefreshTokenInBound {
         var currentRefreshToken = refreshTokenRepository.findByToken(refreshToken);
 
         if (currentRefreshToken.isEmpty()) {
-            log.warn("Refresh token does not exists");
             throw new AuthException(AuthErrorMessages.REFRESH_TOKEN_DOESNT_EXISTS);
         }
 
         refreshTokenRepository.deleteById(currentRefreshToken.get().getId());
         if (!jwtService.validateAccessTokenLifetime(device.getId())) {
-            log.warn("Suspicious activity detected");
             throw new AuthException(AuthErrorMessages.SUSPICIOUS_ACTIVITY);
         }
 
@@ -55,7 +55,6 @@ public class RefreshTokenUseCase implements RefreshTokenInBound {
         newRefresh.setDevice(device);
         newRefresh.setToken(tokens.getRefreshToken());
 
-        log.debug("Refresh token has been updated");
         refreshTokenRepository.save(newRefresh);
 
         return tokens;

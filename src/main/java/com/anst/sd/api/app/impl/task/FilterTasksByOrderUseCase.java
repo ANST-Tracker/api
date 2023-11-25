@@ -22,7 +22,6 @@ public class FilterTasksByOrderUseCase implements FilterTasksByOrderInBound {
         if (filterRequest.getOrders() != null)
             for (var el : filterRequest.getOrders())
                 tasks = filterTasksBySortOrderInBound.filterInternal(tasks, el);
-        log.debug("Tasks has been sorted");
         return tasks;
     }
 }

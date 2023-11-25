@@ -3,7 +3,6 @@ package com.anst.sd.api.app.impl.user;
 import com.anst.sd.api.app.api.ClientException;
 import com.anst.sd.api.app.api.RoleRepository;
 import com.anst.sd.api.app.api.ServerException;
-import com.anst.sd.api.app.api.security.SignupRequest;
 import com.anst.sd.api.app.api.user.RegisterUserInBound;
 import com.anst.sd.api.app.api.user.UserRepository;
 import com.anst.sd.api.domain.Role;
@@ -34,20 +33,17 @@ public class RegisterUserUseCase implements RegisterUserInBound {
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public User registerUser(SignupRequest signupRequest) {
+    public User registerUser(User user) {
         log.info("User registration processing");
-        if (userRepository.existsByUsername(signupRequest.getUsername())) {
+        if (userRepository.existsByUsername(user.getUsername())) {
             throw new ClientException(USERNAME_ALREADY_TAKEN);
         }
 
-        if (userRepository.existsByEmail(signupRequest.getEmail())) {
+        if (userRepository.existsByEmail(user.getEmail())) {
             throw new ClientException(EMAIL_ALREADY_TAKEN);
         }
 
-        User user = new User(signupRequest.getUsername(), signupRequest.getEmail(),
-                encoder.encode(signupRequest.getPassword()));
-        user.setFirstName(signupRequest.getFirstName());
-        user.setLastName(signupRequest.getLastName());
+        user.setPassword(encoder.encode(user.getPassword()));
 
         Set<Role> roles = new HashSet<>();
         Role userRole = roleRepository
@@ -55,7 +51,6 @@ public class RegisterUserUseCase implements RegisterUserInBound {
                 .orElseThrow(() -> new ServerException(INTERNAL_SERVER_ERROR));
         roles.add(userRole);
         user.setRoles(roles);
-        log.debug("User has been registered with id {}", user.getId());
         return userRepository.save(user);
     }
 }

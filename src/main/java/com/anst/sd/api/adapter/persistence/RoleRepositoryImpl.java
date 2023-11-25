@@ -11,7 +11,7 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class RoleRepositoryImpl implements RoleRepository {
-    private final RoleJpaRepositoryOutBound repository;
+    private final RoleJpaRepository repository;
 
     @Override
     public Optional<Role> findByName(ERole name) {

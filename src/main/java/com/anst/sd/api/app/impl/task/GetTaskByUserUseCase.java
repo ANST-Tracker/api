@@ -7,6 +7,7 @@ import com.anst.sd.api.domain.task.Task;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -19,14 +20,13 @@ public class GetTaskByUserUseCase implements GetTaskByUserInBound {
     private final TaskRepository taskRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Task> getTask(Long userId, Long id) {
         log.info("Get task by userId {}", userId);
         Optional<Task> task = taskRepository.findById(id);
         if (task.isPresent() && task.get().getUser().getId().equals(userId)) {
-            log.debug("Task id {} has been received by userId {}",id,userId);
             return task;
         } else {
-            log.warn("User does not have task with id {}", id);
             throw new ClientException(USER_DOESNT_HAVE_CURRENT_TASK);
         }
     }

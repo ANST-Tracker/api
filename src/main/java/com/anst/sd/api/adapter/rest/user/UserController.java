@@ -1,7 +1,7 @@
 package com.anst.sd.api.adapter.rest.user;
 
 import com.anst.sd.api.adapter.rest.user.dto.UserDtoMapper;
-import com.anst.sd.api.adapter.rest.user.dto.UserInfoResponse;
+import com.anst.sd.api.adapter.rest.user.dto.UserInfoResponseDto;
 import com.anst.sd.api.app.api.user.DeleteUserInBound;
 import com.anst.sd.api.app.api.user.GetUserInfoInBound;
 import com.anst.sd.api.domain.user.User;
@@ -35,7 +35,7 @@ public class UserController {
             @ApiResponse(
                     responseCode = "200",
                     description = "User information received successfully",
-                    content = @Content(schema = @Schema(implementation = UserInfoResponse.class))
+                    content = @Content(schema = @Schema(implementation = UserInfoResponseDto.class))
             ),
             @ApiResponse(
                     responseCode = "409",
@@ -44,9 +44,9 @@ public class UserController {
             )
     })
     @GetMapping("/current")
-    public ResponseEntity<UserInfoResponse> getCurrentUser() {
+    public ResponseEntity<UserInfoResponseDto> getCurrentUser() {
         Optional<User> result = getUserInfoInBound.getUserInfo(jwtService.getJwtAuth().getUserId());
-        UserInfoResponse response = userDtoMapper.mapToDto(result.get());
+        UserInfoResponseDto response = userDtoMapper.mapToDto(result.get());
         return ResponseEntity.ok(response);
     }
 
@@ -55,15 +55,15 @@ public class UserController {
             @ApiResponse(
                     responseCode = "200",
                     description = "User deleted successfully",
-                    content = @Content(schema = @Schema(implementation = UserInfoResponse.class))),
+                    content = @Content(schema = @Schema(implementation = UserInfoResponseDto.class))),
             @ApiResponse(
                     responseCode = "409",
                     description = "User doesn't exists")
     })
     @DeleteMapping("/current")
-    public ResponseEntity<UserInfoResponse> deleteCurrentUser() {
+    public ResponseEntity<UserInfoResponseDto> deleteCurrentUser() {
         Optional<User> result = deleteUserInBound.deleteUser(jwtService.getJwtAuth().getUserId());
-        UserInfoResponse response = userDtoMapper.mapToDto(result.get());
+        UserInfoResponseDto response = userDtoMapper.mapToDto(result.get());
         return ResponseEntity.ok(response);
     }
 }

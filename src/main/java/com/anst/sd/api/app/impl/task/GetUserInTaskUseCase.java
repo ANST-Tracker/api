@@ -7,6 +7,7 @@ import com.anst.sd.api.security.AuthException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -19,14 +20,13 @@ public class GetUserInTaskUseCase implements GetUserInTaskInBound {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public User getUser(Long userId) {
         log.info("Get user by userId {}", userId);
         Optional<User> user = userRepository.findById(userId);
         if (user.isEmpty()) {
-            log.warn("User not found with userId {}", userId);
             throw new AuthException(USER_NOT_FOUND);
         }
-        log.debug("Got user by userId {}", user);
         return user.get();
     }
 }
