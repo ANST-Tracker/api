@@ -110,7 +110,7 @@
             <version>0.2.0</version>
         </dependency>
 
-        <!--TODO: разобраться зачем нужны данные зависимости-->
+        <!-- TODO: разобраться зачем нужны данные зависимости-->
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
