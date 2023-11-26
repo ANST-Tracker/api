@@ -105,11 +105,10 @@
         </dependency>
         <!--AUTH-->
         <dependency>
-            <groupId>com.anst.sd.api</groupId>
+            <groupId>io.github.anst-tracker</groupId>
             <artifactId>security</artifactId>
-            <version>0.1.0</version>
+            <version>0.2.0</version>
         </dependency>
-        <!-- TODO: import from .m2/repository -->
 
         <!--TODO: разобраться зачем нужны данные зависимости-->
         <dependency>
