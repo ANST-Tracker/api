@@ -4,6 +4,6 @@ import com.anst.sd.api.domain.task.Task;
 
 import java.util.List;
 
-public interface GetTasksByUserInBound {
+public interface GetTasksInBound {
     List<Task> getTasks(Long userId, Integer page);
 }

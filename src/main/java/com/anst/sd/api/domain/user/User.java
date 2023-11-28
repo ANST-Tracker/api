@@ -1,8 +1,8 @@
 package com.anst.sd.api.domain.user;
 
 import com.anst.sd.api.domain.Device;
-import com.anst.sd.api.domain.RefreshToken;
-import com.anst.sd.api.domain.Role;
+import com.anst.sd.api.domain.security.RefreshToken;
+import com.anst.sd.api.domain.security.Role;
 import com.anst.sd.api.domain.task.Task;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

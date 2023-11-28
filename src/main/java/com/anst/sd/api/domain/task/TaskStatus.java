@@ -14,6 +14,7 @@ public enum TaskStatus {
             TaskStatus.DONE, 4);
 
     final String status;
+
     TaskStatus(String status) {
         this.status = status;
     }

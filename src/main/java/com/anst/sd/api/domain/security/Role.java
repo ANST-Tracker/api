@@ -1,4 +1,4 @@
-package com.anst.sd.api.domain;
+package com.anst.sd.api.domain.security;
 
 import com.anst.sd.api.security.ERole;
 import jakarta.persistence.*;

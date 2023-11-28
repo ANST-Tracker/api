@@ -1,6 +1,7 @@
 package com.anst.sd.api.adapter.rest.task.dto;
 
 import com.anst.sd.api.domain.task.TaskStatus;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
@@ -12,9 +13,12 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TaskInfoDto {
+    @NotNull
     Long id;
+    @NotNull
     String data;
     LocalDateTime deadline;
+    @NotNull
     TaskStatus status;
     String description;
 }

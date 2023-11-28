@@ -1,8 +1,6 @@
 package com.anst.sd.api.adapter.rest;
 
-import com.anst.sd.api.app.api.ClientException;
-import com.anst.sd.api.app.api.ErrorInfo;
-import com.anst.sd.api.app.api.ServerException;
+import com.anst.sd.api.adapter.rest.dto.ErrorInfoDto;
 import com.anst.sd.api.security.AuthException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -21,7 +19,7 @@ import java.time.Instant;
 import static com.anst.sd.api.app.api.ErrorMessages.INTERNAL_SERVER_ERROR;
 
 @ControllerAdvice
-public class AdviceController extends ResponseEntityExceptionHandler {
+public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Nullable
     @Override
@@ -33,51 +31,40 @@ public class AdviceController extends ResponseEntityExceptionHandler {
             @NonNull WebRequest request
     ) {
         logger.warn(ex.getMessage(), ex);
-
-        var errorInfo = new ErrorInfo(
+        var errorInfo = new ErrorInfoDto(
                 Instant.now().toEpochMilli(),
-                INTERNAL_SERVER_ERROR);
-
+                INTERNAL_SERVER_ERROR,
+                ErrorInfoDto.ErrorType.SERVER);
         return super.handleExceptionInternal(ex, errorInfo, headers, statusCode, request);
-    }
-
-    @ExceptionHandler(ClientException.class)
-    public ResponseEntity<Object> handleClientException(ClientException ex) {
-        var errorInfo = new ErrorInfo(
-                ex.getTimestamp(),
-                ex.getMessage());
-        return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<Object> handleAuthException(AuthException ex) {
-        var errorInfo = new ErrorInfo(
+        logger.warn(ex.getMessage(), ex);
+        var errorInfo = new ErrorInfoDto(
                 ex.getTimestamp(),
-                ex.getMessage());
-        return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(ServerException.class)
-    public ResponseEntity<Object> handleServerException(ServerException ex) {
-        var errorInfo = new ErrorInfo(
-                ex.getTimestamp(),
-                ex.getMessage());
-        return new ResponseEntity<>(errorInfo, HttpStatus.INTERNAL_SERVER_ERROR);
+                ex.getMessage(),
+                ErrorInfoDto.ErrorType.AUTH);
+        return new ResponseEntity<>(errorInfo, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex) {
-        var errorInfo = new ErrorInfo(
+        logger.warn(ex.getMessage(), ex);
+        var errorInfo = new ErrorInfoDto(
                 Instant.now().toEpochMilli(),
-                ex.getMessage());
-        return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
+                ex.getMessage(),
+                ErrorInfoDto.ErrorType.CLIENT);
+        return new ResponseEntity<>(errorInfo, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Object> handleRuntimeException(RuntimeException ex) {
-        var errorInfo = new ErrorInfo(
+        logger.warn(ex.getMessage(), ex);
+        var errorInfo = new ErrorInfoDto(
                 Instant.now().toEpochMilli(),
-                ex.getMessage());
-        return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
+                ex.getMessage(),
+                ErrorInfoDto.ErrorType.SERVER);
+        return new ResponseEntity<>(errorInfo, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

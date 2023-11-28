@@ -9,10 +9,13 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface TaskJpaRepository extends JpaRepository<Task, Long>, PagingAndSortingRepository<Task, Long> {
     Page<Task> findTasksByUserId(Long userId, Pageable page);
 
     Page<Task> findTasksByUserIdAndStatusIn(Long userId, List<TaskStatus> status, Pageable page);
+
+    Optional<Task> findTaskByIdAndUserId(Long id, Long userId);
 }

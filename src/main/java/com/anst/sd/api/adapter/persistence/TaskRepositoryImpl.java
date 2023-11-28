@@ -1,5 +1,6 @@
 package com.anst.sd.api.adapter.persistence;
 
+import com.anst.sd.api.app.api.task.TaskNotFoundException;
 import com.anst.sd.api.app.api.task.TaskRepository;
 import com.anst.sd.api.domain.task.Task;
 import com.anst.sd.api.domain.task.TaskStatus;
@@ -9,34 +10,35 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class TaskRepositoryImpl implements TaskRepository {
-    private final TaskJpaRepository repository;
+    private final TaskJpaRepository taskJpaRepository;
 
     @Override
     public Page<Task> findTasksByUserId(Long userId, Pageable page) {
-        return repository.findTasksByUserId(userId, page);
+        return taskJpaRepository.findTasksByUserId(userId, page);
     }
 
     @Override
     public Page<Task> findTasksByUserIdAndStatusIn(Long userId, List<TaskStatus> status, Pageable page) {
-        return repository.findTasksByUserIdAndStatusIn(userId, status, page);
+        return taskJpaRepository.findTasksByUserIdAndStatusIn(userId, status, page);
     }
 
     @Override
     public Task save(Task task) {
-        return repository.save(task);
+        return taskJpaRepository.save(task);
     }
 
     @Override
-    public Optional<Task> findById(Long id) {
-        return repository.findById(id);
+    public Task findByIdAndUser(Long id, Long userId) {
+        return taskJpaRepository.findTaskByIdAndUserId(id, userId)
+                .orElseThrow(() -> new TaskNotFoundException(id, userId));
     }
 
     @Override
     public void deleteById(Long id) {
+        taskJpaRepository.deleteById(id);
     }
 }

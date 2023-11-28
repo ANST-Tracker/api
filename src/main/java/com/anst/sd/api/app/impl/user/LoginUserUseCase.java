@@ -1,12 +1,11 @@
 package com.anst.sd.api.app.impl.user;
 
 import com.anst.sd.api.app.api.DeviceRepository;
-import com.anst.sd.api.app.api.RefreshTokenRepository;
-import com.anst.sd.api.app.api.ServerException;
+import com.anst.sd.api.app.api.security.RefreshTokenRepository;
 import com.anst.sd.api.app.api.user.LoginUserInBound;
 import com.anst.sd.api.app.api.user.UserRepository;
 import com.anst.sd.api.domain.Device;
-import com.anst.sd.api.domain.RefreshToken;
+import com.anst.sd.api.domain.security.RefreshToken;
 import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.security.AuthException;
 import com.anst.sd.api.security.ERole;
@@ -16,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
@@ -36,7 +34,7 @@ public class LoginUserUseCase implements LoginUserInBound {
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Override
-    @Transactional(isolation = Isolation.READ_COMMITTED)
+    @Transactional
     public JwtResponse loginUser(String username, String password, UUID deviceToken) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AuthException(USER_DOESNT_EXISTS));
@@ -63,9 +61,9 @@ public class LoginUserUseCase implements LoginUserInBound {
             deviceRepository.save(modelDevice);
         }
 
-        var curDevice = deviceRepository.findByDeviceToken(deviceToken)
-                .orElseThrow(() -> new ServerException("Device should exist but not found"));
-        var tokens = jwtService.generateAccessRefreshTokens(user.getUsername(), user.getId(), curDevice.getId(), ERole.USER);
+        var curDevice = deviceRepository.getByDeviceToken(deviceToken);
+        var tokens = jwtService.generateAccessRefreshTokens(
+                user.getUsername(), user.getId(), curDevice.getId(), ERole.USER);
         var refreshToken = new RefreshToken();
         refreshToken.setToken(tokens.getRefreshToken());
         refreshToken.setUser(user);

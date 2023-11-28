@@ -21,10 +21,11 @@ public class VersionController {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Current version received successfully")
+                            description = "Current version received successfully",
+                            useReturnTypeSchema = true)
             })
     @GetMapping("/version")
     public ResponseEntity<CurrentVersionResponseDto> getCurrentVersion() {
-        return ResponseEntity.ok(new CurrentVersionResponseDto(getPropertyInBound.getProperty("version")));
+        return ResponseEntity.ok(new CurrentVersionResponseDto(getPropertyInBound.getProperty("product.version")));
     }
 }

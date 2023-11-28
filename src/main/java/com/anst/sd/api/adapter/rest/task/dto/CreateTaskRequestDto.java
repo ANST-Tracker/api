@@ -1,5 +1,7 @@
 package com.anst.sd.api.adapter.rest.task.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +15,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateTaskRequestDto {
+    @NotNull
+    @NotBlank
     String data;
     LocalDateTime deadline;
     String description;

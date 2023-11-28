@@ -1,4 +1,4 @@
-package com.anst.sd.api.app.api;
+package com.anst.sd.api.adapter.rest.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -9,16 +9,10 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder(toBuilder = true)
-public class ErrorInfo {
-
+public class ErrorInfoDto {
     private Long timestamp;
     private String message;
     private ErrorType type;
-
-    public ErrorInfo(Long timestamp, String message) {
-        this.timestamp = timestamp;
-        this.message = message;
-    }
 
     public enum ErrorType {
         CLIENT("client"),
@@ -33,16 +27,6 @@ public class ErrorInfo {
             this.value = value;
         }
 
-        @JsonValue
-        public String getValue() {
-            return value;
-        }
-
-        @Override
-        public String toString() {
-            return String.valueOf(value);
-        }
-
         @JsonCreator
         public static ErrorType fromValue(String value) {
             for (ErrorType b : ErrorType.values()) {
@@ -51,6 +35,16 @@ public class ErrorInfo {
                 }
             }
             throw new IllegalArgumentException("Unexpected value '" + value + "'");
+        }
+
+        @JsonValue
+        public String getValue() {
+            return value;
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(value);
         }
     }
 

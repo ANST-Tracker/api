@@ -1,5 +1,6 @@
-package com.anst.sd.api.domain;
+package com.anst.sd.api.domain.security;
 
+import com.anst.sd.api.domain.Device;
 import com.anst.sd.api.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -11,7 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name ="refresh_token")
+@Table(name = "refresh_token")
 @Entity
 public class RefreshToken {
     @Id

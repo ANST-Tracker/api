@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
@@ -45,25 +43,21 @@ public class UserController {
     })
     @GetMapping("/current")
     public ResponseEntity<UserInfoResponseDto> getCurrentUser() {
-        Optional<User> result = getUserInfoInBound.getUserInfo(jwtService.getJwtAuth().getUserId());
-        UserInfoResponseDto response = userDtoMapper.mapToDto(result.get());
-        return ResponseEntity.ok(response);
+        User result = getUserInfoInBound.getUserInfo(jwtService.getJwtAuth().getUserId());
+        return ResponseEntity.ok(userDtoMapper.mapToDto(result));
     }
 
-    @Operation(summary = "Delete current user")
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "User deleted successfully",
-                    content = @Content(schema = @Schema(implementation = UserInfoResponseDto.class))),
-            @ApiResponse(
-                    responseCode = "409",
-                    description = "User doesn't exists")
-    })
+    @Operation(
+            summary = "Delete current user",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "User deleted successfully",
+                            useReturnTypeSchema = true)
+            })
     @DeleteMapping("/current")
     public ResponseEntity<UserInfoResponseDto> deleteCurrentUser() {
-        Optional<User> result = deleteUserInBound.deleteUser(jwtService.getJwtAuth().getUserId());
-        UserInfoResponseDto response = userDtoMapper.mapToDto(result.get());
-        return ResponseEntity.ok(response);
+        User result = deleteUserInBound.deleteUser(jwtService.getJwtAuth().getUserId());
+        return ResponseEntity.ok(userDtoMapper.mapToDto(result));
     }
 }
