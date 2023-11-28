@@ -1,4 +1,4 @@
-package com.anst.sd.api.fw.spring;
+package com.anst.sd.api;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration;
@@ -11,10 +11,10 @@ import org.springframework.boot.autoconfigure.security.servlet.UserDetailsServic
         ManagementWebSecurityAutoConfiguration.class,
         UserDetailsServiceAutoConfiguration.class}
 )
-public class ToDoListCourseworkApplication {
+public class AnstApiTodoApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ToDoListCourseworkApplication.class, args);
+        SpringApplication.run(AnstApiTodoApplication.class, args);
     }
 
 }
