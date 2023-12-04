@@ -1,7 +1,5 @@
 package com.anst.sd.api.adapter.rest.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,37 +13,14 @@ public class ErrorInfoDto {
     private ErrorType type;
 
     public enum ErrorType {
-        CLIENT("client"),
-
-        VALIDATION("validation"),
-        AUTH("auth"),
-
-        SERVER("server");
-        private final String value;
-
-        ErrorType(String value) {
-            this.value = value;
-        }
-
-        @JsonCreator
-        public static ErrorType fromValue(String value) {
-            for (ErrorType b : ErrorType.values()) {
-                if (b.value.equals(value)) {
-                    return b;
-                }
-            }
-            throw new IllegalArgumentException("Unexpected value '" + value + "'");
-        }
-
-        @JsonValue
-        public String getValue() {
-            return value;
-        }
+        CLIENT,
+        VALIDATION,
+        AUTH,
+        SERVER;
 
         @Override
         public String toString() {
-            return String.valueOf(value);
+            return this.name();
         }
     }
-
 }

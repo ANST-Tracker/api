@@ -1,7 +1,7 @@
 package com.anst.sd.api.app.api.security;
 
-import com.anst.sd.api.security.RefreshResponse;
+import com.anst.sd.api.security.JwtResponse;
 
 public interface RefreshTokenInBound {
-    RefreshResponse refresh(String refreshToken);
+    JwtResponse refresh(String refreshToken);
 }

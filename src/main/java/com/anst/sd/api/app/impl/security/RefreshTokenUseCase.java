@@ -7,8 +7,8 @@ import com.anst.sd.api.app.api.user.UserRepository;
 import com.anst.sd.api.domain.security.RefreshToken;
 import com.anst.sd.api.security.AuthErrorMessages;
 import com.anst.sd.api.security.AuthException;
+import com.anst.sd.api.security.JwtResponse;
 import com.anst.sd.api.security.JwtService;
-import com.anst.sd.api.security.RefreshResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class RefreshTokenUseCase implements RefreshTokenInBound {
 
     @Override
     @Transactional
-    public RefreshResponse refresh(String refreshToken) {
+    public JwtResponse refresh(String refreshToken) {
         log.info("Refresh token valid process started");
         if (!jwtService.validateRefreshToken(refreshToken)) {
             throw new AuthException(AuthErrorMessages.INVALID_REFRESH_TOKEN);

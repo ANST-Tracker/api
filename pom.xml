@@ -12,7 +12,7 @@
 
     <groupId>io.github.anst-tracker</groupId>
     <artifactId>api</artifactId>
-    <version>0.0.2</version>
+    <version>0.1.2</version>
     <name>anst-tracker-API</name>
 
     <properties>
@@ -113,7 +113,7 @@
         <dependency>
             <groupId>io.github.anst-tracker</groupId>
             <artifactId>security</artifactId>
-            <version>0.2.1</version>
+            <version>0.3.1</version>
         </dependency>
 
 

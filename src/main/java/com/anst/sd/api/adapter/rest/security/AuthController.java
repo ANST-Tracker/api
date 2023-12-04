@@ -8,7 +8,6 @@ import com.anst.sd.api.app.api.user.LoginUserInBound;
 import com.anst.sd.api.app.api.user.RegisterUserInBound;
 import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.security.JwtResponse;
-import com.anst.sd.api.security.RefreshResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -26,7 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
     private final RefreshTokenInBound refreshTokenInBound;
-    private final RefreshResponseDtoMapper refreshResponseDtoMapper;
     private final LoginUserInBound loginUserInBound;
     private final RegisterUserInBound registerUserInBound;
     private final UserDtoMapper userDtoMapper;
@@ -42,9 +40,9 @@ public class AuthController {
                             useReturnTypeSchema = true)
             })
     @PostMapping("/refresh")
-    public ResponseEntity<RefreshResponseDto> refreshToken(@Valid @RequestBody RefreshRequestDto request) {
-        RefreshResponse response = refreshTokenInBound.refresh(request.getRefreshToken());
-        return ResponseEntity.ok(refreshResponseDtoMapper.mapToDto(response));
+    public ResponseEntity<JwtResponseDto> refreshToken(@Valid @RequestBody RefreshRequestDto request) {
+        JwtResponse response = refreshTokenInBound.refresh(request.getRefreshToken());
+        return ResponseEntity.ok(jwtResponseDtoMapper.mapToDto(response));
     }
 
     @Operation(
