@@ -21,11 +21,6 @@ jobs:
       - name: Maven build jar
         run: mvn clean test
 
-      - name: Upload coverage #https://app.codecov.io/gh/ANST-Tracker/api
-        uses: codecov/codecov-action@v3
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
   build-push-image:
     runs-on: ubuntu-latest
     needs: run-tests
