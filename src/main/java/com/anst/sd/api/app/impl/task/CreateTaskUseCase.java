@@ -19,7 +19,7 @@ public class CreateTaskUseCase implements CreateTaskInBound {
 
     @Override
     @Transactional
-    public Task createTask(Long userId, Task task) {
+    public Task create(Long userId, Task task) {
         log.info("Create task by user with userId {}", userId);
         User user = userRepository.getById(userId);
         task.setUser(user);

@@ -1,6 +1,11 @@
 package com.anst.sd.api.adapter.rest;
 
 import com.anst.sd.api.adapter.rest.dto.ErrorInfoDto;
+import com.anst.sd.api.app.api.device.DeviceNotFoundException;
+import com.anst.sd.api.app.api.security.RoleNotFoundException;
+import com.anst.sd.api.app.api.task.TaskNotFoundException;
+import com.anst.sd.api.app.api.user.RegisterUserException;
+import com.anst.sd.api.app.api.user.UserNotFoundException;
 import com.anst.sd.api.security.AuthException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,7 +21,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import java.time.Instant;
 
-import static com.anst.sd.api.app.api.ErrorMessages.INTERNAL_SERVER_ERROR;
+import static com.anst.sd.api.adapter.rest.dto.ErrorInfoDto.createErrorInfo;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -33,7 +38,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         logger.warn(ex.getMessage(), ex);
         var errorInfo = new ErrorInfoDto(
                 Instant.now().toEpochMilli(),
-                INTERNAL_SERVER_ERROR,
+                "Internal server error",
                 ErrorInfoDto.ErrorType.SERVER);
         return super.handleExceptionInternal(ex, errorInfo, headers, statusCode, request);
     }
@@ -41,30 +46,44 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(AuthException.class)
     public ResponseEntity<Object> handleAuthException(AuthException ex) {
         logger.warn(ex.getMessage(), ex);
-        var errorInfo = new ErrorInfoDto(
-                ex.getTimestamp(),
-                ex.getMessage(),
-                ErrorInfoDto.ErrorType.AUTH);
+        var errorInfo = createErrorInfo(ex);
+        errorInfo.setType(ErrorInfoDto.ErrorType.AUTH);
         return new ResponseEntity<>(errorInfo, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(RegisterUserException.class)
+    public ResponseEntity<Object> handleAuthException(RegisterUserException ex) {
+        logger.warn(ex.getMessage(), ex);
+        var errorInfo = createErrorInfo(ex);
+        errorInfo.setType(ErrorInfoDto.ErrorType.CLIENT);
+        return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex) {
         logger.warn(ex.getMessage(), ex);
-        var errorInfo = new ErrorInfoDto(
-                Instant.now().toEpochMilli(),
-                ex.getMessage(),
-                ErrorInfoDto.ErrorType.CLIENT);
+        var errorInfo = createErrorInfo(ex);
+        errorInfo.setType(ErrorInfoDto.ErrorType.AUTH);
         return new ResponseEntity<>(errorInfo, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Object> handleRuntimeException(RuntimeException ex) {
         logger.warn(ex.getMessage(), ex);
-        var errorInfo = new ErrorInfoDto(
-                Instant.now().toEpochMilli(),
-                ex.getMessage(),
-                ErrorInfoDto.ErrorType.SERVER);
+        var errorInfo = createErrorInfo(ex);
+        errorInfo.setType(ErrorInfoDto.ErrorType.SERVER);
         return new ResponseEntity<>(errorInfo, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler({
+            DeviceNotFoundException.class,
+            RoleNotFoundException.class,
+            TaskNotFoundException.class,
+            UserNotFoundException.class})
+    public ResponseEntity<Object> handleRuntimeException(DeviceNotFoundException ex) {
+        logger.warn(ex.getMessage(), ex);
+        var errorInfo = createErrorInfo(ex);
+        errorInfo.setType(ErrorInfoDto.ErrorType.CLIENT);
+        return new ResponseEntity<>(errorInfo, HttpStatus.NOT_FOUND);
     }
 }

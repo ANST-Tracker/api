@@ -2,10 +2,8 @@ package com.anst.sd.api.app.api.user;
 
 import com.anst.sd.api.domain.user.User;
 
-import java.util.Optional;
-
 public interface UserRepository {
-    Optional<User> findByUsername(String username);
+    User getByUsername(String username);
 
     User getById(Long id);
 

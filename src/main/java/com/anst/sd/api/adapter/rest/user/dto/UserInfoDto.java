@@ -15,7 +15,7 @@ import java.util.Set;
 @Builder
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserInfoResponseDto {
+public class UserInfoDto {
     String firstName;
     String lastName;
     @NotNull

@@ -2,7 +2,7 @@ package com.anst.sd.api.adapter.rest.security;
 
 import com.anst.sd.api.adapter.rest.security.dto.*;
 import com.anst.sd.api.adapter.rest.user.dto.UserDtoMapper;
-import com.anst.sd.api.adapter.rest.user.dto.UserInfoResponseDto;
+import com.anst.sd.api.adapter.rest.user.dto.UserInfoDto;
 import com.anst.sd.api.app.api.security.RefreshTokenInBound;
 import com.anst.sd.api.app.api.user.LoginUserInBound;
 import com.anst.sd.api.app.api.user.RegisterUserInBound;
@@ -28,7 +28,7 @@ public class AuthController {
     private final LoginUserInBound loginUserInBound;
     private final RegisterUserInBound registerUserInBound;
     private final UserDtoMapper userDtoMapper;
-    private final SignUpRequestDomainMapper signUpRequestDomainMapper;
+    private final SignupRequestDomainMapper signUpRequestDomainMapper;
     private final JwtResponseDtoMapper jwtResponseDtoMapper;
 
     @Operation(
@@ -40,7 +40,7 @@ public class AuthController {
                             useReturnTypeSchema = true)
             })
     @PostMapping("/refresh")
-    public ResponseEntity<JwtResponseDto> refreshToken(@Valid @RequestBody RefreshRequestDto request) {
+    public ResponseEntity<JwtResponseDto> refresh(@Valid @RequestBody RefreshRequestDto request) {
         JwtResponse response = refreshTokenInBound.refresh(request.getRefreshToken());
         return ResponseEntity.ok(jwtResponseDtoMapper.mapToDto(response));
     }
@@ -54,8 +54,8 @@ public class AuthController {
                             useReturnTypeSchema = true)
             })
     @PostMapping("/signin")
-    public ResponseEntity<JwtResponseDto> authenticateUser(@Valid @RequestBody LoginRequestDto request) {
-        JwtResponse response = loginUserInBound.loginUser(
+    public ResponseEntity<JwtResponseDto> loginUser(@Valid @RequestBody LoginRequestDto request) {
+        JwtResponse response = loginUserInBound.login(
                 request.getUsername(), request.getPassword(), request.getDeviceToken());
         return ResponseEntity.ok(jwtResponseDtoMapper.mapToDto(response));
     }
@@ -69,8 +69,8 @@ public class AuthController {
                             useReturnTypeSchema = true)
             })
     @PostMapping("/signup")
-    public ResponseEntity<UserInfoResponseDto> registerUser(@Valid @RequestBody SignupRequestDto signUpRequestDto) {
-        User registeredUser = registerUserInBound.registerUser(signUpRequestDomainMapper.mapToDomain(signUpRequestDto));
+    public ResponseEntity<UserInfoDto> registerUser(@Valid @RequestBody SignupRequestDto signUpRequestDto) {
+        User registeredUser = registerUserInBound.register(signUpRequestDomainMapper.mapToDomain(signUpRequestDto));
         return ResponseEntity.ok(userDtoMapper.mapToDto(registeredUser));
     }
 }

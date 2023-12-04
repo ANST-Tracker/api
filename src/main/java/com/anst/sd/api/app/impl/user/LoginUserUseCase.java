@@ -21,7 +21,6 @@ import java.time.Instant;
 import java.util.UUID;
 
 import static com.anst.sd.api.security.AuthErrorMessages.INVALID_PASSWORD;
-import static com.anst.sd.api.security.AuthErrorMessages.USER_DOESNT_EXISTS;
 
 @Slf4j
 @Service
@@ -35,11 +34,9 @@ public class LoginUserUseCase implements LoginUserInBound {
 
     @Override
     @Transactional
-    public JwtResponse loginUser(String username, String password, UUID deviceToken) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new AuthException(USER_DOESNT_EXISTS));
-
-        log.info("Logging user with id {}", user.getId());
+    public JwtResponse login(String username, String password, UUID deviceToken) {
+        log.info("Logging user with username {}", username);
+        User user = userRepository.getByUsername(username);
 
         if (user.getPassword() != null && !passwordEncoder.matches(password, user.getPassword())) {
             log.warn("User with id {} has bad credentials", user.getId());
@@ -64,14 +61,13 @@ public class LoginUserUseCase implements LoginUserInBound {
         var curDevice = deviceRepository.getByDeviceToken(deviceToken);
         var tokens = jwtService.generateAccessRefreshTokens(
                 user.getUsername(), user.getId(), curDevice.getId(), ERole.USER);
+
         var refreshToken = new RefreshToken();
         refreshToken.setToken(tokens.getRefreshToken());
         refreshToken.setUser(user);
         refreshToken.setDevice(curDevice);
         refreshTokenRepository.save(refreshToken);
 
-        return new JwtResponse(
-                tokens.getAccessToken(),
-                tokens.getRefreshToken());
+        return tokens;
     }
 }

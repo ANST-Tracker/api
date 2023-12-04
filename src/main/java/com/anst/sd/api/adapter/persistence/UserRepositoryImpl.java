@@ -6,16 +6,15 @@ import com.anst.sd.api.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 @Component
 @RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
     private final UserJpaRepository userJpaRepository;
 
     @Override
-    public Optional<User> findByUsername(String username) {
-        return userJpaRepository.findByUsername(username);
+    public User getByUsername(String username) {
+        return userJpaRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException(username));
     }
 
     @Override

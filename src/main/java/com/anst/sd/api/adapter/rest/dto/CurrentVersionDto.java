@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CurrentVersionResponseDto {
+public class CurrentVersionDto {
     @NotNull
     String version;
 }

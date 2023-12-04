@@ -40,9 +40,9 @@ public class TaskController {
                             useReturnTypeSchema = true)
             })
     @PostMapping("/create")
-    public ResponseEntity<TaskInfoDto> createTask(@Valid @RequestBody CreateTaskRequestDto request) {
+    public ResponseEntity<TaskInfoDto> createTask(@Valid @RequestBody CreateTaskDto request) {
         Task task = taskDomainMapper.mapToDomain(request);
-        Task result = createTaskInBound.createTask(jwtService.getJwtAuth().getUserId(), task);
+        Task result = createTaskInBound.create(jwtService.getJwtAuth().getUserId(), task);
         return ResponseEntity.ok(taskDtoMapper.mapToDto(result));
     }
 
@@ -56,7 +56,7 @@ public class TaskController {
             })
     @GetMapping("/{id}")
     public ResponseEntity<TaskInfoDto> getTask(@Parameter(description = "Task ID") @PathVariable Long id) {
-        Task task = getTaskInBound.getTask(jwtService.getJwtAuth().getUserId(), id);
+        Task task = getTaskInBound.get(jwtService.getJwtAuth().getUserId(), id);
         return ResponseEntity.ok(taskDtoMapper.mapToDto(task));
     }
 
@@ -69,9 +69,9 @@ public class TaskController {
                             useReturnTypeSchema = true)
             })
     @PutMapping("/update")
-    public ResponseEntity<TaskInfoDto> updateTask(@Valid @RequestBody UpdateTaskRequestDto request) {
+    public ResponseEntity<TaskInfoDto> updateTask(@Valid @RequestBody UpdateTaskDto request) {
         Task task = taskDomainMapper.mapToDomain(request);
-        Task result = updateTaskInBound.updateTask(jwtService.getJwtAuth().getUserId(), task);
+        Task result = updateTaskInBound.update(jwtService.getJwtAuth().getUserId(), task);
         return ResponseEntity.ok(taskDtoMapper.mapToDto(result));
     }
 
@@ -85,7 +85,7 @@ public class TaskController {
             })
     @DeleteMapping("/{id}")
     public ResponseEntity<TaskInfoDto> deleteTask(@Parameter(description = "Task ID") @PathVariable Long id) {
-        Task task = deleteTaskInBound.deleteTask(jwtService.getJwtAuth().getUserId(), id);
+        Task task = deleteTaskInBound.delete(jwtService.getJwtAuth().getUserId(), id);
         return ResponseEntity.ok(taskDtoMapper.mapToDto(task));
     }
 
@@ -99,7 +99,7 @@ public class TaskController {
             })
     @GetMapping("/list")
     public ResponseEntity<List<TaskInfoDto>> getTasks(Integer page) {
-        List<Task> tasks = getTasksInBound.getTasks(jwtService.getJwtAuth().getUserId(), page);
+        List<Task> tasks = getTasksInBound.get(jwtService.getJwtAuth().getUserId(), page);
         return ResponseEntity.ok(taskDtoMapper.mapToDto(tasks));
     }
 
@@ -114,7 +114,7 @@ public class TaskController {
     @GetMapping(value = "/filter")
     public ResponseEntity<List<TaskInfoDto>> searchTasks(@RequestBody FilterRequestDto filterRequestDto) {
         FilterRequest filterRequest = filterRequestDomainMapper.mapToDomain(filterRequestDto);
-        List<Task> result = filterTasksInBound.filterTasks(jwtService.getJwtAuth().getUserId(), filterRequest);
+        List<Task> result = filterTasksInBound.filter(jwtService.getJwtAuth().getUserId(), filterRequest);
         return ResponseEntity.ok(taskDtoMapper.mapToDto(result));
     }
 }

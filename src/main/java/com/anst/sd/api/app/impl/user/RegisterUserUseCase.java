@@ -28,11 +28,10 @@ public class RegisterUserUseCase implements RegisterUserInBound {
     private final PasswordEncoder encoder;
     private final RoleRepository roleRepository;
 
-
     @Override
     @Transactional
-    public User registerUser(User user) {
-        log.info("User registration processing");
+    public User register(User user) {
+        log.info("User registration processing for username {}", user.getUsername());
         validateUser(user);
         user.setPassword(encoder.encode(user.getPassword()));
 

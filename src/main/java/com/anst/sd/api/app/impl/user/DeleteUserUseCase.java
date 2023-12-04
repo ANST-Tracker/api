@@ -16,7 +16,7 @@ public class DeleteUserUseCase implements DeleteUserInBound {
 
     @Override
     @Transactional
-    public User deleteUser(Long userId) {
+    public User delete(Long userId) {
         log.info("Deleting user with id {}", userId);
         var user = userRepository.getById(userId);
         userRepository.deleteById(userId);

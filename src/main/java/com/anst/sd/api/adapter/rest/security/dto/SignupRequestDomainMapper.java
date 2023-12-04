@@ -4,6 +4,6 @@ import com.anst.sd.api.domain.user.User;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface SignUpRequestDomainMapper {
+public interface SignupRequestDomainMapper {
     User mapToDomain(SignupRequestDto source);
 }

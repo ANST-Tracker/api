@@ -5,7 +5,7 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface TaskDomainMapper {
-    Task mapToDomain(CreateTaskRequestDto source);
+    Task mapToDomain(CreateTaskDto source);
 
-    Task mapToDomain(UpdateTaskRequestDto source);
+    Task mapToDomain(UpdateTaskDto source);
 }

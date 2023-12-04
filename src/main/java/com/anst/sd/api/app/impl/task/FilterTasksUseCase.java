@@ -27,7 +27,7 @@ public class FilterTasksUseCase implements FilterTasksInBound {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Task> filterTasks(Long userId, FilterRequest filterRequest) {
+    public List<Task> filter(Long userId, FilterRequest filterRequest) {
         log.info("Task filter has been started by userId {}", userId);
         var pageNumber = filterRequest.getPage();
         if (pageNumber == null || pageNumber < 0) {
