@@ -1,6 +1,6 @@
 package com.anst.sd.api.adapter.rest;
 
-import com.anst.sd.api.adapter.rest.dto.CurrentVersionResponseDto;
+import com.anst.sd.api.adapter.rest.dto.CurrentVersionDto;
 import com.anst.sd.api.app.api.GetPropertyInBound;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,10 +21,11 @@ public class VersionController {
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Current version received successfully")
+                            description = "Current version received successfully",
+                            useReturnTypeSchema = true)
             })
     @GetMapping("/version")
-    public ResponseEntity<CurrentVersionResponseDto> getCurrentVersion() {
-        return ResponseEntity.ok(new CurrentVersionResponseDto(getPropertyInBound.getProperty("version")));
+    public ResponseEntity<CurrentVersionDto> getVersion() {
+        return ResponseEntity.ok(new CurrentVersionDto(getPropertyInBound.get("product.version")));
     }
 }

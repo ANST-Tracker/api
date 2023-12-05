@@ -17,7 +17,7 @@ public class GetPropertyUseCase implements GetPropertyInBound {
     }
 
     @Override
-    public String getProperty(String propertyName) {
+    public String get(String propertyName) {
         log.debug("Got info with propertyName {}", propertyName);
         return reader.getProperty(propertyName);
     }

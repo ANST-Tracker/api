@@ -9,8 +9,8 @@
 //import com.anst.sd.api.adapter.rest.dto.SignupRequest;
 //import com.anst.sd.api.adapter.rest.dto.RefreshResponse;
 //import com.anst.sd.api.domain.Device;
-//import com.anst.sd.api.domain.RefreshToken;
-//import com.anst.sd.api.domain.Role;
+//import com.anst.sd.api.domain.security.RefreshToken;
+//import com.anst.sd.api.domain.security.Role;
 //import com.anst.sd.api.fw.security.ERole;
 //import com.anst.sd.api.adapter.persistence.DeviceJpaRepository;
 //import com.anst.sd.api.adapter.persistence.RefreshTokenJpaRepository;

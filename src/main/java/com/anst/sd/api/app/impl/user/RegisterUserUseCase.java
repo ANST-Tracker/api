@@ -1,26 +1,24 @@
 package com.anst.sd.api.app.impl.user;
 
-import com.anst.sd.api.app.api.ClientException;
-import com.anst.sd.api.app.api.RoleRepository;
-import com.anst.sd.api.app.api.ServerException;
+import com.anst.sd.api.app.api.security.RoleNotFoundException;
+import com.anst.sd.api.app.api.security.RoleRepository;
+import com.anst.sd.api.app.api.user.RegisterUserException;
 import com.anst.sd.api.app.api.user.RegisterUserInBound;
 import com.anst.sd.api.app.api.user.UserRepository;
-import com.anst.sd.api.domain.Role;
+import com.anst.sd.api.domain.security.Role;
 import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.security.ERole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-
-import static com.anst.sd.api.app.api.ClientErrorMessages.EMAIL_ALREADY_TAKEN;
-import static com.anst.sd.api.app.api.ClientErrorMessages.USERNAME_ALREADY_TAKEN;
-import static com.anst.sd.api.app.api.ErrorMessages.INTERNAL_SERVER_ERROR;
 
 @Slf4j
 @Service
@@ -30,27 +28,31 @@ public class RegisterUserUseCase implements RegisterUserInBound {
     private final PasswordEncoder encoder;
     private final RoleRepository roleRepository;
 
-
     @Override
-    @Transactional(isolation = Isolation.READ_COMMITTED)
-    public User registerUser(User user) {
-        log.info("User registration processing");
-        if (userRepository.existsByUsername(user.getUsername())) {
-            throw new ClientException(USERNAME_ALREADY_TAKEN);
-        }
-
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new ClientException(EMAIL_ALREADY_TAKEN);
-        }
-
+    @Transactional
+    public User register(User user) {
+        log.info("User registration processing for username {}", user.getUsername());
+        validateUser(user);
         user.setPassword(encoder.encode(user.getPassword()));
 
         Set<Role> roles = new HashSet<>();
-        Role userRole = roleRepository
-                .findByName(ERole.USER)
-                .orElseThrow(() -> new ServerException(INTERNAL_SERVER_ERROR));
+        Role userRole = roleRepository.findByName(ERole.USER)
+                .orElseThrow(() -> new RoleNotFoundException(ERole.USER.name()));
         roles.add(userRole);
         user.setRoles(roles);
         return userRepository.save(user);
+    }
+
+    private void validateUser(User user) {
+        List<String> errors = new ArrayList<>();
+        if (userRepository.existsByUsername(user.getUsername())) {
+            errors.add("Username is already taken");
+        }
+        if (userRepository.existsByEmail(user.getEmail())) {
+            errors.add("Email is already in use");
+        }
+        if (!errors.isEmpty()) {
+            throw new RegisterUserException(StringUtils.join(errors, '\n'));
+        }
     }
 }
