@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -27,7 +28,6 @@ public class UpdateTaskUseCase implements UpdateTaskInBound {
 
     private void mergeTask(Task original, Task updated) {
         original.setData(updated.getData());
-        original.setModified(LocalDateTime.now());
         original.setDescription(updated.getDescription());
         original.setStatus(updated.getStatus());
     }

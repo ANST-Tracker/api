@@ -10,6 +10,3 @@ create table public.refresh_token
     created     timestamptz not null,
     updated     timestamptz
 );
-
-alter table public.refresh_token
-    owner to postgres;

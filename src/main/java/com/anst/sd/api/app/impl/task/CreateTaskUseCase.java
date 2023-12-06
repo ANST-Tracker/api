@@ -4,11 +4,14 @@ import com.anst.sd.api.app.api.task.CreateTaskInBound;
 import com.anst.sd.api.app.api.task.TaskRepository;
 import com.anst.sd.api.app.api.user.UserRepository;
 import com.anst.sd.api.domain.task.Task;
+import com.anst.sd.api.domain.task.TaskStatus;
 import com.anst.sd.api.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
 
 @Slf4j
 @Service
@@ -23,7 +26,8 @@ public class CreateTaskUseCase implements CreateTaskInBound {
         log.info("Create task by user with userId {}", userId);
         User user = userRepository.getById(userId);
         task.setUser(user);
-        task.setCreated(task.getCreated());
+        task.setCreated(Instant.now());
+        task.setStatus(TaskStatus.BACKLOG);
         taskRepository.save(task);
         return task;
     }

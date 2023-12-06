@@ -8,6 +8,3 @@ create table public.device
     created      timestamptz not null,
     last_login   timestamptz not null
 );
-
-alter table public.device
-    owner to postgres;

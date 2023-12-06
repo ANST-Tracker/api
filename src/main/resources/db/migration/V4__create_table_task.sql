@@ -1,6 +1,6 @@
 create table public.task
 (
-    id          bigint primary key,
+    id          bigint primary key generated always as identity,
     description text,
     status      text        not null,
     data        varchar     not null,
@@ -11,6 +11,3 @@ create table public.task
     created     timestamptz not null,
     updated     timestamptz
 );
-
-alter table public.task
-    owner to postgres;

@@ -8,8 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -27,38 +27,32 @@ public class Task {
     @Column
     private LocalDateTime deadline;
     @Column
-    private LocalDateTime created;
-    @Column
     private String description;
     @Column
     @Enumerated(value = EnumType.STRING)
     private TaskStatus status;
-    @Column
-    private LocalDateTime modified;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+    @Column(nullable = false)
+    private Instant created;
+    @Column
+    private Instant updated;
 
     public Task() {}
+
+    @PrePersist
+    public void prePersist() {
+        created = Instant.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        updated = Instant.now();
+    }
 
     @JsonIgnore
     public User getUser() {
         return user;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Task task = (Task) o;
-        return Objects.equals(id, task.id) && Objects.equals(data, task.data) &&
-                Objects.equals(deadline, task.deadline) && Objects.equals(created, task.created) &&
-                Objects.equals(description, task.description) && status == task.status &&
-                Objects.equals(modified, task.modified) && Objects.equals(user, task.user);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, data, deadline, created, description, status, modified, user);
     }
 }

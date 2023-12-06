@@ -8,7 +8,11 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-import java.util.*;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -26,13 +30,13 @@ public class User {
     private String firstName;
     @Column(name = "last_name")
     private String lastName;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     @NotBlank
     private String username;
-    @Column
+    @Column(nullable = false)
     @NotBlank
     private String password;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     @NotBlank
     private String email;
     @ManyToMany(fetch = FetchType.EAGER)
@@ -48,6 +52,10 @@ public class User {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
     private List<Device> devices = new ArrayList<>();
+    @Column(nullable = false)
+    private Instant created;
+    @Column
+    private Instant updated;
 
     public User(String username, String email, String password) {
         this.username = username;
@@ -55,17 +63,13 @@ public class User {
         this.password = password;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id.equals(user.id) && username.equals(user.username) && password.equals(user.password) &&
-                email.equals(user.email) && roles.equals(user.roles) && Objects.equals(tasks, user.tasks);
+    @PrePersist
+    public void prePersist() {
+        created = Instant.now();
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, username, password, email, roles, tasks);
+    @PreUpdate
+    public void preUpdate() {
+        updated = Instant.now();
     }
 }
