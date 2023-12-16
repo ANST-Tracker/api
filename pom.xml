@@ -25,6 +25,11 @@
     <dependencies>
         <!--UTILS-->
         <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.16.0</version>
+        </dependency>
+        <dependency>
             <groupId>io.sentry</groupId>
             <artifactId>sentry-spring-boot-starter</artifactId>
             <version>6.16.0</version>
@@ -60,6 +65,12 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
         <!--TEST-->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <version>6.0.2</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -104,6 +115,11 @@
 
         <!--DB-->
         <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
@@ -128,7 +144,6 @@
             <version>0.3.1</version>
         </dependency>
 
-
         <!-- TODO: разобраться зачем нужны данные зависимости-->
         <dependency>
             <groupId>javax.xml.bind</groupId>
@@ -137,15 +152,8 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
-            <version>6.0.2</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-crypto</artifactId>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -224,6 +232,11 @@
                             <version>${org.mapstruct.version}</version>
                         </path>
                         <path>
+                            <groupId>org.hibernate.orm</groupId>
+                            <artifactId>hibernate-jpamodelgen</artifactId>
+                            <version>6.0.0.Final</version>
+                        </path>
+                        <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                             <version>1.18.28</version>
@@ -238,5 +251,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

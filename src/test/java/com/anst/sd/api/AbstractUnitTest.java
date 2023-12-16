@@ -1,15 +1,16 @@
 package com.anst.sd.api;
 
 import com.anst.sd.api.domain.user.User;
-import com.anst.sd.api.security.ERole;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultIndenter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.cfg.CoercionAction;
+import com.fasterxml.jackson.databind.cfg.CoercionInputShape;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.json.JSONException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +22,10 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+import static com.anst.sd.api.fw.spring.JacksonConfig.DATE_FORMAT;
 
 @ExtendWith(MockitoExtension.class)
 public abstract class AbstractUnitTest {
@@ -29,10 +33,17 @@ public abstract class AbstractUnitTest {
 
     public AbstractUnitTest() {
         objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        SimpleModule localDateTimeSerialization = new SimpleModule();
+        localDateTimeSerialization.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer());
+        localDateTimeSerialization.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer());
+        objectMapper.registerModule(localDateTimeSerialization);
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        objectMapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+        objectMapper.configure(DeserializationFeature.READ_UNKNOWN_ENUM_VALUES_AS_NULL, true);
+        objectMapper.coercionConfigDefaults().setCoercion(CoercionInputShape.EmptyString, CoercionAction.AsNull);
         objectMapper.setDefaultPrettyPrinter(new MyDefaultPrettyPrinter());
     }
 
@@ -48,7 +59,7 @@ public abstract class AbstractUnitTest {
     protected void assertEqualsToFile(String fileName, Object value) {
         String expected = readFile(fileName);
         try {
-            String actual = objectMapper.writeValueAsString(value);
+            String actual = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(value);
             Assertions.assertEquals(expected, actual);
         } catch (JsonProcessingException e) {
             throw new IllegalArgumentException(e);
@@ -91,6 +102,29 @@ public abstract class AbstractUnitTest {
         public void writeObjectFieldValueSeparator(JsonGenerator jg) throws IOException {
             jg.writeRaw(": ");
         }
+    }
+
+    static class LocalDateTimeSerializer extends JsonSerializer<LocalDateTime> {
+
+        private final DateTimeFormatter fmt = DateTimeFormatter.ofPattern(DATE_FORMAT);
+
+        @Override
+        public void serialize(LocalDateTime value, JsonGenerator gen, SerializerProvider serializers)
+                throws IOException {
+            gen.writeString(value.format(fmt));
+        }
+
+    }
+
+    static class LocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {
+
+        private final DateTimeFormatter fmt = DateTimeFormatter.ofPattern(DATE_FORMAT);
+
+        @Override
+        public LocalDateTime deserialize(JsonParser p, DeserializationContext context) throws IOException {
+            return LocalDateTime.parse(p.getValueAsString(), fmt);
+        }
+
     }
 
     protected User createTestUser() {

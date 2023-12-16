@@ -1,6 +1,6 @@
-package com.anst.sd.api.adapter.rest.task.dto;
+package com.anst.sd.api.adapter.rest.task.read.dto;
 
-import com.anst.sd.api.app.api.task.SortOrder;
+import com.anst.sd.api.app.api.DateRangeFilter;
 import com.anst.sd.api.domain.task.TaskStatus;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -14,8 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class FilterRequestDto {
-    List<SortOrder> orders;
-    List<TaskStatus> necessaryStatuses;
+public class TaskFilterRequestDto {
+    DateRangeFilter deadline;
+    List<TaskStatus> status;
     Integer page;
 }

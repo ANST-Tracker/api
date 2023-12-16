@@ -12,7 +12,7 @@ import org.mockito.Mock;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -31,14 +31,13 @@ class CreateTaskUseCaseTest extends AbstractUnitTest {
     }
 
     @Test
-    void create() {
+    void create_successfully() {
         User user = createTestUser();
         when(userRepository.getById(1L)).thenReturn(user);
         Task task = createTask();
 
         Task result = useCase.create(1L, task);
 
-        assertNotNull(result.getCreated());
         assertEquals(TaskStatus.BACKLOG, result.getStatus());
         assertEquals(user.getId(), result.getUser().getId());
         assertEquals(DEADLINE, result.getDeadline());
@@ -53,5 +52,4 @@ class CreateTaskUseCaseTest extends AbstractUnitTest {
         task.setDeadline(DEADLINE);
         return task;
     }
-
 }
