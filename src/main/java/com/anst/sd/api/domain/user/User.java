@@ -1,6 +1,7 @@
 package com.anst.sd.api.domain.user;
 
-import com.anst.sd.api.domain.Device;
+import com.anst.sd.api.domain.DomainObject;
+import com.anst.sd.api.domain.security.Device;
 import com.anst.sd.api.domain.security.RefreshToken;
 import com.anst.sd.api.domain.security.Role;
 import com.anst.sd.api.domain.task.Task;
@@ -21,11 +22,7 @@ import java.util.Set;
 @Builder(toBuilder = true)
 @Entity(name = "user")
 @Table(name = "users")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private Long id;
+public class User extends DomainObject {
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
@@ -43,14 +40,14 @@ public class User {
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private List<Task> tasks = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private List<RefreshToken> tokens = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private List<Device> devices = new ArrayList<>();
     @Column(nullable = false)
     private Instant created;

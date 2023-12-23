@@ -1,10 +1,16 @@
 package arch;
 
 import com.tngtech.archunit.core.domain.JavaClasses;
+import com.tngtech.archunit.core.domain.JavaModifier;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.library.Architectures;
+import org.apache.logging.log4j.util.Strings;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @AnalyzeClasses(
         packages = "com.anst.sd.api",
@@ -55,6 +61,26 @@ public class ArchitectureTest {
                 .whereLayer(FW_LAYER)
                 .mayNotBeAccessedByAnyLayer()
                 .check(classes);
+    }
+
+    @ArchTest
+    public void useCaseTransactionalTest(JavaClasses classes) {
+        List<String> errors = new ArrayList<>();
+        classes.stream()
+                .filter(clazz -> clazz.getPackageName().contains("app.impl") &&
+                        clazz.getSimpleName().toLowerCase().endsWith("usecase"))
+                .flatMap(clazz -> clazz.getMethods().stream()
+                        .filter(method -> method.getModifiers().contains(JavaModifier.PUBLIC)))
+                .forEach(method -> {
+                    try {
+                        method.getAnnotationOfType(Transactional.class);
+                    } catch (Exception e) {
+                        errors.add(e.getMessage());
+                    }
+                });
+        if (!errors.isEmpty()) {
+            throw new RuntimeException(Strings.join(errors, '\n'));
+        }
     }
 
     // ===================================================================================================================

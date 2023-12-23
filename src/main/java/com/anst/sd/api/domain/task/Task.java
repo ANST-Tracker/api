@@ -1,12 +1,10 @@
 package com.anst.sd.api.domain.task;
 
+import com.anst.sd.api.domain.DomainObject;
 import com.anst.sd.api.domain.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -16,12 +14,9 @@ import java.time.LocalDateTime;
 @Table(name = "task")
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
-public class Task {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private Long id;
+public class Task extends DomainObject {
     @Column
     private String data;
     @Column
@@ -31,15 +26,13 @@ public class Task {
     @Column
     @Enumerated(value = EnumType.STRING)
     private TaskStatus status;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
     @Column(nullable = false)
     private Instant created;
     @Column
     private Instant updated;
-
-    public Task() {}
 
     @PrePersist
     public void prePersist() {

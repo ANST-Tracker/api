@@ -4,7 +4,7 @@ import com.anst.sd.api.app.api.DeviceRepository;
 import com.anst.sd.api.app.api.security.RefreshTokenRepository;
 import com.anst.sd.api.app.api.user.LoginUserInBound;
 import com.anst.sd.api.app.api.user.UserRepository;
-import com.anst.sd.api.domain.Device;
+import com.anst.sd.api.domain.security.Device;
 import com.anst.sd.api.domain.security.RefreshToken;
 import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.security.AuthException;
@@ -17,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.UUID;
 
 import static com.anst.sd.api.security.AuthErrorMessages.INVALID_PASSWORD;
@@ -43,22 +42,10 @@ public class LoginUserUseCase implements LoginUserInBound {
             throw new AuthException(INVALID_PASSWORD);
         }
 
-        var device = deviceRepository.findByDeviceToken(deviceToken);
+        var curDevice = deviceRepository.findByDeviceToken(deviceToken)
+                .orElse(Device.createDevice(deviceToken, user));
+        curDevice = deviceRepository.save(curDevice);
 
-        if (device.isPresent()) {
-            var currentDevice = device.get();
-            currentDevice.setLastLogin(Instant.now());
-            deviceRepository.save(currentDevice);
-        } else {
-            var modelDevice = new Device();
-            modelDevice.setLastLogin(Instant.now());
-            modelDevice.setCreated(Instant.now());
-            modelDevice.setDeviceToken(deviceToken);
-            modelDevice.setUser(user);
-            deviceRepository.save(modelDevice);
-        }
-
-        var curDevice = deviceRepository.getByDeviceToken(deviceToken);
         var tokens = jwtService.generateAccessRefreshTokens(
                 user.getUsername(), user.getId(), curDevice.getId(), ERole.USER);
 

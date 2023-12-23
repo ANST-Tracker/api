@@ -4,6 +4,7 @@ import com.anst.sd.api.app.api.GetPropertyInBound;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 
@@ -17,6 +18,7 @@ public class GetPropertyUseCase implements GetPropertyInBound {
     }
 
     @Override
+    @Transactional
     public String get(String propertyName) {
         log.debug("Got info with propertyName {}", propertyName);
         return reader.getProperty(propertyName);

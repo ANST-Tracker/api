@@ -1,8 +1,7 @@
 package com.anst.sd.api.adapter.persistence;
 
 import com.anst.sd.api.app.api.DeviceRepository;
-import com.anst.sd.api.app.api.device.DeviceNotFoundException;
-import com.anst.sd.api.domain.Device;
+import com.anst.sd.api.domain.security.Device;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,12 +16,6 @@ public class DeviceRepositoryImpl implements DeviceRepository {
     @Override
     public Optional<Device> findByDeviceToken(UUID token) {
         return deviceJpaRepository.findByDeviceToken(token);
-    }
-
-    @Override
-    public Device getByDeviceToken(UUID token) {
-        return deviceJpaRepository.findByDeviceToken(token)
-                .orElseThrow(() -> new DeviceNotFoundException(token.toString()));
     }
 
     @Override

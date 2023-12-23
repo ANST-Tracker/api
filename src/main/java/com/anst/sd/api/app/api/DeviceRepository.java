@@ -1,14 +1,12 @@
 package com.anst.sd.api.app.api;
 
-import com.anst.sd.api.domain.Device;
+import com.anst.sd.api.domain.security.Device;
 
 import java.util.Optional;
 import java.util.UUID;
 
 public interface DeviceRepository {
     Optional<Device> findByDeviceToken(UUID token);
-
-    Device getByDeviceToken(UUID token);
 
     Optional<Device> findById(Long id);
 

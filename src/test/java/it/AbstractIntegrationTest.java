@@ -71,6 +71,8 @@ public abstract class AbstractIntegrationTest {
         user.setEmail("email");
         user.setPassword("password");
         user.setUsername("username");
+        user.setFirstName("firstName");
+        user.setLastName("lastName");
         user.setRoles(Set.of(roleJpaRepository.findByName(ERole.USER).get()));
         return userJpaRepository.save(user);
     }
