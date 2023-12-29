@@ -1,0 +1,12 @@
+{
+  "firstName": "test_dfaa48835ff5",
+  "lastName": "test_1e5f77749a3a",
+  "username": "test_d2edef6bb29c",
+  "email": "test_daf2cc36fbde",
+  "roles": [
+    {
+      "id": 19,
+      "name": "ADMIN"
+    }
+  ]
+}
