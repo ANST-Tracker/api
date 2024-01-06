@@ -19,8 +19,5 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Run maven checkstyle
-        run: mvn clean validate
-
       - name: Maven build jar
         run: mvn clean test
