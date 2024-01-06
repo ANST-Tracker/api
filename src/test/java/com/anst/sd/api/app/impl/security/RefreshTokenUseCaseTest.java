@@ -27,6 +27,10 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 class RefreshTokenUseCaseTest extends AbstractUnitTest {
+    private static final Long USER_ID = 123L;
+    private static final Long DEVICE_ID = 456L;
+    private static final String ADMIN_ROLE = "ADMIN";
+    private static final String INPUT_TOKEN = "TEST_TOKEN";
     @Mock
     private JwtService jwtService;
     @Mock
@@ -37,10 +41,6 @@ class RefreshTokenUseCaseTest extends AbstractUnitTest {
     private RefreshTokenRepository refreshTokenRepository;
     @InjectMocks
     private RefreshTokenUseCase useCase;
-    private static final Long USER_ID = 123L;
-    private static final Long DEVICE_ID = 456L;
-    private static final String ADMIN_ROLE = "ADMIN";
-    private static final String INPUT_TOKEN = "TEST_TOKEN";
     private User user;
     private Device device;
     private RefreshToken refreshToken;
@@ -48,7 +48,7 @@ class RefreshTokenUseCaseTest extends AbstractUnitTest {
 
     @BeforeEach
     void setUp() {
-        user = createUser();
+        user = createTestUser();
         device = createDevice();
         refreshToken = createRefreshToken();
         claimsHolder = createClaims();
@@ -106,25 +106,15 @@ class RefreshTokenUseCaseTest extends AbstractUnitTest {
         Device device = new Device();
         device.setDeviceToken(UUID.randomUUID());
         device.setCreated(Instant.now());
-        device.setUser(createUser());
+        device.setUser(createTestUser());
         return device;
-    }
-
-    private User createUser() {
-        User user = new User();
-        user.setFirstName("test");
-        user.setLastName("test");
-        user.setUsername("test");
-        user.setPassword("test");
-        user.setEmail("test");
-        return user;
     }
 
     private RefreshToken createRefreshToken() {
         RefreshToken refreshToken = new RefreshToken();
         refreshToken.setToken(UUID.randomUUID().toString());
         refreshToken.setCreated(Instant.now());
-        refreshToken.setUser(createUser());
+        refreshToken.setUser(createTestUser());
         refreshToken.setDevice(createDevice());
         return refreshToken;
     }
