@@ -268,8 +268,8 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>validate</id>
-                        <phase>validate</phase>
+                        <id>checkstyle</id>
+                        <phase>test-compile</phase>
                         <goals>
                             <goal>check</goal>
                         </goals>
