@@ -11,15 +11,15 @@ import com.anst.sd.api.security.AuthErrorMessages;
 import com.anst.sd.api.security.AuthException;
 import com.anst.sd.api.security.JwtService;
 import io.jsonwebtoken.Claims;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import io.jsonwebtoken.impl.DefaultClaims;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -120,160 +120,12 @@ class RefreshTokenUseCaseTest extends AbstractUnitTest {
     }
 
     private JwtService.ClaimsHolder createClaims() {
-        Claims claims = new Claims() {
-            private Map<String, Object> claimsMap = new HashMap<>();
+        Claims preparedClaims = new DefaultClaims();
+        preparedClaims.put("userId", USER_ID.toString());
+        preparedClaims.put("deviceId", DEVICE_ID.toString());
+        preparedClaims.put("role", ADMIN_ROLE);
 
-            @Override
-            public String getIssuer() {
-                return null;
-            }
-
-            @Override
-            public Claims setIssuer(String s) {
-                return null;
-            }
-
-            @Override
-            public String getSubject() {
-                return null;
-            }
-
-            @Override
-            public Claims setSubject(String s) {
-                return null;
-            }
-
-            @Override
-            public String getAudience() {
-                return null;
-            }
-
-            @Override
-            public Claims setAudience(String s) {
-                return null;
-            }
-
-            @Override
-            public Date getExpiration() {
-                return null;
-            }
-
-            @Override
-            public Claims setExpiration(Date date) {
-                return null;
-            }
-
-            @Override
-            public Date getNotBefore() {
-                return null;
-            }
-
-            @Override
-            public Claims setNotBefore(Date date) {
-                return null;
-            }
-
-            @Override
-            public Date getIssuedAt() {
-                return null;
-            }
-
-            @Override
-            public Claims setIssuedAt(Date date) {
-                return null;
-            }
-
-            @Override
-            public String getId() {
-                return null;
-            }
-
-            @Override
-            public Claims setId(String s) {
-                return null;
-            }
-
-            @Override
-            public <T> T get(String s, Class<T> aClass) {
-                Object value = claimsMap.get(s);
-                if (value == null) {
-                    return null;
-                }
-                if (aClass.isInstance(value)) {
-                    return aClass.cast(value);
-                }
-                throw new IllegalArgumentException("Cannot cast to " + aClass.getName());
-            }
-
-            @Override
-            public int size() {
-                return 0;
-            }
-
-            @Override
-            public boolean isEmpty() {
-                return false;
-            }
-
-            @Override
-            public boolean containsKey(Object key) {
-                return false;
-            }
-
-            @Override
-            public boolean containsValue(Object value) {
-                return false;
-            }
-
-            @Override
-            public Object get(Object key) {
-                return claimsMap.get(key);
-            }
-
-            @Nullable
-            @Override
-            public Object put(String key, Object value) {
-                return claimsMap.put(key, value);
-            }
-
-            @Override
-            public Object remove(Object key) {
-                return null;
-            }
-
-            @Override
-            public void putAll(@NotNull Map<? extends String, ?> m) {
-
-            }
-
-            @Override
-            public void clear() {
-
-            }
-
-            @NotNull
-            @Override
-            public Set<String> keySet() {
-                return null;
-            }
-
-            @NotNull
-            @Override
-            public Collection<Object> values() {
-                return null;
-            }
-
-            @NotNull
-            @Override
-            public Set<Entry<String, Object>> entrySet() {
-                return null;
-            }
-        };
-        claims.put("userId", USER_ID.toString());
-        claims.put("deviceId", DEVICE_ID.toString());
-        claims.put("role", ADMIN_ROLE);
-
-        return new JwtService.ClaimsHolder(claims);
+        return new JwtService.ClaimsHolder(preparedClaims);
     }
 
 }
