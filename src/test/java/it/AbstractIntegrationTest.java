@@ -64,6 +64,7 @@ public abstract class AbstractIntegrationTest {
         refreshTokenJpaRepository.deleteAll();
         deviceJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
+        jdbcTemplate.execute("ALTER SEQUENCE task_id_seq RESTART WITH 1");
     }
 
     protected User createTestUser() {
