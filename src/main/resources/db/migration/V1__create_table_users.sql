@@ -1,6 +1,6 @@
 create table public.users
 (
-    id         bigint primary key,
+    id         bigint primary key generated always as identity,
     email      varchar unique not null,
     first_name varchar,
     last_name  varchar,
@@ -10,6 +10,3 @@ create table public.users
     created    timestamptz    not null,
     updated    timestamptz
 );
-
-alter table public.users
-    owner to postgres;

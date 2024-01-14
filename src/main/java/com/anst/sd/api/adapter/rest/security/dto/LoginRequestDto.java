@@ -15,13 +15,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LoginRequestDto {
-    @NotNull
     @NotBlank
     String username;
-    @NotNull
     @NotBlank
     String password;
     @NotNull
-    @NotBlank
     UUID deviceToken;
 }

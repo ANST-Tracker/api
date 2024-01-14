@@ -4,9 +4,6 @@ create table public.role
     name varchar not null
 );
 
-alter table public.role
-    owner to postgres;
-
 INSERT INTO role
 VALUES (1, 'USER'),
        (2, 'ADMIN'),

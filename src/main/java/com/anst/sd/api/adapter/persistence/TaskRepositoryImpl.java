@@ -1,29 +1,38 @@
 package com.anst.sd.api.adapter.persistence;
 
+import com.anst.sd.api.app.api.DateRangeFilter;
+import com.anst.sd.api.app.api.task.TaskFilter;
 import com.anst.sd.api.app.api.task.TaskNotFoundException;
 import com.anst.sd.api.app.api.task.TaskRepository;
 import com.anst.sd.api.domain.task.Task;
 import com.anst.sd.api.domain.task.TaskStatus;
+import com.anst.sd.api.domain.task.Task_;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 public class TaskRepositoryImpl implements TaskRepository {
     private final TaskJpaRepository taskJpaRepository;
+    private final EntityManager entityManager;
+    @Value("${pageable.size}")
+    private Integer pageSize;
 
     @Override
-    public Page<Task> findTasksByUserId(Long userId, Pageable page) {
-        return taskJpaRepository.findTasksByUserId(userId, page);
-    }
-
-    @Override
-    public Page<Task> findTasksByUserIdAndStatusIn(Long userId, List<TaskStatus> status, Pageable page) {
-        return taskJpaRepository.findTasksByUserIdAndStatusIn(userId, status, page);
+    public Page<Task> findTasksByUserId(Long userId, Integer page) {
+        PageRequest pageRequest = PageRequest.of(page, pageSize);
+        return taskJpaRepository.findTasksByUserId(userId, pageRequest);
     }
 
     @Override
@@ -40,5 +49,64 @@ public class TaskRepositoryImpl implements TaskRepository {
     @Override
     public void deleteById(Long id) {
         taskJpaRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Task> findByFilter(Long userId, TaskFilter filter) {
+        try (Session session = entityManager.unwrap(Session.class)) {
+            PageRequest pageRequest = PageRequest.of(filter.getPage(), pageSize);
+
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<Task> criteriaQuery = criteriaBuilder.createQuery(Task.class);
+            Root<Task> task = criteriaQuery.from(Task.class);
+
+            List<Predicate> predicateList = new ArrayList<>(generateTaskPredicates(criteriaBuilder, filter, task));
+            return createQueryAndGetResults(session, criteriaQuery, predicateList, pageRequest);
+        }
+    }
+
+    private List<Predicate> generateTaskPredicates(CriteriaBuilder criteriaBuilder,
+                                                     TaskFilter filter,
+                                                     Root<Task> taskRoot) {
+        List<Predicate> predicates = new ArrayList<>();
+        addSimplePredicates(filter, taskRoot, predicates);
+        addDateRangePredicates(criteriaBuilder, filter, taskRoot, predicates);
+        return predicates;
+    }
+
+    private void addSimplePredicates(TaskFilter filter, Root<Task> taskRoot, List<Predicate> predicates) {
+        if (!CollectionUtils.isEmpty(filter.getStatus())) {
+            Expression<TaskStatus> statusExpression = taskRoot.get(Task_.status);
+            Predicate statusPredicate = statusExpression.in(filter.getStatus());
+            predicates.add(statusPredicate);
+        }
+    }
+
+    private void addDateRangePredicates(CriteriaBuilder criteriaBuilder,
+                                        TaskFilter filter,
+                                        Root<Task> taskRoot,
+                                        List<Predicate> predicates) {
+        DateRangeFilter startDateRangeFilter = filter.getDeadline();
+        if (startDateRangeFilter != null && startDateRangeFilter.getDateFrom() != null) {
+            predicates.add(criteriaBuilder.greaterThanOrEqualTo(
+                    taskRoot.get(Task_.deadline),
+                    startDateRangeFilter.getDateFrom()));
+        }
+        if (startDateRangeFilter != null && startDateRangeFilter.getDateTo() != null) {
+            predicates.add(criteriaBuilder.lessThanOrEqualTo(
+                    taskRoot.get(Task_.deadline),
+                    startDateRangeFilter.getDateTo()));
+        }
+    }
+
+    private List<Task> createQueryAndGetResults(Session session,
+                                                CriteriaQuery<Task> criteriaQuery,
+                                                List<Predicate> predicateList,
+                                                PageRequest page) {
+        criteriaQuery.where(predicateList.toArray(new Predicate[0]));
+        TypedQuery<Task> query = session.createQuery(criteriaQuery);
+        query.setFirstResult(Math.toIntExact(page.getOffset()));
+        query.setMaxResults(page.getPageSize());
+        return query.getResultList();
     }
 }

@@ -1,6 +1,6 @@
 package com.anst.sd.api.adapter.persistence;
 
-import com.anst.sd.api.domain.Device;
+import com.anst.sd.api.domain.security.Device;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

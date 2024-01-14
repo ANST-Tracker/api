@@ -5,6 +5,7 @@ import com.anst.sd.api.adapter.rest.user.dto.UserDtoMapper;
 import com.anst.sd.api.adapter.rest.user.dto.UserInfoDto;
 import com.anst.sd.api.app.api.security.RefreshTokenInBound;
 import com.anst.sd.api.app.api.user.LoginUserInBound;
+import com.anst.sd.api.app.api.user.RegisterUserException;
 import com.anst.sd.api.app.api.user.RegisterUserInBound;
 import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.security.JwtResponse;
@@ -14,6 +15,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -69,7 +71,13 @@ public class AuthController {
                             useReturnTypeSchema = true)
             })
     @PostMapping("/signup")
-    public ResponseEntity<UserInfoDto> registerUser(@Valid @RequestBody SignupRequestDto signUpRequestDto) {
+    public ResponseEntity<UserInfoDto> registerUser(
+            @Valid @RequestBody SignupRequestDto signUpRequestDto,
+            BindingResult bindingResult
+    ) {
+        if (bindingResult.hasErrors()) {
+            throw new RegisterUserException(bindingResult.getAllErrors().toString());
+        }
         User registeredUser = registerUserInBound.register(signUpRequestDomainMapper.mapToDomain(signUpRequestDto));
         return ResponseEntity.ok(userDtoMapper.mapToDto(registeredUser));
     }

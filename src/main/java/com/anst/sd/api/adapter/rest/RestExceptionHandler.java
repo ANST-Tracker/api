@@ -4,6 +4,7 @@ import com.anst.sd.api.adapter.rest.dto.ErrorInfoDto;
 import com.anst.sd.api.app.api.device.DeviceNotFoundException;
 import com.anst.sd.api.app.api.security.RoleNotFoundException;
 import com.anst.sd.api.app.api.task.TaskNotFoundException;
+import com.anst.sd.api.app.api.task.TaskValidationException;
 import com.anst.sd.api.app.api.user.RegisterUserException;
 import com.anst.sd.api.app.api.user.UserNotFoundException;
 import com.anst.sd.api.security.AuthException;
@@ -44,15 +45,23 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(AuthException.class)
-    public ResponseEntity<Object> handleAuthException(AuthException ex) {
+    public ResponseEntity<Object> handle(AuthException ex) {
         logger.warn(ex.getMessage(), ex);
         var errorInfo = createErrorInfo(ex);
         errorInfo.setType(ErrorInfoDto.ErrorType.AUTH);
         return new ResponseEntity<>(errorInfo, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(TaskValidationException.class)
+    public ResponseEntity<Object> handle(TaskValidationException ex) {
+        logger.warn(ex.getMessage(), ex);
+        var errorInfo = createErrorInfo(ex);
+        errorInfo.setType(ErrorInfoDto.ErrorType.CLIENT);
+        return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(RegisterUserException.class)
-    public ResponseEntity<Object> handleAuthException(RegisterUserException ex) {
+    public ResponseEntity<Object> handle(RegisterUserException ex) {
         logger.warn(ex.getMessage(), ex);
         var errorInfo = createErrorInfo(ex);
         errorInfo.setType(ErrorInfoDto.ErrorType.CLIENT);
@@ -60,7 +69,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex) {
+    public ResponseEntity<Object> handle(AccessDeniedException ex) {
         logger.warn(ex.getMessage(), ex);
         var errorInfo = createErrorInfo(ex);
         errorInfo.setType(ErrorInfoDto.ErrorType.AUTH);
@@ -68,7 +77,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Object> handleRuntimeException(RuntimeException ex) {
+    public ResponseEntity<Object> handle(RuntimeException ex) {
         logger.warn(ex.getMessage(), ex);
         var errorInfo = createErrorInfo(ex);
         errorInfo.setType(ErrorInfoDto.ErrorType.SERVER);
@@ -80,7 +89,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             RoleNotFoundException.class,
             TaskNotFoundException.class,
             UserNotFoundException.class})
-    public ResponseEntity<Object> handleRuntimeException(DeviceNotFoundException ex) {
+    public ResponseEntity<Object> handle(Exception ex) {
         logger.warn(ex.getMessage(), ex);
         var errorInfo = createErrorInfo(ex);
         errorInfo.setType(ErrorInfoDto.ErrorType.CLIENT);

@@ -1,11 +1,9 @@
 package com.anst.sd.api.domain.security;
 
+import com.anst.sd.api.domain.DomainObject;
 import com.anst.sd.api.security.ERole;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.Hibernate;
-
-import java.util.Objects;
 
 @Getter
 @Setter
@@ -14,25 +12,8 @@ import java.util.Objects;
 @AllArgsConstructor
 @Entity
 @Table(name = "role")
-public class Role {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
+public class Role extends DomainObject {
     @Enumerated(EnumType.STRING)
-    @Column(length = 20)
+    @Column
     private ERole name;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Role role = (Role) o;
-        return id != null && Objects.equals(id, role.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
 }
