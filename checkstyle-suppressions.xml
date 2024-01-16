@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE suppressions PUBLIC
+        "-//Puppy Crawl//DTD Suppressions 1.1//EN"
+        "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
+
+<suppressions>
+    <suppress files="[/\\]test[/\\].*" checks="Javadoc.*" />
+    <suppress files="[/\\]target[/\\].*" checks=".*" />
+    <suppress files="[/\\]target-eclipse[/\\].*" checks=".*" />
+    <suppress files=".*\.end2end\.log.*" checks="[a-zA-Z0-9]*"/>
+    <suppress files=".*\.gif" checks="[a-zA-Z0-9]*"/>
+    <suppress files=".*\.png" checks="[a-zA-Z0-9]*"/>
+    <suppress files=".*\.jpg" checks="[a-zA-Z0-9]*"/>
+    <suppress files=".*\.csv" checks="[a-zA-Z0-9]*"/>
+</suppressions>
