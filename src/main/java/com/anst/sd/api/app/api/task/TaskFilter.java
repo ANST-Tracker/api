@@ -14,4 +14,5 @@ public class TaskFilter {
     DateRangeFilter deadline;
     List<TaskStatus> status;
     Integer page;
+    Long projectId;
 }

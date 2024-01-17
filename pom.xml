@@ -25,6 +25,11 @@
     <dependencies>
         <!--UTILS-->
         <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>2.3.1</version>
+        </dependency>
+        <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>2.16.0</version>
@@ -64,6 +69,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
+
         <!--TEST-->
         <dependency>
             <groupId>org.springframework.security</groupId>
@@ -142,17 +148,6 @@
             <groupId>io.github.anst-tracker</groupId>
             <artifactId>security</artifactId>
             <version>0.3.1</version>
-        </dependency>
-
-        <!-- TODO: разобраться зачем нужны данные зависимости-->
-        <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.3.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-crypto</artifactId>
         </dependency>
     </dependencies>
 

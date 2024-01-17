@@ -54,6 +54,8 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     protected TaskJpaRepository taskJpaRepository;
     @Autowired
+    protected ProjectJpaRepository projectJpaRepository;
+    @Autowired
     protected UserJpaRepository userJpaRepository;
     @Autowired
     protected JdbcTemplate jdbcTemplate;

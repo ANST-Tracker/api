@@ -41,15 +41,16 @@ public class V1WriteTaskController {
                             description = "Task created successfully",
                             useReturnTypeSchema = true)
             })
-    @PostMapping
+    @PostMapping("/{projectId}")
     public ResponseEntity<TaskInfoDto> createTask(
             @Valid @RequestBody CreateTaskDto request,
+            @PathVariable Long projectId,
             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new TaskValidationException();
         }
         Task task = taskDomainMapper.mapToDomain(request);
-        Task result = createTaskInBound.create(jwtService.getJwtAuth().getUserId(), task);
+        Task result = createTaskInBound.create(jwtService.getJwtAuth().getUserId(), projectId, task);
         return ResponseEntity.ok(taskDtoMapper.mapToDto(result));
     }
 

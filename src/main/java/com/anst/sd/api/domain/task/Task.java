@@ -1,8 +1,7 @@
 package com.anst.sd.api.domain.task;
 
 import com.anst.sd.api.domain.DomainObject;
-import com.anst.sd.api.domain.user.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.anst.sd.api.domain.project.Project;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,8 +26,8 @@ public class Task extends DomainObject {
     @Enumerated(value = EnumType.STRING)
     private TaskStatus status;
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "project_id")
+    private Project project;
     @Column(nullable = false)
     private Instant created;
     @Column
@@ -42,10 +41,5 @@ public class Task extends DomainObject {
     @PreUpdate
     public void preUpdate() {
         updated = Instant.now();
-    }
-
-    @JsonIgnore
-    public User getUser() {
-        return user;
     }
 }

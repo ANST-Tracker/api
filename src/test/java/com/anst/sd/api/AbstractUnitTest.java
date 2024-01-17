@@ -1,5 +1,7 @@
 package com.anst.sd.api;
 
+import com.anst.sd.api.domain.project.Project;
+import com.anst.sd.api.domain.project.ProjectType;
 import com.anst.sd.api.domain.user.User;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -134,5 +136,14 @@ public abstract class AbstractUnitTest {
         user.setPassword("password");
         user.setUsername("username");
         return user;
+    }
+
+    protected Project createTestProject(User user) {
+        Project project = new Project();
+        project.setId(1L);
+        project.setUser(user);
+        project.setName("test");
+        project.setProjectType(ProjectType.BASE);
+        return project;
     }
 }

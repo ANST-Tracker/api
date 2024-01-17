@@ -1,6 +1,6 @@
 package com.anst.sd.api.adapter.persistence;
 
-import com.anst.sd.api.app.api.DeviceRepository;
+import com.anst.sd.api.app.api.device.DeviceRepository;
 import com.anst.sd.api.domain.security.Device;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

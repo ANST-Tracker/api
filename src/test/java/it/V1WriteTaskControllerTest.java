@@ -3,6 +3,8 @@ package it;
 import com.anst.sd.api.adapter.rest.task.dto.TaskInfoDto;
 import com.anst.sd.api.adapter.rest.task.write.dto.CreateTaskDto;
 import com.anst.sd.api.adapter.rest.task.write.dto.UpdateTaskDto;
+import com.anst.sd.api.domain.project.Project;
+import com.anst.sd.api.domain.project.ProjectType;
 import com.anst.sd.api.domain.task.Task;
 import com.anst.sd.api.domain.task.TaskStatus;
 import com.anst.sd.api.domain.user.User;
@@ -22,10 +24,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 class V1WriteTaskControllerTest extends AbstractIntegrationTest {
     private static final String API_URL = "/task";
     private User user;
+    private Project project;
 
     @BeforeEach
     void prepareData() {
         user = createTestUser();
+        project = createProject(user);
     }
 
     @Test
@@ -79,7 +83,7 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
 
     @Test
     void deleteTask_successfully() throws Exception {
-        Task task = createTask(user);
+        Task task = createTask(project);
 
         performAuthenticated(user, MockMvcRequestBuilders
                 .delete(API_URL + "/" + task.getId()))
@@ -92,7 +96,7 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
 
     @Test
     void deleteTask_failed_notFound() throws Exception {
-        createTask(user);
+        createTask(project);
 
         performAuthenticated(user, MockMvcRequestBuilders
                 .delete(API_URL + "/5433"))
@@ -103,7 +107,7 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
 
     @Test
     void updateTask_successfully() throws Exception {
-        Task task = createTask(user);
+        Task task = createTask(project);
         UpdateTaskDto request = readFromFile("/V1WriteTaskControllerTest/updateTaskDto.json", UpdateTaskDto.class);
 
         MvcResult result = performAuthenticated(user, MockMvcRequestBuilders
@@ -125,7 +129,7 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
 
     @Test
     void updateTask_failed_validationError() throws Exception {
-        Task task = createTask(user);
+        Task task = createTask(project);
         UpdateTaskDto request = readFromFile("/V1WriteTaskControllerTest/updateTaskDto.json", UpdateTaskDto.class);
         request.setData("");
 
@@ -151,12 +155,20 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
-    private Task createTask(User user) {
+    private Task createTask(Project project) {
         Task task = new Task();
         task.setData("testData");
         task.setStatus(TaskStatus.IN_PROGRESS);
         task.setDescription("testData");
-        task.setUser(user);
+        task.setProject(project);
         return taskJpaRepository.save(task);
+    }
+
+    private Project createProject(User user) {
+        Project project = new Project();
+        project.setName("test");
+        project.setProjectType(ProjectType.BASE);
+        project.setUser(user);
+        return projectJpaRepository.save(project);
     }
 }

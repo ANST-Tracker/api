@@ -19,12 +19,12 @@ public class GetTasksUseCase implements GetTasksInBound {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Task> get(Long userId, Integer page) {
+    public List<Task> get(Long userId, Long projectId, Integer page) {
         log.info("Get user tasks by userId {}", userId);
         if (page == null || page < 0) {
             page = 0;
         }
-        Page<Task> pageResponse = taskRepository.findTasksByUserId(userId, page);
+        Page<Task> pageResponse = taskRepository.findTasksByUserIdAndProjectId(userId, projectId, page);
         return pageResponse.toList();
     }
 }

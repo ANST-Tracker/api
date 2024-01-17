@@ -5,8 +5,8 @@ create table public.task
     status      text        not null,
     data        varchar     not null,
     deadline    timestamptz,
-    user_id     bigint      not null
-        constraint fk_task_user_id references public.users,
+    project_id     bigint      not null
+        constraint fk_task_project_id references public.users,
 
     created     timestamptz not null,
     updated     timestamptz
