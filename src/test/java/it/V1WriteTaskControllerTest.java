@@ -4,7 +4,6 @@ import com.anst.sd.api.adapter.rest.task.dto.TaskInfoDto;
 import com.anst.sd.api.adapter.rest.task.write.dto.CreateTaskDto;
 import com.anst.sd.api.adapter.rest.task.write.dto.UpdateTaskDto;
 import com.anst.sd.api.domain.project.Project;
-import com.anst.sd.api.domain.project.ProjectType;
 import com.anst.sd.api.domain.task.Task;
 import com.anst.sd.api.domain.task.TaskStatus;
 import com.anst.sd.api.domain.user.User;
@@ -51,7 +50,7 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
         CreateTaskDto request = readFromFile("/V1WriteTaskControllerTest/createTaskDto.json", CreateTaskDto.class);
 
         MvcResult result = performAuthenticated(user, MockMvcRequestBuilders
-                .post(API_URL)
+                .post(API_URL + "/" + project.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
@@ -73,7 +72,7 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
         request.setData("");
 
         performAuthenticated(user, MockMvcRequestBuilders
-                .post(API_URL)
+                .post(API_URL + "/" + project.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
@@ -162,13 +161,5 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
         task.setDescription("testData");
         task.setProject(project);
         return taskJpaRepository.save(task);
-    }
-
-    private Project createProject(User user) {
-        Project project = new Project();
-        project.setName("test");
-        project.setProjectType(ProjectType.BASE);
-        project.setUser(user);
-        return projectJpaRepository.save(project);
     }
 }

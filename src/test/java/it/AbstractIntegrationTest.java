@@ -2,6 +2,8 @@ package it;
 
 import com.anst.sd.api.AnstApiTodoApplication;
 import com.anst.sd.api.adapter.persistence.*;
+import com.anst.sd.api.domain.project.Project;
+import com.anst.sd.api.domain.project.ProjectType;
 import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.security.ERole;
 import com.anst.sd.api.security.JwtResponse;
@@ -63,6 +65,7 @@ public abstract class AbstractIntegrationTest {
     @BeforeEach
     void clearDataBase() {
         taskJpaRepository.deleteAll();
+        projectJpaRepository.deleteAll();
         refreshTokenJpaRepository.deleteAll();
         deviceJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
@@ -78,6 +81,14 @@ public abstract class AbstractIntegrationTest {
         user.setLastName("lastName");
         user.setRoles(Set.of(roleJpaRepository.findByName(ERole.USER).get()));
         return userJpaRepository.save(user);
+    }
+
+    protected Project createProject(User user) {
+        Project project = new Project();
+        project.setName("test");
+        project.setProjectType(ProjectType.BASE);
+        project.setUser(user);
+        return projectJpaRepository.save(project);
     }
 
     // ===================================================================================================================

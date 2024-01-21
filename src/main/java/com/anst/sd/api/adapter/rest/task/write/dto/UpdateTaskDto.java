@@ -22,4 +22,5 @@ public class UpdateTaskDto {
     String description;
     @NotNull
     TaskStatus status;
+    Long updatedProjectId;
 }

@@ -4,7 +4,6 @@ import com.anst.sd.api.adapter.rest.task.dto.TaskInfoDto;
 import com.anst.sd.api.adapter.rest.task.read.dto.TaskFilterRequestDto;
 import com.anst.sd.api.app.api.DateRangeFilter;
 import com.anst.sd.api.domain.project.Project;
-import com.anst.sd.api.domain.project.ProjectType;
 import com.anst.sd.api.domain.task.Task;
 import com.anst.sd.api.domain.task.TaskStatus;
 import com.anst.sd.api.domain.user.User;
@@ -44,7 +43,7 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
         TaskFilterRequestDto requestDto = new TaskFilterRequestDto();
         requestDto.setDeadline(dateRangeFilter);
         requestDto.setStatus(List.of(TaskStatus.BACKLOG));
-        requestDto.setProjectId(project.getId());
+        requestDto.setProjectIds(List.of(project.getId()));
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
             .post(API_URL + "/find-by-filter")
@@ -89,7 +88,7 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
             .get(API_URL + "/list")
             .param("page", "2")
-            .param("projectId", "1"))
+            .param("projectId", project.getId().toString()))
             .andDo(print())
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andReturn();
@@ -165,13 +164,5 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
             tasks.add(task);
         }
         return taskJpaRepository.saveAll(tasks);
-    }
-
-    private Project createProject(User user) {
-        Project project = new Project();
-        project.setName("test");
-        project.setProjectType(ProjectType.BASE);
-        project.setUser(user);
-        return projectJpaRepository.save(project);
     }
 }

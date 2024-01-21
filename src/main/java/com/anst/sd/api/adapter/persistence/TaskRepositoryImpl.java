@@ -88,9 +88,9 @@ public class TaskRepositoryImpl implements TaskRepository {
         TaskFilter filter,
         List<Predicate> predicates,
         TaskJoinPredicates taskJoinPredicates) {
-        if (filter.getProjectId() != null) {
-            predicates.add(criteriaBuilder.equal(taskJoinPredicates.getProjectJoin().get(Project_.id),
-                filter.getProjectId()));
+        if (!CollectionUtils.isEmpty(filter.getProjectIds())) {
+            filter.getProjectIds().forEach(projectId -> predicates.add(criteriaBuilder.or(
+                criteriaBuilder.equal(taskJoinPredicates.getProjectJoin().get(Project_.id), projectId))));
         }
     }
 

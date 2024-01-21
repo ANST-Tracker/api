@@ -42,4 +42,7 @@ public class Task extends DomainObject {
     public void preUpdate() {
         updated = Instant.now();
     }
+
+    @Transient
+    Long updatedProjectId;
 }

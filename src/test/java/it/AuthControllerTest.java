@@ -4,6 +4,8 @@ import com.anst.sd.api.adapter.rest.security.dto.JwtResponseDto;
 import com.anst.sd.api.adapter.rest.security.dto.LoginRequestDto;
 import com.anst.sd.api.adapter.rest.security.dto.RefreshRequestDto;
 import com.anst.sd.api.adapter.rest.security.dto.SignupRequestDto;
+import com.anst.sd.api.domain.project.Project;
+import com.anst.sd.api.domain.project.ProjectType;
 import com.anst.sd.api.domain.user.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -11,6 +13,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -46,6 +49,9 @@ class AuthControllerTest extends AbstractIntegrationTest {
         assertEquals(dto.getLastName(), registeredUser.getLastName());
         assertEquals(dto.getFirstName(), registeredUser.getFirstName());
         assertEquals(dto.getUsername(), registeredUser.getUsername());
+        List<Project> projectList = projectJpaRepository.findAll();
+        assertEquals(1, projectList.size());
+        assertEquals(ProjectType.BUCKET, projectList.get(0).getProjectType());
     }
 
     @Test

@@ -1,10 +1,13 @@
 package com.anst.sd.api.app.impl.user;
 
+import com.anst.sd.api.app.api.project.ProjectRepository;
 import com.anst.sd.api.app.api.security.RoleNotFoundException;
 import com.anst.sd.api.app.api.security.RoleRepository;
 import com.anst.sd.api.app.api.user.RegisterUserException;
 import com.anst.sd.api.app.api.user.RegisterUserInBound;
 import com.anst.sd.api.app.api.user.UserRepository;
+import com.anst.sd.api.domain.project.Project;
+import com.anst.sd.api.domain.project.ProjectType;
 import com.anst.sd.api.domain.security.Role;
 import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.security.ERole;
@@ -27,6 +30,7 @@ public class RegisterUserUseCase implements RegisterUserInBound {
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
     private final RoleRepository roleRepository;
+    private final ProjectRepository projectRepository;
 
     @Override
     @Transactional
@@ -34,13 +38,26 @@ public class RegisterUserUseCase implements RegisterUserInBound {
         log.info("User registration processing for username {}", user.getUsername());
         validateUser(user);
         user.setPassword(encoder.encode(user.getPassword()));
+        addUserRole(user);
+        user = userRepository.save(user);
+        createUserBucketProject(user);
+        return user;
+    }
 
+    private void createUserBucketProject(User user) {
+        Project project = new Project();
+        project.setName("Bucket");
+        project.setProjectType(ProjectType.BUCKET);
+        project.setUser(user);
+        projectRepository.save(project);
+    }
+
+    private void addUserRole(User user) {
         Set<Role> roles = new HashSet<>();
         Role userRole = roleRepository.findByName(ERole.USER)
-                .orElseThrow(() -> new RoleNotFoundException(ERole.USER.name()));
+            .orElseThrow(() -> new RoleNotFoundException(ERole.USER.name()));
         roles.add(userRole);
         user.setRoles(roles);
-        return userRepository.save(user);
     }
 
     private void validateUser(User user) {
