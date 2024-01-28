@@ -55,7 +55,9 @@ public class V1ReadTaskController {
                             useReturnTypeSchema = true)
             })
     @GetMapping("/list")
-    public ResponseEntity<List<TaskInfoDto>> getTasks(@RequestParam Integer page, @RequestParam Long projectId) {
+    public ResponseEntity<List<TaskInfoDto>> getTasks(
+        @RequestParam(required = false) Integer page,
+        @RequestParam Long projectId) {
         List<Task> tasks = getTasksInBound.get(jwtService.getJwtAuth().getUserId(), projectId, page);
         return ResponseEntity.ok(taskDtoMapper.mapToDto(tasks));
     }

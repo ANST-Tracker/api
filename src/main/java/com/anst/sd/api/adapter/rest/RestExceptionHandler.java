@@ -2,6 +2,8 @@ package com.anst.sd.api.adapter.rest;
 
 import com.anst.sd.api.adapter.rest.dto.ErrorInfoDto;
 import com.anst.sd.api.app.api.device.DeviceNotFoundException;
+import com.anst.sd.api.app.api.project.ProjectNotFoundException;
+import com.anst.sd.api.app.api.project.ProjectValidationException;
 import com.anst.sd.api.app.api.security.RoleNotFoundException;
 import com.anst.sd.api.app.api.task.TaskNotFoundException;
 import com.anst.sd.api.app.api.task.TaskValidationException;
@@ -52,8 +54,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorInfo, HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler(TaskValidationException.class)
-    public ResponseEntity<Object> handle(TaskValidationException ex) {
+    @ExceptionHandler({TaskValidationException.class, ProjectValidationException.class})
+    public ResponseEntity<Object> handleValidation(Exception ex) {
         logger.warn(ex.getMessage(), ex);
         var errorInfo = createErrorInfo(ex);
         errorInfo.setType(ErrorInfoDto.ErrorType.CLIENT);
@@ -88,8 +90,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             DeviceNotFoundException.class,
             RoleNotFoundException.class,
             TaskNotFoundException.class,
-            UserNotFoundException.class})
-    public ResponseEntity<Object> handle(Exception ex) {
+            UserNotFoundException.class,
+            ProjectNotFoundException.class})
+    public ResponseEntity<Object> handleNotFound(Exception ex) {
         logger.warn(ex.getMessage(), ex);
         var errorInfo = createErrorInfo(ex);
         errorInfo.setType(ErrorInfoDto.ErrorType.CLIENT);

@@ -14,11 +14,6 @@ public class ProjectRepositoryImpl implements ProjectRepository {
     private final ProjectJpaRepository projectJpaRepository;
 
     @Override
-    public List<Project> saveAll(List<Project> projectList) {
-        return projectJpaRepository.saveAll(projectList);
-    }
-
-    @Override
     public Project save(Project project) {
         return projectJpaRepository.save(project);
     }
@@ -27,5 +22,15 @@ public class ProjectRepositoryImpl implements ProjectRepository {
     public Project getByIdAndUserId(Long id, Long userId) {
         return projectJpaRepository.findByIdAndUserId(id, userId)
             .orElseThrow(() -> new ProjectNotFoundException(id, userId));
+    }
+
+    @Override
+    public List<Project> findByUserId(Long userId) {
+        return projectJpaRepository.findAllByUserId(userId);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        projectJpaRepository.deleteById(id);
     }
 }

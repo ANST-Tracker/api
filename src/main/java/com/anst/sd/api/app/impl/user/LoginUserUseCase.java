@@ -38,7 +38,6 @@ public class LoginUserUseCase implements LoginUserInBound {
         User user = userRepository.getByUsername(username);
 
         if (user.getPassword() != null && !passwordEncoder.matches(password, user.getPassword())) {
-            log.warn("User with id {} has bad credentials", user.getId());
             throw new AuthException(INVALID_PASSWORD);
         }
 

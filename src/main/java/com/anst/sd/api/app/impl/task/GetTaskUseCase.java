@@ -17,7 +17,7 @@ public class GetTaskUseCase implements GetTaskInBound {
     @Override
     @Transactional(readOnly = true)
     public Task get(Long userId, Long id) {
-        log.info("Get task by userId {}", userId);
+        log.info("Getting task by id {} and userId {}", id, userId);
         return taskRepository.findByIdAndUser(id, userId);
     }
 }

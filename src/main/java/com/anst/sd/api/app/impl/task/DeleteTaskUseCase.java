@@ -17,7 +17,7 @@ public class DeleteTaskUseCase implements DeleteTaskInBound {
     @Override
     @Transactional
     public Task delete(Long userId, Long id) {
-        log.info("Delete task with userId {}", userId);
+        log.info("Deleting task with id {} and userId {}", id, userId);
         Task task = taskRepository.findByIdAndUser(id, userId);
         taskRepository.deleteById(id);
         return task;

@@ -70,6 +70,10 @@ public abstract class AbstractIntegrationTest {
         deviceJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
         jdbcTemplate.execute("ALTER SEQUENCE task_id_seq RESTART WITH 1");
+        jdbcTemplate.execute("ALTER SEQUENCE project_id_seq RESTART WITH 1");
+        jdbcTemplate.execute("ALTER SEQUENCE users_id_seq RESTART WITH 1");
+        jdbcTemplate.execute("ALTER SEQUENCE device_id_seq RESTART WITH 1");
+        jdbcTemplate.execute("ALTER SEQUENCE refresh_token_id_seq RESTART WITH 1");
     }
 
     protected User createTestUser() {

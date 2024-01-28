@@ -26,7 +26,7 @@ public class RefreshTokenUseCase implements RefreshTokenInBound {
     @Override
     @Transactional
     public JwtResponse refresh(String refreshToken) {
-        log.info("Refreshing token started");
+        log.info("Refreshing token {}", refreshToken);
         if (!jwtService.validateRefreshToken(refreshToken)) {
             throw new AuthException(AuthErrorMessages.INVALID_REFRESH_TOKEN);
         }

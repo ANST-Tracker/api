@@ -3,8 +3,8 @@ package com.anst.sd.api.adapter.rest.security.dto;
 import com.anst.sd.api.AbstractUnitTest;
 import com.anst.sd.api.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
-import org.mapstruct.factory.Mappers;
 import org.junit.jupiter.api.Test;
+import org.mapstruct.factory.Mappers;
 class SignUpRequestDomainMapperTest extends AbstractUnitTest {
     private SignupRequestDomainMapper mapper;
 

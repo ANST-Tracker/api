@@ -20,7 +20,7 @@ public class GetTasksUseCase implements GetTasksInBound {
     @Override
     @Transactional(readOnly = true)
     public List<Task> get(Long userId, Long projectId, Integer page) {
-        log.info("Get user tasks by userId {}", userId);
+        log.info("Getting tasks by userId {} and projectId {}, page {}", userId, projectId, page);
         if (page == null || page < 0) {
             page = 0;
         }

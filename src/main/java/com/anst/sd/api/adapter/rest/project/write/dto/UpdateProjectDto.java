@@ -1,4 +1,4 @@
-package com.anst.sd.api.adapter.rest.security.dto;
+package com.anst.sd.api.adapter.rest.project.write.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
@@ -11,9 +11,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RefreshResponseDto {
+public class UpdateProjectDto {
     @NotBlank
-    String accessToken;
-    @NotBlank
-    String refreshToken;
+    String name;
 }

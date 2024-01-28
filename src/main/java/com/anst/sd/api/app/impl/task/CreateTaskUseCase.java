@@ -21,7 +21,7 @@ public class CreateTaskUseCase implements CreateTaskInBound {
     @Override
     @Transactional
     public Task create(Long userId, Long projectId, Task task) {
-        log.info("Create task by user with userId {}", userId);
+        log.info("Creating task with userId {} in project {}", userId, projectId);
         Project project = projectRepository.getByIdAndUserId(projectId, userId);
         task.setProject(project);
         task.setStatus(TaskStatus.BACKLOG);

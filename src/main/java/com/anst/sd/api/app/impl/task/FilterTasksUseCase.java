@@ -20,7 +20,7 @@ public class FilterTasksUseCase implements FilterTasksInBound {
     @Override
     @Transactional(readOnly = true)
     public List<Task> filter(Long userId, TaskFilter filter) {
-        log.info("Task filter has been started by userId {}", userId);
+        log.info("Filtering task for user {} with filter {}", userId, filter);
         if (filter.getPage() == null || filter.getPage() < 0) {
             filter.setPage(0);
         }

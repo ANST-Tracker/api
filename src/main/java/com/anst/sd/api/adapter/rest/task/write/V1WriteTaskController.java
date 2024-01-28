@@ -1,5 +1,6 @@
 package com.anst.sd.api.adapter.rest.task.write;
 
+import com.anst.sd.api.adapter.rest.dto.IdResponseDto;
 import com.anst.sd.api.adapter.rest.task.dto.TaskDomainMapper;
 import com.anst.sd.api.adapter.rest.task.dto.TaskDtoMapper;
 import com.anst.sd.api.adapter.rest.task.dto.TaskInfoDto;
@@ -63,7 +64,7 @@ public class V1WriteTaskController {
                             useReturnTypeSchema = true)
             })
     @PutMapping("/{id}")
-    public ResponseEntity<TaskInfoDto> updateTask(
+    public ResponseEntity<IdResponseDto> updateTask(
             @PathVariable Long id,
             @Valid @RequestBody UpdateTaskDto request,
             BindingResult bindingResult) {
@@ -72,7 +73,7 @@ public class V1WriteTaskController {
         }
         Task task = taskDomainMapper.mapToDomain(request);
         Task result = updateTaskInBound.update(jwtService.getJwtAuth().getUserId(), id, task);
-        return ResponseEntity.ok(taskDtoMapper.mapToDto(result));
+        return ResponseEntity.ok(new IdResponseDto(result.getId()));
     }
 
     @Operation(
@@ -84,8 +85,8 @@ public class V1WriteTaskController {
                             useReturnTypeSchema = true)
             })
     @DeleteMapping("/{id}")
-    public ResponseEntity<TaskInfoDto> deleteTask(@Parameter(description = "Task ID") @PathVariable Long id) {
+    public ResponseEntity<IdResponseDto> deleteTask(@Parameter(description = "Task ID") @PathVariable Long id) {
         Task task = deleteTaskInBound.delete(jwtService.getJwtAuth().getUserId(), id);
-        return ResponseEntity.ok(taskDtoMapper.mapToDto(task));
+        return ResponseEntity.ok(new IdResponseDto(task.getId()));
     }
 }

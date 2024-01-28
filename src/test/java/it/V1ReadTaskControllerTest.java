@@ -100,6 +100,23 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
     }
 
     @Test
+    void getTaskList_successfully_nullPage() throws Exception {
+        createTasks(project, 5);
+
+        MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
+            .get(API_URL + "/list")
+            .param("projectId", project.getId().toString()))
+            .andDo(print())
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andReturn();
+
+        List<TaskInfoDto> responseDto = getListFromResponse(response, TaskInfoDto.class);
+        assertEquals(5, responseDto.size());
+        assertThat(List.of(1L, 2L, 3L, 4L, 5L),
+            containsInAnyOrder(responseDto.stream().map(TaskInfoDto::getId).toArray()));
+    }
+
+    @Test
     void getTaskList_successfully_emptyPage() throws Exception {
         createTasks(project, 20);
 

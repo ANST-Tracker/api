@@ -179,22 +179,6 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>properties-maven-plugin</artifactId>
-                <version>1.0.0</version>
-                <executions>
-                    <execution>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>write-project-properties</goal>
-                        </goals>
-                        <configuration>
-                            <outputFile>${project.build.outputDirectory}/properties-pom.yaml</outputFile>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
@@ -233,6 +217,8 @@
                     <excludes>
                         <exclude>**/dto/**</exclude>
                         <exclude>**/domain/**</exclude>
+                        <exclude>**/persistence/**</exclude>
+                        <exclude>**/app/api/**</exclude>
                     </excludes>
                 </configuration>
                 <executions>

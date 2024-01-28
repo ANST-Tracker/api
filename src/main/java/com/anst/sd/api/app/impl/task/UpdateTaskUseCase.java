@@ -20,7 +20,7 @@ public class UpdateTaskUseCase implements UpdateTaskInBound {
     @Override
     @Transactional
     public Task update(Long userId, Long taskId, Task updated) {
-        log.info("Update task by userId {}", userId);
+        log.info("Updating task with id {} and userId {}", taskId, userId);
         Task task = taskRepository.findByIdAndUser(taskId, userId);
         mergeTask(task, updated, userId);
         return taskRepository.save(task);

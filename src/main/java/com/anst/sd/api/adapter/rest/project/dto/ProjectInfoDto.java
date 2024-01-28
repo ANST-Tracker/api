@@ -1,25 +1,21 @@
-package com.anst.sd.api.adapter.rest.task.dto;
+package com.anst.sd.api.adapter.rest.project.dto;
 
-import com.anst.sd.api.domain.task.TaskStatus;
+import com.anst.sd.api.domain.project.ProjectType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDateTime;
 
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor
-public class TaskInfoDto {
+public class ProjectInfoDto {
     @NotNull
     Long id;
     @NotBlank
-    String data;
-    LocalDateTime deadline;
+    String name;
     @NotNull
-    TaskStatus status;
-    String description;
+    ProjectType type;
 }
