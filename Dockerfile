@@ -9,6 +9,6 @@ RUN mvn clean package
 
 FROM openjdk:17-jdk-slim
 
-COPY --from=builder app/target/*.jar /app/my-app.jar
+COPY --from=builder /app/target/*.jar /app/my-app.jar
 
 ENTRYPOINT ["java", "-jar", "/app/my-app.jar"]
