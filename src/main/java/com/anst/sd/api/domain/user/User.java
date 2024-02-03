@@ -1,16 +1,15 @@
 package com.anst.sd.api.domain.user;
 
 import com.anst.sd.api.domain.DomainObject;
+import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.security.Device;
 import com.anst.sd.api.domain.security.RefreshToken;
 import com.anst.sd.api.domain.security.Role;
-import com.anst.sd.api.domain.task.Task;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -40,15 +39,14 @@ public class User extends DomainObject {
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private List<Task> tasks = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
+    private List<Project> projects;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
-    private List<RefreshToken> tokens = new ArrayList<>();
+    private List<RefreshToken> tokens;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
-    private List<Device> devices = new ArrayList<>();
+    private List<Device> devices;
     @Column(nullable = false)
     private Instant created;
     @Column

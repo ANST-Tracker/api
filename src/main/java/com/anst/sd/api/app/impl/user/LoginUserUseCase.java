@@ -1,6 +1,6 @@
 package com.anst.sd.api.app.impl.user;
 
-import com.anst.sd.api.app.api.DeviceRepository;
+import com.anst.sd.api.app.api.device.DeviceRepository;
 import com.anst.sd.api.app.api.security.RefreshTokenRepository;
 import com.anst.sd.api.app.api.user.LoginUserInBound;
 import com.anst.sd.api.app.api.user.UserRepository;
@@ -38,7 +38,6 @@ public class LoginUserUseCase implements LoginUserInBound {
         User user = userRepository.getByUsername(username);
 
         if (user.getPassword() != null && !passwordEncoder.matches(password, user.getPassword())) {
-            log.warn("User with id {} has bad credentials", user.getId());
             throw new AuthException(INVALID_PASSWORD);
         }
 

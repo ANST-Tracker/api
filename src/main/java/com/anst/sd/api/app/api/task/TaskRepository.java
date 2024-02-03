@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface TaskRepository {
-    Page<Task> findTasksByUserId(Long userId, Integer page);
+    Page<Task> findTasksByUserIdAndProjectId(Long userId, Long projectId, Integer page);
 
     Task save(Task task);
 

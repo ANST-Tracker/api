@@ -18,4 +18,5 @@ public class TaskFilterRequestDto {
     DateRangeFilter deadline;
     List<TaskStatus> status;
     Integer page;
+    List<Long> projectIds;
 }

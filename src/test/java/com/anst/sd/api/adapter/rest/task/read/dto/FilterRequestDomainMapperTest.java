@@ -1,8 +1,6 @@
 package com.anst.sd.api.adapter.rest.task.read.dto;
 
 import com.anst.sd.api.AbstractUnitTest;
-import com.anst.sd.api.adapter.rest.task.read.dto.FilterRequestDomainMapper;
-import com.anst.sd.api.adapter.rest.task.read.dto.TaskFilterRequestDto;
 import com.anst.sd.api.app.api.task.TaskFilter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

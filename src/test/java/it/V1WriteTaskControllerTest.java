@@ -1,15 +1,14 @@
 package it;
 
-import com.anst.sd.api.adapter.rest.task.dto.TaskInfoDto;
 import com.anst.sd.api.adapter.rest.task.write.dto.CreateTaskDto;
 import com.anst.sd.api.adapter.rest.task.write.dto.UpdateTaskDto;
+import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.task.Task;
 import com.anst.sd.api.domain.task.TaskStatus;
 import com.anst.sd.api.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -22,10 +21,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 class V1WriteTaskControllerTest extends AbstractIntegrationTest {
     private static final String API_URL = "/task";
     private User user;
+    private Project project;
 
     @BeforeEach
     void prepareData() {
         user = createTestUser();
+        project = createProject(user);
     }
 
     @Test
@@ -46,20 +47,18 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
     void createTask_successfully() throws Exception {
         CreateTaskDto request = readFromFile("/V1WriteTaskControllerTest/createTaskDto.json", CreateTaskDto.class);
 
-        MvcResult result = performAuthenticated(user, MockMvcRequestBuilders
-                .post(API_URL)
+        performAuthenticated(user, MockMvcRequestBuilders
+                .post(API_URL + "/" + project.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
+                .andExpect(MockMvcResultMatchers.status().isOk());
 
-        TaskInfoDto dto = getFromResponse(result, TaskInfoDto.class);
-        assertEquals(request.getDescription(), dto.getDescription());
-        assertEquals(request.getData(), dto.getData());
-        assertEquals(request.getDeadline(), dto.getDeadline());
-        assertEquals(BACKLOG, dto.getStatus());
         Task task = taskJpaRepository.findAll().get(0);
+        assertEquals(request.getDescription(), task.getDescription());
+        assertEquals(request.getData(), task.getData());
+        assertEquals(request.getDeadline(), task.getDeadline());
+        assertEquals(BACKLOG, task.getStatus());
         assertNotNull(task.getCreated());
     }
 
@@ -69,7 +68,7 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
         request.setData("");
 
         performAuthenticated(user, MockMvcRequestBuilders
-                .post(API_URL)
+                .post(API_URL + "/" + project.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
@@ -79,7 +78,7 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
 
     @Test
     void deleteTask_successfully() throws Exception {
-        Task task = createTask(user);
+        Task task = createTask(project);
 
         performAuthenticated(user, MockMvcRequestBuilders
                 .delete(API_URL + "/" + task.getId()))
@@ -92,7 +91,7 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
 
     @Test
     void deleteTask_failed_notFound() throws Exception {
-        createTask(user);
+        createTask(project);
 
         performAuthenticated(user, MockMvcRequestBuilders
                 .delete(API_URL + "/5433"))
@@ -103,29 +102,50 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
 
     @Test
     void updateTask_successfully() throws Exception {
-        Task task = createTask(user);
+        Task task = createTask(project);
         UpdateTaskDto request = readFromFile("/V1WriteTaskControllerTest/updateTaskDto.json", UpdateTaskDto.class);
 
-        MvcResult result = performAuthenticated(user, MockMvcRequestBuilders
+        performAuthenticated(user, MockMvcRequestBuilders
                 .put(API_URL + "/" + task.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
+                .andExpect(MockMvcResultMatchers.status().isOk());
 
-        TaskInfoDto dto = getFromResponse(result, TaskInfoDto.class);
-        assertEquals(request.getDescription(), dto.getDescription());
-        assertEquals(request.getData(), dto.getData());
-        assertEquals(request.getDeadline(), dto.getDeadline());
-        assertEquals(IN_PROGRESS, dto.getStatus());
         task = taskJpaRepository.findAll().get(0);
+        assertEquals(request.getDescription(), task.getDescription());
+        assertEquals(request.getData(), task.getData());
+        assertEquals(request.getDeadline(), task.getDeadline());
+        assertEquals(IN_PROGRESS, task.getStatus());
+        assertNotNull(task.getUpdated());
+    }
+
+    @Test
+    void updateTask_moveToProject() throws Exception {
+        Task task = createTask(project);
+        Project anotherProject = createProject(user);
+        UpdateTaskDto request = readFromFile("/V1WriteTaskControllerTest/updateTaskDto.json", UpdateTaskDto.class);
+        request.setUpdatedProjectId(anotherProject.getId());
+
+        performAuthenticated(user, MockMvcRequestBuilders
+            .put(API_URL + "/" + task.getId())
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)))
+            .andDo(print())
+            .andExpect(MockMvcResultMatchers.status().isOk());
+
+        task = taskJpaRepository.findAll().get(0);
+        assertEquals(request.getDescription(), task.getDescription());
+        assertEquals(anotherProject.getId(), task.getProject().getId());
+        assertEquals(request.getData(), task.getData());
+        assertEquals(request.getDeadline(), task.getDeadline());
+        assertEquals(IN_PROGRESS, task.getStatus());
         assertNotNull(task.getUpdated());
     }
 
     @Test
     void updateTask_failed_validationError() throws Exception {
-        Task task = createTask(user);
+        Task task = createTask(project);
         UpdateTaskDto request = readFromFile("/V1WriteTaskControllerTest/updateTaskDto.json", UpdateTaskDto.class);
         request.setData("");
 
@@ -151,12 +171,12 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
-    private Task createTask(User user) {
+    private Task createTask(Project project) {
         Task task = new Task();
         task.setData("testData");
         task.setStatus(TaskStatus.IN_PROGRESS);
         task.setDescription("testData");
-        task.setUser(user);
+        task.setProject(project);
         return taskJpaRepository.save(task);
     }
 }

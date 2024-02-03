@@ -1,7 +1,7 @@
 package com.anst.sd.api.app.impl.security;
 
 import com.anst.sd.api.AbstractUnitTest;
-import com.anst.sd.api.app.api.DeviceRepository;
+import com.anst.sd.api.app.api.device.DeviceRepository;
 import com.anst.sd.api.app.api.security.RefreshTokenRepository;
 import com.anst.sd.api.app.api.user.UserRepository;
 import com.anst.sd.api.domain.security.Device;

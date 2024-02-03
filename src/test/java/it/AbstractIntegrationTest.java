@@ -2,6 +2,8 @@ package it;
 
 import com.anst.sd.api.AnstApiTodoApplication;
 import com.anst.sd.api.adapter.persistence.*;
+import com.anst.sd.api.domain.project.Project;
+import com.anst.sd.api.domain.project.ProjectType;
 import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.security.ERole;
 import com.anst.sd.api.security.JwtResponse;
@@ -54,6 +56,8 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     protected TaskJpaRepository taskJpaRepository;
     @Autowired
+    protected ProjectJpaRepository projectJpaRepository;
+    @Autowired
     protected UserJpaRepository userJpaRepository;
     @Autowired
     protected JdbcTemplate jdbcTemplate;
@@ -61,10 +65,15 @@ public abstract class AbstractIntegrationTest {
     @BeforeEach
     void clearDataBase() {
         taskJpaRepository.deleteAll();
+        projectJpaRepository.deleteAll();
         refreshTokenJpaRepository.deleteAll();
         deviceJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
         jdbcTemplate.execute("ALTER SEQUENCE task_id_seq RESTART WITH 1");
+        jdbcTemplate.execute("ALTER SEQUENCE project_id_seq RESTART WITH 1");
+        jdbcTemplate.execute("ALTER SEQUENCE users_id_seq RESTART WITH 1");
+        jdbcTemplate.execute("ALTER SEQUENCE device_id_seq RESTART WITH 1");
+        jdbcTemplate.execute("ALTER SEQUENCE refresh_token_id_seq RESTART WITH 1");
     }
 
     protected User createTestUser() {
@@ -76,6 +85,14 @@ public abstract class AbstractIntegrationTest {
         user.setLastName("lastName");
         user.setRoles(Set.of(roleJpaRepository.findByName(ERole.USER).get()));
         return userJpaRepository.save(user);
+    }
+
+    protected Project createProject(User user) {
+        Project project = new Project();
+        project.setName("test");
+        project.setProjectType(ProjectType.BASE);
+        project.setUser(user);
+        return projectJpaRepository.save(project);
     }
 
     // ===================================================================================================================

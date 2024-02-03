@@ -1,11 +1,11 @@
 package com.anst.sd.api.app.impl.task;
 
+import com.anst.sd.api.app.api.project.ProjectRepository;
 import com.anst.sd.api.app.api.task.CreateTaskInBound;
 import com.anst.sd.api.app.api.task.TaskRepository;
-import com.anst.sd.api.app.api.user.UserRepository;
+import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.task.Task;
 import com.anst.sd.api.domain.task.TaskStatus;
-import com.anst.sd.api.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,16 +16,15 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class CreateTaskUseCase implements CreateTaskInBound {
     private final TaskRepository taskRepository;
-    private final UserRepository userRepository;
+    private final ProjectRepository projectRepository;
 
     @Override
     @Transactional
-    public Task create(Long userId, Task task) {
-        log.info("Create task by user with userId {}", userId);
-        User user = userRepository.getById(userId);
-        task.setUser(user);
+    public Task create(Long userId, Long projectId, Task task) {
+        log.info("Creating task with userId {} in project {}", userId, projectId);
+        Project project = projectRepository.getByIdAndUserId(projectId, userId);
+        task.setProject(project);
         task.setStatus(TaskStatus.BACKLOG);
-        taskRepository.save(task);
-        return task;
+        return taskRepository.save(task);
     }
 }

@@ -1,4 +1,4 @@
-package com.anst.sd.api.app.api;
+package com.anst.sd.api.app.api.device;
 
 import com.anst.sd.api.domain.security.Device;
 

@@ -1,8 +1,9 @@
 package com.anst.sd.api.app.impl.task;
 
 import com.anst.sd.api.AbstractUnitTest;
+import com.anst.sd.api.app.api.project.ProjectRepository;
 import com.anst.sd.api.app.api.task.TaskRepository;
-import com.anst.sd.api.app.api.user.UserRepository;
+import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.task.Task;
 import com.anst.sd.api.domain.task.TaskStatus;
 import com.anst.sd.api.domain.user.User;
@@ -22,24 +23,26 @@ class CreateTaskUseCaseTest extends AbstractUnitTest {
     @Mock
     private TaskRepository taskRepository;
     @Mock
-    private UserRepository userRepository;
+    private ProjectRepository projectRepository;
 
     @BeforeEach
     void setUp() {
-        useCase = new CreateTaskUseCase(taskRepository, userRepository);
+        useCase = new CreateTaskUseCase(taskRepository, projectRepository);
         when(taskRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
     }
 
     @Test
     void create_successfully() {
         User user = createTestUser();
-        when(userRepository.getById(1L)).thenReturn(user);
+        Project project = createTestProject(user);
+        when(projectRepository.getByIdAndUserId(1L, 1L)).thenReturn(project);
         Task task = createTask();
 
-        Task result = useCase.create(1L, task);
+        Task result = useCase.create(1L, 1L, task);
 
         assertEquals(TaskStatus.BACKLOG, result.getStatus());
-        assertEquals(user.getId(), result.getUser().getId());
+        assertEquals(project.getId(), result.getProject().getId());
+        assertEquals(user.getId(), result.getProject().getUser().getId());
         assertEquals(DEADLINE, result.getDeadline());
         assertEquals("testData", result.getData());
         assertEquals("testDescription", result.getDescription());

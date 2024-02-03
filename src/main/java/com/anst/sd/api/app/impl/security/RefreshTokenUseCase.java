@@ -1,6 +1,6 @@
 package com.anst.sd.api.app.impl.security;
 
-import com.anst.sd.api.app.api.DeviceRepository;
+import com.anst.sd.api.app.api.device.DeviceRepository;
 import com.anst.sd.api.app.api.security.RefreshTokenInBound;
 import com.anst.sd.api.app.api.security.RefreshTokenRepository;
 import com.anst.sd.api.app.api.user.UserRepository;
@@ -26,7 +26,7 @@ public class RefreshTokenUseCase implements RefreshTokenInBound {
     @Override
     @Transactional
     public JwtResponse refresh(String refreshToken) {
-        log.info("Refreshing token started");
+        log.info("Refreshing token {}", refreshToken);
         if (!jwtService.validateRefreshToken(refreshToken)) {
             throw new AuthException(AuthErrorMessages.INVALID_REFRESH_TOKEN);
         }
