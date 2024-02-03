@@ -4,6 +4,9 @@ WORKDIR /app
 
 COPY src /app/src
 COPY pom.xml /app/pom.xml
+COPY checkstyle.xml /app/checkstyle.xml
+COPY checkstyle-suppressions.xml /app/checkstyle-suppressions.xml
+COPY lombok.config /app/lombok.config
 
 RUN mvn clean package
 
