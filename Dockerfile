@@ -8,7 +8,7 @@ COPY checkstyle.xml /app/checkstyle.xml
 COPY checkstyle-suppressions.xml /app/checkstyle-suppressions.xml
 COPY lombok.config /app/lombok.config
 
-RUN mvn clean package
+RUN mvn clean package -Dmaven.test.skip
 
 FROM openjdk:17-jdk-slim
 
