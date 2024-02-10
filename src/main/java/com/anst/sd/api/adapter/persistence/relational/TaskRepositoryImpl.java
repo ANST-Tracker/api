@@ -1,4 +1,4 @@
-package com.anst.sd.api.adapter.persistence;
+package com.anst.sd.api.adapter.persistence.relational;
 
 import com.anst.sd.api.app.api.DateRangeFilter;
 import com.anst.sd.api.app.api.task.TaskFilter;

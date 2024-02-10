@@ -1,7 +1,7 @@
 package it;
 
 import com.anst.sd.api.AnstApiTodoApplication;
-import com.anst.sd.api.adapter.persistence.*;
+import com.anst.sd.api.adapter.persistence.relational.*;
 import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.project.ProjectType;
 import com.anst.sd.api.domain.user.User;
