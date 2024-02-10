@@ -5,15 +5,18 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Setter
 @Builder(toBuilder = true)
-@Entity(name = "user_code")
-@Table(name = "user_codes")
-public class UserCode extends DomainObject {
+public class UserCode {
+    @Id
+    private String id;
     @Column(unique = true, nullable = false)
     private String userId;
     @Column(unique = true, nullable = false)
