@@ -1,9 +1,6 @@
 package com.anst.sd.api.domain.user;
 
-import com.anst.sd.api.domain.DomainObject;
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
