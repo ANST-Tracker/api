@@ -26,7 +26,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
     @Test
     void registerUser_failed_emptyFields() throws Exception {
         SignupRequestDto dto = readFromFile("/AuthControllerTest/registerUserDto.json", SignupRequestDto.class);
-        dto.setEmail(null);
+        dto.setTelegramId(null);
 
         mockMvc.perform(MockMvcRequestBuilders
                         .post(API_URL + "/signup")
@@ -45,7 +45,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
 
         assertEquals(1, userJpaRepository.findAll().size());
         User registeredUser = userJpaRepository.findAll().get(0);
-        assertEquals(dto.getEmail(), registeredUser.getEmail());
+        assertEquals(dto.getTelegramId(), registeredUser.getTelegramId());
         assertEquals(dto.getLastName(), registeredUser.getLastName());
         assertEquals(dto.getFirstName(), registeredUser.getFirstName());
         assertEquals(dto.getUsername(), registeredUser.getUsername());

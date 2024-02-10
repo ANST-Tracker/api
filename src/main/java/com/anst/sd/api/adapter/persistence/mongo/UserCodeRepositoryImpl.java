@@ -1,4 +1,4 @@
-package com.anst.sd.api.adapter.persistence;
+package com.anst.sd.api.adapter.persistence.mongo;
 
 import com.anst.sd.api.app.api.usercode.UserCodeRepository;
 import com.anst.sd.api.domain.user.UserCode;
