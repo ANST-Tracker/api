@@ -34,7 +34,7 @@ class UserControllerTest extends AbstractIntegrationTest {
         assertEquals(user.getLastName(), userInfoDto.getLastName());
         assertEquals(user.getUsername(), userInfoDto.getUsername());
         assertEquals(List.of(ERole.USER), userInfoDto.getRoles().stream().map(Role::getName).collect(Collectors.toList()));
-        assertEquals(user.getEmail(), userInfoDto.getEmail());
+        assertEquals(user.getTelegramId(), userInfoDto.getTelegramId());
     }
 
     @Test
@@ -64,7 +64,7 @@ class UserControllerTest extends AbstractIntegrationTest {
         assertEquals(user.getLastName(), userInfoDto.getLastName());
         assertEquals(user.getUsername(), userInfoDto.getUsername());
         assertEquals(Set.of(ERole.USER), user.getRoles().stream().map(Role::getName).collect(Collectors.toSet()));
-        assertEquals(user.getEmail(), userInfoDto.getEmail());
+        assertEquals(user.getTelegramId(), userInfoDto.getTelegramId());
         assertEquals(0, userJpaRepository.findAll().size());
     }
 

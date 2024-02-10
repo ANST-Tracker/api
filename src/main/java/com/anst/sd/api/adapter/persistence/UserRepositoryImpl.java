@@ -23,8 +23,8 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public boolean existsByEmail(String email) {
-        return userJpaRepository.existsByEmail(email);
+    public boolean existsByTelegramId(String telegramId) {
+        return userJpaRepository.existsByTelegramId(telegramId);
     }
 
     @Override

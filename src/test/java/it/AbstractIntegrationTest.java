@@ -78,7 +78,7 @@ public abstract class AbstractIntegrationTest {
 
     protected User createTestUser() {
         User user = new User();
-        user.setEmail("email");
+        user.setTelegramId("telegramId");
         user.setPassword("password");
         user.setUsername("username");
         user.setFirstName("firstName");

@@ -19,7 +19,7 @@ public class UserInfoDto {
     @NotNull
     String username;
     @NotNull
-    String email;
+    String telegramId;
     @NotNull
     @NotEmpty
     Set<Role> roles;

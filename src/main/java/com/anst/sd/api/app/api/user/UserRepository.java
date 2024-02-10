@@ -7,7 +7,7 @@ public interface UserRepository {
 
     User getById(Long id);
 
-    boolean existsByEmail(String email);
+    boolean existsByTelegramId(String telegramId);
 
     boolean existsByUsername(String username);
 

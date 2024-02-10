@@ -132,7 +132,7 @@ public abstract class AbstractUnitTest {
     protected User createTestUser() {
         User user = new User();
         user.setId(1L);
-        user.setEmail("email");
+        user.setTelegramId("telegramId");
         user.setPassword("password");
         user.setUsername("username");
         return user;
