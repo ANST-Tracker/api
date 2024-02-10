@@ -37,7 +37,7 @@ public class LoginUserUseCase implements LoginUserInBound {
         log.info("Logging user with username {}", username);
         User user = userRepository.getByUsername(username);
 
-        if (user.getPassword() != null && !passwordEncoder.matches(password, user.getPassword())) {
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new AuthException(INVALID_PASSWORD);
         }
 
