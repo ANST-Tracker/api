@@ -32,7 +32,7 @@ class RegisterUserUseCaseTest extends AbstractUnitTest {
     }
 
     @Test
-    void registerUser_failed() {
+    void registerUser_failed_userAlreadyExists() {
         when(userRepository.existsByEmail(any())).thenReturn(true);
         when(userRepository.existsByUsername(any())).thenReturn(true);
         User user = createTestUser();

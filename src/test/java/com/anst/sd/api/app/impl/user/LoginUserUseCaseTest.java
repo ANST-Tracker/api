@@ -38,7 +38,7 @@ class LoginUserUseCaseTest extends AbstractUnitTest {
     }
 
     @Test
-    void login() {
+    void loginUser_failed_wrongPassword() {
         User user = createTestUser();
         when(userRepository.getByUsername(any())).thenReturn(user);
         when(passwordEncoder.matches(any(), any())).thenReturn(false);
