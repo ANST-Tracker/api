@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/test")
 public class V1WriteUserCodeController {
     private final JwtService jwtService;
     private final GetUserInBound getUserInBound;
     private final SendUserCodeToTelegramInBound sendUserCodeToTelegramInBound;
 
-    @PostMapping("/send")
+    @PostMapping("/send-code")
     public ResponseEntity<UserCode> send() {
         User user = getUserInBound.get(jwtService.getJwtAuth().getUserId());
         sendUserCodeToTelegramInBound.create(String.valueOf(user.getId()), String.valueOf(user.getTelegramId()));

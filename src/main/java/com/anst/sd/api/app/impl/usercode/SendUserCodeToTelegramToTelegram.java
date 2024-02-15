@@ -3,6 +3,7 @@ package com.anst.sd.api.app.impl.usercode;
 import com.anst.sd.api.app.api.usercode.SendUserCodeToTelegramInBound;
 import com.anst.sd.api.app.api.usercode.UserCodeRepository;
 import com.anst.sd.api.domain.user.UserCode;
+import com.anst.sd.api.fw.kafka.KafkaProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @RequiredArgsConstructor
 public class SendUserCodeToTelegramToTelegram implements SendUserCodeToTelegramInBound {
+    private final KafkaProducer kafkaProducer;
     private final CodeGeneration codeGeneration;
     private final UserCodeRepository userCodeRepository;
 
@@ -24,12 +26,8 @@ public class SendUserCodeToTelegramToTelegram implements SendUserCodeToTelegramI
         userCode.setUserId(String.valueOf(userId));
         userCode.setTelegramId(String.valueOf(telegramId));
 
-        sendToKafka(userCode);
+        kafkaProducer.sendMessage(userCode);
 
         return userCodeRepository.save(userCode);
-    }
-
-    public void sendToKafka(UserCode userCode) {
-
     }
 }
