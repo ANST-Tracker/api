@@ -3,16 +3,16 @@ package com.anst.sd.api.app.impl.usercode;
 import com.anst.sd.api.app.api.usercode.SendUserCodeToTelegramInBound;
 import com.anst.sd.api.app.api.usercode.UserCodeRepository;
 import com.anst.sd.api.domain.user.UserCode;
-import com.anst.sd.api.fw.kafka.KafkaProducer;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
-public class SendUserCodeToTelegramToTelegram implements SendUserCodeToTelegramInBound {
-    private final KafkaProducer kafkaProducer;
-    private final CodeGeneration codeGeneration;
+@Log4j2
+public class SendUserCodeToTelegramDelegate implements SendUserCodeToTelegramInBound {
+    private final CodeGenerationDelegate codeGenerationDelegate;
     private final UserCodeRepository userCodeRepository;
 
     @Override
@@ -20,14 +20,13 @@ public class SendUserCodeToTelegramToTelegram implements SendUserCodeToTelegramI
     public UserCode create(String userId, String telegramId) {
         UserCode userCode = new UserCode();
 
-        String code = codeGeneration.generate();
+        String code = codeGenerationDelegate.generate();
 
         userCode.setCode(code);
         userCode.setUserId(String.valueOf(userId));
         userCode.setTelegramId(String.valueOf(telegramId));
 
-        kafkaProducer.sendMessage(userCode);
-
+        log.info("Entity has been sent to Kafka");
         return userCodeRepository.save(userCode);
     }
 }
