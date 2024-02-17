@@ -1,8 +1,8 @@
 package com.anst.sd.api.adapter.rest.usercode.write;
 
 import com.anst.sd.api.app.api.user.GetUserInBound;
-import com.anst.sd.api.app.api.usercode.SendMessageProducerInBound;
-import com.anst.sd.api.app.api.usercode.SendUserCodeToTelegramInBound;
+import com.anst.sd.api.app.api.usercode.SendUserCodeProducerOutBound;
+import com.anst.sd.api.app.api.usercode.SendUserCodeInBound;
 import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.domain.user.UserCode;
 import com.anst.sd.api.security.JwtService;
@@ -18,17 +18,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class V1WriteUserCodeController {
     private final JwtService jwtService;
     private final GetUserInBound getUserInBound;
-    private final SendUserCodeToTelegramInBound sendUserCodeToTelegramInBound;
-    private final SendMessageProducerInBound sendMessageProducerInBound;
+    private final SendUserCodeInBound sendUserCodeInBound;
+    private final SendUserCodeProducerOutBound sendUserCodeProducerOutBound;
 
     @PostMapping("/send-code")
     public ResponseEntity<UserCode> send() {
         User user = getUserInBound.get(jwtService.getJwtAuth().getUserId());
-        UserCode source = sendUserCodeToTelegramInBound.create(
+        UserCode source = sendUserCodeInBound.create(
                 String.valueOf(user.getId()),
                 String.valueOf(user.getTelegramId()));
 
-        sendMessageProducerInBound.sendMessage(source);
+        sendUserCodeProducerOutBound.sendMessage(source);
         return ResponseEntity.ok(null);
     }
 

@@ -1,6 +1,6 @@
 package com.anst.sd.api.app.impl.usercode;
 
-import com.anst.sd.api.app.api.usercode.SendUserCodeToTelegramInBound;
+import com.anst.sd.api.app.api.usercode.SendUserCodeInBound;
 import com.anst.sd.api.app.api.usercode.UserCodeRepository;
 import com.anst.sd.api.domain.user.UserCode;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @RequiredArgsConstructor
 @Log4j2
-public class SendUserCodeToTelegramDelegate implements SendUserCodeToTelegramInBound {
+public class SendUserCodeDelegate implements SendUserCodeInBound {
     private final CodeGenerationDelegate codeGenerationDelegate;
     private final UserCodeRepository userCodeRepository;
 

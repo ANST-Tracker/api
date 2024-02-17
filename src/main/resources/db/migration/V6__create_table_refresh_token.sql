@@ -5,5 +5,5 @@ create table public.refresh_token
     device_id bigint         not null,
     user_id   bigint         not null,
 
-    created     timestamptz not null
+    created   timestamptz    not null
 );

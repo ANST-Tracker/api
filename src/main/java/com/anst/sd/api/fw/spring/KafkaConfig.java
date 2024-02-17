@@ -18,9 +18,9 @@ import java.util.Map;
 @EnableKafka
 @Configuration
 public class KafkaConfig {
-    @Value("${spring.kafka.adress}")
+    @Value("${spring.kafka.path}")
     private String bootstrapServers;
-    @Value("${spring.kafka.consumerGroupId}")
+    @Value("${spring.kafka.consumer.telegramSendCodeGroupId}")
     private String consumerGroupId;
 
     @Bean

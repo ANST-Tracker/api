@@ -8,10 +8,10 @@ import java.security.SecureRandom;
 @Component
 @RequiredArgsConstructor
 public class CodeGenerationDelegate {
+
     public String generate() {
         SecureRandom random = new SecureRandom();
         int number = random.nextInt(90000) + 10000;
         return Integer.toString(number);
-
     }
 }

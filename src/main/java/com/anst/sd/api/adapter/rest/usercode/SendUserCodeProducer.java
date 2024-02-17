@@ -1,7 +1,7 @@
-package com.anst.sd.api.app.impl.usercode;
+package com.anst.sd.api.adapter.rest.usercode;
 
 import com.anst.sd.api.adapter.MessageConverter;
-import com.anst.sd.api.app.api.usercode.SendMessageProducerInBound;
+import com.anst.sd.api.app.api.usercode.SendUserCodeProducerOutBound;
 import com.anst.sd.api.domain.user.UserCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -12,10 +12,10 @@ import org.springframework.stereotype.Component;
 @Component
 @Log4j2
 @RequiredArgsConstructor
-public class SendMessageProducerDelegate implements SendMessageProducerInBound {
+public class SendUserCodeProducer implements SendUserCodeProducerOutBound {
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final MessageConverter<UserCode> messageConverter;
-    @Value("${spring.kafka.topicName}")
+    @Value("${spring.kafka.topics.telegramSendCode}")
     private String topicName;
 
     @Override
