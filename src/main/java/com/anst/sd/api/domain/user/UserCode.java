@@ -2,6 +2,7 @@ package com.anst.sd.api.domain.user;
 
 import jakarta.persistence.Column;
 import lombok.*;
+import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -11,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 @Setter
 @Builder(toBuilder = true)
+@Accessors(chain = true)
 public class UserCode {
     @Id
     private String id;

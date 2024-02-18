@@ -37,7 +37,7 @@ spring:
     mongodb:
       uri: ${MONGO_URL}
   kafka:
-    path: ${KAFKA_URL}
+    path:
 
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer

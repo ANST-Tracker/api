@@ -1,6 +1,6 @@
 package com.anst.sd.api.app.impl.usercode;
 
-import com.anst.sd.api.app.api.usercode.SendUserCodeInBound;
+import com.anst.sd.api.app.api.usercode.CreateUserCodeInBound;
 import com.anst.sd.api.app.api.usercode.UserCodeRepository;
 import com.anst.sd.api.domain.user.UserCode;
 import lombok.RequiredArgsConstructor;
@@ -11,22 +11,21 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @RequiredArgsConstructor
 @Log4j2
-public class SendUserCodeDelegate implements SendUserCodeInBound {
+public class CreateUserCodeDelegate implements CreateUserCodeInBound {
     private final CodeGenerationDelegate codeGenerationDelegate;
     private final UserCodeRepository userCodeRepository;
 
     @Override
     @Transactional
     public UserCode create(String userId, String telegramId) {
-        UserCode userCode = new UserCode();
-
+        log.info("Create user code processing started");
         String code = codeGenerationDelegate.generate();
 
-        userCode.setCode(code);
-        userCode.setUserId(String.valueOf(userId));
-        userCode.setTelegramId(String.valueOf(telegramId));
+        UserCode userCode = new UserCode()
+                .setCode(code)
+                .setUserId(userId)
+                .setTelegramId(telegramId);
 
-        log.info("Entity has been sent to Kafka");
         return userCodeRepository.save(userCode);
     }
 }
