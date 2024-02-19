@@ -19,13 +19,11 @@ public class CreateUserCodeDelegate implements CreateUserCodeInBound {
     @Transactional
     public UserCode create(String userId, String telegramId) {
         log.info("Create user code processing started");
-        String code = codeGenerationDelegate.generate();
 
         UserCode userCode = new UserCode()
-                .setCode(code)
+                .setCode(codeGenerationDelegate.generate())
                 .setUserId(userId)
                 .setTelegramId(telegramId);
-
         return userCodeRepository.save(userCode);
     }
 }
