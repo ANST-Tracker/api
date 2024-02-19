@@ -20,5 +20,4 @@ public class MessageConverter<T> {
             throw new RuntimeException(e.getMessage());
         }
     }
-
 }

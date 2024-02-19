@@ -56,6 +56,5 @@ public class JacksonConfig {
         public LocalDateTime deserialize(JsonParser p, DeserializationContext context) throws IOException {
             return LocalDateTime.parse(p.getValueAsString(), fmt);
         }
-
     }
 }

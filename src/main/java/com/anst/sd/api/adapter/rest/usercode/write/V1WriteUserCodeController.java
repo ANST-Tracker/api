@@ -31,5 +31,4 @@ public class V1WriteUserCodeController {
         createUserCodeOutBound.sendMessage(source);
         return ResponseEntity.ok(null);
     }
-
 }
