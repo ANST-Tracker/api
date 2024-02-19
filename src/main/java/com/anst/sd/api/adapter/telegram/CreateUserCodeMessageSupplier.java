@@ -15,13 +15,12 @@ import org.springframework.stereotype.Component;
 public class CreateUserCodeMessageSupplier implements CreateUserCodeOutBound {
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final MessageConverter<UserCode> messageConverter;
-    @Value("${spring.kafka.topics.telegramSendCode}")
-    private String topicName;
+    private static final String TOPIC = "TG_SEND_CODE_RQ";
 
     @Override
     public void sendMessage(UserCode clazz) {
         log.info("Object UserCode trying to send Kafka");
         String message = messageConverter.serialize(clazz);
-        kafkaTemplate.send(topicName, message);
+        kafkaTemplate.send(TOPIC, message);
     }
 }
