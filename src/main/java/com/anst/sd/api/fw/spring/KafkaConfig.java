@@ -18,7 +18,7 @@ import java.util.Map;
 @Configuration
 public class KafkaConfig {
     private static final String BOOTSTRAP_SERVERS = "localhost:9092";
-    private static final String СONSUMER_GROUP_ID = "tgConsumer";
+    private static final String TG_CONSUMER = "tgConsumer";
 
     @Bean
     public ProducerFactory<String, String> producerFactory() {
@@ -38,7 +38,7 @@ public class KafkaConfig {
     public ConsumerFactory<String, String> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, СONSUMER_GROUP_ID);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, TG_CONSUMER);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
