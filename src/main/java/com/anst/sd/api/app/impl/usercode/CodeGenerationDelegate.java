@@ -10,7 +10,6 @@ import java.security.SecureRandom;
 @RequiredArgsConstructor
 @Log4j2
 public class CodeGenerationDelegate {
-
     public String generate() {
         log.info("Generating a random five-digit code");
         SecureRandom random = new SecureRandom();

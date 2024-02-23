@@ -27,7 +27,6 @@ public class V1WriteUserCodeController {
         UserCode source = createUserCodeInBound.create(
                 String.valueOf(user.getId()),
                 String.valueOf(user.getTelegramId()));
-
         createUserCodeOutBound.sendMessage(source);
         return ResponseEntity.ok(null);
     }

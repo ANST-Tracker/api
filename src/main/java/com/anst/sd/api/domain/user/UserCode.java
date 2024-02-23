@@ -22,4 +22,13 @@ public class UserCode {
     private String telegramId;
     @Column(nullable = false)
     private String code;
+
+    @Override
+    public String toString() {
+        return "UserCode{" +
+                "userId='" + userId + '\'' +
+                ", telegramId='" + telegramId + '\'' +
+                ", code='" + code + '\'' +
+                '}';
+    }
 }
