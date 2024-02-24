@@ -33,13 +33,13 @@ class RegisterUserUseCaseTest extends AbstractUnitTest {
 
     @Test
     void registerUser_failed_userAlreadyExists() {
-        when(userRepository.existsByEmail(any())).thenReturn(true);
+        when(userRepository.existsByTelegramId(any())).thenReturn(true);
         when(userRepository.existsByUsername(any())).thenReturn(true);
         User user = createTestUser();
 
         assertThrows(RegisterUserException.class, () -> registerUserUseCase.register(user),
             """
-                    Email is already in use
+                    Telegram id is already in use
                     Username is already taken
                     """);
     }
