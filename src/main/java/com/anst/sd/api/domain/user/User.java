@@ -34,7 +34,7 @@ public class User extends DomainObject {
     private String password;
     @Column(unique = true, nullable = false)
     @NotBlank
-    private String email;
+    private String telegramId;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -52,9 +52,9 @@ public class User extends DomainObject {
     @Column
     private Instant updated;
 
-    public User(String username, String email, String password) {
+    public User(String username, String telegramId, String password) {
         this.username = username;
-        this.email = email;
+        this.telegramId = telegramId;
         this.password = password;
     }
 

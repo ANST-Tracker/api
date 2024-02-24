@@ -65,8 +65,8 @@ public class RegisterUserUseCase implements RegisterUserInBound {
         if (userRepository.existsByUsername(user.getUsername())) {
             errors.add("Username is already taken");
         }
-        if (userRepository.existsByEmail(user.getEmail())) {
-            errors.add("Email is already in use");
+        if (userRepository.existsByTelegramId(user.getTelegramId())) {
+            errors.add("Telegram account is already in use");
         }
         if (!errors.isEmpty()) {
             throw new RegisterUserException(StringUtils.join(errors, '\n'));

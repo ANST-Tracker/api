@@ -34,6 +34,23 @@ spring:
   data:
     redis:
       url: ${REDIS_URL}
+    mongodb:
+      uri: ${MONGO_URL}
+  kafka:
+    path:
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+    consumer:
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringSerializer
+      telegramSendCodeGroupId: ${TELEGRAM_SEND_GROUP_ID}
+
+    topics:
+      telegramSendCode: ${TELEGRAM_SEND_TOPIC_NAME}
 
 security:
   jwt:

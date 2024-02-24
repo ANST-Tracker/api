@@ -1,4 +1,4 @@
-package com.anst.sd.api.adapter.persistence;
+package com.anst.sd.api.adapter.persistence.relational;
 
 import com.anst.sd.api.app.api.user.UserNotFoundException;
 import com.anst.sd.api.app.api.user.UserRepository;
@@ -23,8 +23,8 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public boolean existsByEmail(String email) {
-        return userJpaRepository.existsByEmail(email);
+    public boolean existsByTelegramId(String telegramId) {
+        return userJpaRepository.existsByTelegramId(telegramId);
     }
 
     @Override

@@ -2,6 +2,6 @@
   "username": "userName",
   "firstName": "firstName",
   "lastName": "lastName",
-  "email": "email@gmail.com",
+  "telegramId": "telegramId",
   "password": "password"
 }
