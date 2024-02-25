@@ -6,11 +6,10 @@ import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+@Data
 @Document
-@Getter
-@NoArgsConstructor
 @AllArgsConstructor
-@Setter
+@NoArgsConstructor
 @Builder(toBuilder = true)
 @Accessors(chain = true)
 public class UserCode {
@@ -22,13 +21,4 @@ public class UserCode {
     private String telegramId;
     @Column(nullable = false)
     private String code;
-
-    @Override
-    public String toString() {
-        return "UserCode{" +
-                "userId='" + userId + '\'' +
-                ", telegramId='" + telegramId + '\'' +
-                ", code='" + code + '\'' +
-                '}';
-    }
 }
