@@ -37,7 +37,7 @@ spring:
     mongodb:
       uri: ${MONGO_URL}
   kafka:
-    path:
+    path: ${KAFKA_URL}
 
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -47,10 +47,6 @@ spring:
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringSerializer
-      telegramSendCodeGroupId: ${TELEGRAM_SEND_GROUP_ID}
-
-    topics:
-      telegramSendCode: ${TELEGRAM_SEND_TOPIC_NAME}
 
 security:
   jwt:
