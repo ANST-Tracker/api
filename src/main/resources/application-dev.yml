@@ -48,6 +48,8 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringSerializer
 
+    bootstrap-servers: ${KAFKA_URL}
+
 security:
   jwt:
     block-valid-access: true

@@ -48,6 +48,7 @@ spring:
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringSerializer
+    bootstrap-servers: localhost:9092
 
 security:
   jwt:
