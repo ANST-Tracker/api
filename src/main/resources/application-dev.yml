@@ -35,7 +35,7 @@ spring:
     redis:
       url: ${REDIS_URL}
     mongodb:
-      uri: ${MONGO_URL}
+      uri: ${MONGO_URL_USER}
   kafka:
     path: ${KAFKA_URL}
 
