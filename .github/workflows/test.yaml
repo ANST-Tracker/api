@@ -1,6 +1,9 @@
 name: run tests
 
 on:
+  workflow_dispatch:
+    branches:
+      - '*'
   pull_request:
     types:
       - opened
