@@ -4,12 +4,14 @@ import com.anst.sd.api.adapter.rest.dto.ErrorInfoDto;
 import com.anst.sd.api.app.api.device.DeviceNotFoundException;
 import com.anst.sd.api.app.api.project.ProjectNotFoundException;
 import com.anst.sd.api.app.api.project.ProjectValidationException;
+import com.anst.sd.api.app.api.security.CodeAlreadySentException;
 import com.anst.sd.api.app.api.security.RoleNotFoundException;
+import com.anst.sd.api.app.api.security.UserCodeNotFoundException;
 import com.anst.sd.api.app.api.task.TaskNotFoundException;
 import com.anst.sd.api.app.api.task.TaskValidationException;
 import com.anst.sd.api.app.api.user.RegisterUserException;
 import com.anst.sd.api.app.api.user.UserNotFoundException;
-import com.anst.sd.api.security.AuthException;
+import com.anst.sd.api.security.app.api.AuthException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -86,12 +88,21 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorInfo, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(CodeAlreadySentException.class)
+    public ResponseEntity<Object> handle(CodeAlreadySentException ex) {
+        logger.warn(ex.getMessage(), ex);
+        var errorInfo = createErrorInfo(ex);
+        errorInfo.setType(ErrorInfoDto.ErrorType.CLIENT);
+        return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler({
             DeviceNotFoundException.class,
             RoleNotFoundException.class,
             TaskNotFoundException.class,
             UserNotFoundException.class,
-            ProjectNotFoundException.class})
+            ProjectNotFoundException.class,
+            UserCodeNotFoundException.class})
     public ResponseEntity<Object> handleNotFound(Exception ex) {
         logger.warn(ex.getMessage(), ex);
         var errorInfo = createErrorInfo(ex);

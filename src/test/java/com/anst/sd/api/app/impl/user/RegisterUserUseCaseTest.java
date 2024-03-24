@@ -6,6 +6,8 @@ import com.anst.sd.api.app.api.security.RoleRepository;
 import com.anst.sd.api.app.api.user.RegisterUserException;
 import com.anst.sd.api.app.api.user.UserRepository;
 import com.anst.sd.api.domain.user.User;
+import com.anst.sd.api.security.app.impl.JwtService;
+import com.anst.sd.api.security.domain.JwtAuth;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -24,18 +26,23 @@ class RegisterUserUseCaseTest extends AbstractUnitTest {
     private RoleRepository roleRepository;
     @Mock
     private ProjectRepository projectRepository;
+    @Mock
+    private JwtService jwtService;
     private RegisterUserUseCase registerUserUseCase;
 
     @BeforeEach
     void setUp() {
-        registerUserUseCase = new RegisterUserUseCase(userRepository, passwordEncoder, roleRepository, projectRepository);
+        registerUserUseCase = new RegisterUserUseCase(userRepository, jwtService, passwordEncoder, roleRepository, projectRepository);
     }
 
     @Test
     void registerUser_failed_userAlreadyExists() {
+        String telegramJwt = "testTelegramJwt";
         when(userRepository.existsByTelegramId(any())).thenReturn(true);
         when(userRepository.existsByUsername(any())).thenReturn(true);
         User user = createTestUser();
+        user.setTelegramId(telegramJwt);
+        when(jwtService.getJwtAuth()).thenReturn(JwtAuth.builder().telegramId(telegramJwt).build());
 
         assertThrows(RegisterUserException.class, () -> registerUserUseCase.register(user),
             """

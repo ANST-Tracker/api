@@ -3,7 +3,7 @@ package it;
 import com.anst.sd.api.adapter.rest.user.dto.UserInfoDto;
 import com.anst.sd.api.domain.security.Role;
 import com.anst.sd.api.domain.user.User;
-import com.anst.sd.api.security.ERole;
+import com.anst.sd.api.security.domain.ERole;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;

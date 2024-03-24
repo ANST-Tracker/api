@@ -7,10 +7,10 @@ import com.anst.sd.api.app.api.user.UserRepository;
 import com.anst.sd.api.domain.security.Device;
 import com.anst.sd.api.domain.security.RefreshToken;
 import com.anst.sd.api.domain.user.User;
-import com.anst.sd.api.security.AuthException;
-import com.anst.sd.api.security.ERole;
-import com.anst.sd.api.security.JwtResponse;
-import com.anst.sd.api.security.JwtService;
+import com.anst.sd.api.security.app.api.AuthException;
+import com.anst.sd.api.security.app.api.JwtResponse;
+import com.anst.sd.api.security.app.impl.JwtService;
+import com.anst.sd.api.security.domain.ERole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-import static com.anst.sd.api.security.AuthErrorMessages.INVALID_PASSWORD;
+import static com.anst.sd.api.security.app.api.AuthErrorMessages.INVALID_PASSWORD;
 
 @Slf4j
 @Service
@@ -39,6 +39,11 @@ public class LoginUserUseCase implements LoginUserInBound {
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new AuthException(INVALID_PASSWORD);
+        }
+
+        String tokenTgId = jwtService.getJwtAuth().getTelegramId();
+        if (!user.getTelegramId().equals(tokenTgId)) {
+            throw new AuthException("Trying to login user with tgId %s with token for tgId %s".formatted(user.getTelegramId(), tokenTgId));
         }
 
         var curDevice = deviceRepository.findByDeviceToken(deviceToken)

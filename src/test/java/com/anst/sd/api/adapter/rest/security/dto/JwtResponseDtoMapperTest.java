@@ -1,7 +1,7 @@
 package com.anst.sd.api.adapter.rest.security.dto;
 
 import com.anst.sd.api.AbstractUnitTest;
-import com.anst.sd.api.security.JwtResponse;
+import com.anst.sd.api.security.app.api.JwtResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;

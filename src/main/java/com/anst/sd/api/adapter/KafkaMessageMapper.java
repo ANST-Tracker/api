@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Log4j2
-public class MessageConverter<T> {
+public class KafkaMessageMapper<T> {
     private final ObjectMapper objectMapper;
 
-    public String serialize(T clazz) {
+    public String mapToKafkaMessage(T clazz) {
         try {
             return objectMapper.writeValueAsString(clazz);
         } catch (JsonProcessingException e) {

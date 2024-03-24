@@ -9,7 +9,7 @@ import com.anst.sd.api.app.api.task.GetTaskInBound;
 import com.anst.sd.api.app.api.task.GetTasksInBound;
 import com.anst.sd.api.app.api.task.TaskFilter;
 import com.anst.sd.api.domain.task.Task;
-import com.anst.sd.api.security.JwtService;
+import com.anst.sd.api.security.app.impl.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

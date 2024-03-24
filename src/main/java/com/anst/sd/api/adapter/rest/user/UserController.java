@@ -5,13 +5,12 @@ import com.anst.sd.api.adapter.rest.user.dto.UserInfoDto;
 import com.anst.sd.api.app.api.user.DeleteUserInBound;
 import com.anst.sd.api.app.api.user.GetUserInBound;
 import com.anst.sd.api.domain.user.User;
-import com.anst.sd.api.security.AuthException;
-import com.anst.sd.api.security.JwtService;
+import com.anst.sd.api.security.app.api.AuthException;
+import com.anst.sd.api.security.app.impl.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,18 +28,14 @@ public class UserController {
     private final UserDtoMapper userDtoMapper;
 
     @Operation(summary = "Get current user information")
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "User information received successfully",
-                    content = @Content(schema = @Schema(implementation = UserInfoDto.class))
-            ),
-            @ApiResponse(
-                    responseCode = "409",
-                    description = "Username doesn't exists",
-                    content = @Content(schema = @Schema(implementation = AuthException.class))
-            )
-    })
+    @ApiResponse(
+            responseCode = "200",
+            description = "User information received successfully",
+            content = @Content(schema = @Schema(implementation = UserInfoDto.class)))
+    @ApiResponse(
+            responseCode = "409",
+            description = "Username doesn't exists",
+            content = @Content(schema = @Schema(implementation = AuthException.class)))
     @GetMapping("/current")
     public ResponseEntity<UserInfoDto> getUser() {
         User result = getUserInBound.get(jwtService.getJwtAuth().getUserId());

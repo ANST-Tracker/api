@@ -1,16 +1,14 @@
-package com.anst.sd.api.app.impl.usercode;
+package com.anst.sd.api.app.impl.security;
 
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
-import org.springframework.stereotype.Component;
+import lombok.extern.slf4j.Slf4j;
 
 import java.security.SecureRandom;
 
-@Component
-@RequiredArgsConstructor
-@Log4j2
+@Slf4j
 public class CodeGenerationDelegate {
-    public String generate() {
+    private CodeGenerationDelegate() { }
+
+    public static String generate() {
         log.info("Generating a random five-digit code");
         SecureRandom random = new SecureRandom();
         int number = random.nextInt(90000) + 10000;

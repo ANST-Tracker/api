@@ -1,6 +1,6 @@
 package com.anst.sd.api.fw.spring;
 
-import com.anst.sd.api.security.EnableAuthLibSecurity;
+import com.anst.sd.api.security.fw.EnableAuthLibSecurity;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration

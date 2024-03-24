@@ -1,13 +1,15 @@
 package it;
 
 import com.anst.sd.api.AnstApiTodoApplication;
+import com.anst.sd.api.adapter.persistence.mongo.UserCodeMongoRepository;
 import com.anst.sd.api.adapter.persistence.relational.*;
+import com.anst.sd.api.adapter.telegram.CreateUserCodeMessageSupplier;
 import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.project.ProjectType;
 import com.anst.sd.api.domain.user.User;
-import com.anst.sd.api.security.ERole;
-import com.anst.sd.api.security.JwtResponse;
-import com.anst.sd.api.security.JwtService;
+import com.anst.sd.api.security.app.api.JwtResponse;
+import com.anst.sd.api.security.app.impl.JwtService;
+import com.anst.sd.api.security.domain.ERole;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
@@ -18,6 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -56,14 +59,19 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     protected TaskJpaRepository taskJpaRepository;
     @Autowired
+    protected UserCodeMongoRepository userCodeMongoRepository;
+    @Autowired
     protected ProjectJpaRepository projectJpaRepository;
     @Autowired
     protected UserJpaRepository userJpaRepository;
     @Autowired
     protected JdbcTemplate jdbcTemplate;
+    @MockBean
+    protected CreateUserCodeMessageSupplier createUserCodeMessageSupplier;
 
     @BeforeEach
     void clearDataBase() {
+        userCodeMongoRepository.deleteAll();
         taskJpaRepository.deleteAll();
         projectJpaRepository.deleteAll();
         refreshTokenJpaRepository.deleteAll();
@@ -199,8 +207,7 @@ public abstract class AbstractIntegrationTest {
     // ===================================================================================================================
 
     private String createAuthData(User user) {
-        JwtResponse result =
-                jwtService.generateAccessRefreshTokens(user.getUsername(), user.getId(), DEVICE_ID, ERole.USER);
+        JwtResponse result = jwtService.generateAccessRefreshTokens(user.getUsername(), user.getId(), DEVICE_ID, ERole.USER);
         return result.getAccessToken();
     }
 }

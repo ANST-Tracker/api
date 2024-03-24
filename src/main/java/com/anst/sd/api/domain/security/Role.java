@@ -1,7 +1,7 @@
 package com.anst.sd.api.domain.security;
 
 import com.anst.sd.api.domain.DomainObject;
-import com.anst.sd.api.security.ERole;
+import com.anst.sd.api.security.domain.ERole;
 import jakarta.persistence.*;
 import lombok.*;
 
