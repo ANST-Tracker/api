@@ -1,6 +1,5 @@
 package com.anst.sd.api.adapter.rest.task.write.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -17,7 +16,6 @@ import java.time.LocalDateTime;
 public class CreateTaskDto {
     @NotBlank
     String data;
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     LocalDateTime deadline;
     String description;
 }

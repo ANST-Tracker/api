@@ -51,12 +51,15 @@ spring:
     bootstrap-servers: ${KAFKA_URL}
 
 security:
+  code:
+    expiration-time: 180
+    return: true
   jwt:
     block-valid-access: true
     storage: ${JWT_ACCESS_STORAGE}
     access:
       secret: ${JWT_ACCESS_SECRET}
-      expiration: 10m
+      expiration: 15m
     refresh:
       secret: ${JWT_REFRESH_SECRET}
       expiration: 168h

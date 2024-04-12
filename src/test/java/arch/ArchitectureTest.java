@@ -79,7 +79,7 @@ public class ArchitectureTest {
                     }
                 });
         if (!errors.isEmpty()) {
-            throw new RuntimeException(Strings.join(errors, '\n'));
+            throw new AssertionError(Strings.join(errors, '\n'));
         }
     }
 
@@ -90,10 +90,10 @@ public class ArchitectureTest {
     private Architectures.LayeredArchitecture getLayers() {
         return Architectures.layeredArchitecture()
                 .consideringOnlyDependenciesInLayers()
-                .layer(ADAPTER_LAYER).definedBy("..adapter..")
-                .layer(APP_API_LAYER).definedBy("..app.api..")
-                .layer(APP_IMPL_LAYER).definedBy("..app.impl..")
-                .layer(DOMAIN_LAYER).definedBy("..domain..")
-                .layer(FW_LAYER).definedBy("..fw..");
+                .layer(ADAPTER_LAYER).definedBy("..api.adapter..")
+                .layer(APP_API_LAYER).definedBy("..api.app.api..")
+                .layer(APP_IMPL_LAYER).definedBy("..api.app.impl..")
+                .layer(DOMAIN_LAYER).definedBy("..api.domain..")
+                .layer(FW_LAYER).definedBy("..api.fw..");
     }
 }

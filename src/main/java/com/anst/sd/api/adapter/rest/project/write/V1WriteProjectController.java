@@ -9,7 +9,7 @@ import com.anst.sd.api.app.api.project.DeleteProjectInbound;
 import com.anst.sd.api.app.api.project.ProjectValidationException;
 import com.anst.sd.api.app.api.project.UpdateProjectInbound;
 import com.anst.sd.api.domain.project.Project;
-import com.anst.sd.api.security.JwtService;
+import com.anst.sd.api.security.app.impl.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;

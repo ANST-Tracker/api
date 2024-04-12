@@ -2,7 +2,7 @@ package com.anst.sd.api.adapter.persistence.relational;
 
 import com.anst.sd.api.app.api.security.RoleRepository;
 import com.anst.sd.api.domain.security.Role;
-import com.anst.sd.api.security.ERole;
+import com.anst.sd.api.security.domain.ERole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

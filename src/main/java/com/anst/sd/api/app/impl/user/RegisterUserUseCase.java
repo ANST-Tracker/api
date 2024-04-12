@@ -10,7 +10,8 @@ import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.project.ProjectType;
 import com.anst.sd.api.domain.security.Role;
 import com.anst.sd.api.domain.user.User;
-import com.anst.sd.api.security.ERole;
+import com.anst.sd.api.security.app.impl.JwtService;
+import com.anst.sd.api.security.domain.ERole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +29,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class RegisterUserUseCase implements RegisterUserInBound {
     private final UserRepository userRepository;
+    private final JwtService jwtService;
     private final PasswordEncoder encoder;
     private final RoleRepository roleRepository;
     private final ProjectRepository projectRepository;
@@ -43,6 +45,10 @@ public class RegisterUserUseCase implements RegisterUserInBound {
         createUserBucketProject(user);
         return user;
     }
+
+    // ===================================================================================================================
+    // = Implementation
+    // ===================================================================================================================
 
     private void createUserBucketProject(User user) {
         Project project = new Project();
@@ -67,6 +73,11 @@ public class RegisterUserUseCase implements RegisterUserInBound {
         }
         if (userRepository.existsByTelegramId(user.getTelegramId())) {
             errors.add("Telegram account is already in use");
+        }
+        String telegramIdFromJwt = jwtService.getJwtAuth().getTelegramId();
+        if (!telegramIdFromJwt.equals(user.getTelegramId())) {
+            errors.add("Trying to register user with telegramId %s by token for another id %s"
+                .formatted(user.getTelegramId(), telegramIdFromJwt));
         }
         if (!errors.isEmpty()) {
             throw new RegisterUserException(StringUtils.join(errors, '\n'));

@@ -4,7 +4,7 @@ import com.anst.sd.api.adapter.rest.project.dto.ProjectInfoDto;
 import com.anst.sd.api.adapter.rest.project.dto.ProjectInfoDtoMapper;
 import com.anst.sd.api.app.api.project.GetProjectsInbound;
 import com.anst.sd.api.domain.project.Project;
-import com.anst.sd.api.security.JwtService;
+import com.anst.sd.api.security.app.impl.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;

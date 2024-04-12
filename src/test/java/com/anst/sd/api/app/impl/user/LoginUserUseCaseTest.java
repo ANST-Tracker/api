@@ -5,8 +5,8 @@ import com.anst.sd.api.app.api.device.DeviceRepository;
 import com.anst.sd.api.app.api.security.RefreshTokenRepository;
 import com.anst.sd.api.app.api.user.UserRepository;
 import com.anst.sd.api.domain.user.User;
-import com.anst.sd.api.security.AuthException;
-import com.anst.sd.api.security.JwtService;
+import com.anst.sd.api.security.app.api.AuthException;
+import com.anst.sd.api.security.app.impl.JwtService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -14,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.UUID;
 
-import static com.anst.sd.api.security.AuthErrorMessages.INVALID_PASSWORD;
+import static com.anst.sd.api.security.app.api.AuthErrorMessages.INVALID_PASSWORD;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;

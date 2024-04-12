@@ -1,6 +1,6 @@
 package com.anst.sd.api.adapter.rest.security.dto;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,8 +11,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class JwtResponseDto {
-    @NotNull
-    String accessToken;
-    String refreshToken;
+public class VerifyCodeRequestDto {
+    @NotBlank
+    String telegramId;
+    @NotBlank
+    String code;
 }
