@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -25,6 +27,11 @@ public class CreateTaskUseCase implements CreateTaskInBound {
         Project project = projectRepository.getByIdAndUserId(projectId, userId);
         task.setProject(project);
         task.setStatus(TaskStatus.BACKLOG);
+        if (task.getPendingNotifications() != null) {
+            task.getPendingNotifications().removeIf(notification -> notification.getRemindIn()
+                    .isBefore(LocalDateTime.now()));
+            task.getPendingNotifications().forEach(notification -> notification.setTask(task));
+        }
         return taskRepository.save(task);
     }
 }

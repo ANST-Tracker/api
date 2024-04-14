@@ -2,5 +2,10 @@
   "data": "newData",
   "deadline": "2023-12-16 18:56:17",
   "description": "newDesc",
-  "status": "IN_PROGRESS"
+  "status": "IN_PROGRESS",
+  "pendingNotifications": [
+    {
+      "remindIn": "2028-12-16 17:13:18"
+    }
+  ]
 }

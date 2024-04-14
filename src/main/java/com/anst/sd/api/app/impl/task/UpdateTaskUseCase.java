@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -31,6 +33,11 @@ public class UpdateTaskUseCase implements UpdateTaskInBound {
         original.setDeadline(updated.getDeadline());
         original.setDescription(updated.getDescription());
         original.setStatus(updated.getStatus());
+        if (updated.getPendingNotifications() != null) {
+            updated.getPendingNotifications().
+                    removeIf(notification -> notification.getRemindIn().isBefore(LocalDateTime.now()));
+        }
+        original.setPendingNotifications(updated.getPendingNotifications());
         if (updated.getUpdatedProjectId() != null &&
             !updated.getUpdatedProjectId().equals(original.getProject().getId())) {
             Project newProject = projectRepository.getByIdAndUserId(updated.getUpdatedProjectId(), userId);
