@@ -65,6 +65,8 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     protected UserJpaRepository userJpaRepository;
     @Autowired
+    protected PendingNotificationJpaRepository pendingNotificationJpaRepository;
+    @Autowired
     protected JdbcTemplate jdbcTemplate;
     @MockBean
     protected CreateUserCodeMessageSupplier createUserCodeMessageSupplier;
@@ -77,11 +79,13 @@ public abstract class AbstractIntegrationTest {
         refreshTokenJpaRepository.deleteAll();
         deviceJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
+        pendingNotificationJpaRepository.deleteAll();
         jdbcTemplate.execute("ALTER SEQUENCE task_id_seq RESTART WITH 1");
         jdbcTemplate.execute("ALTER SEQUENCE project_id_seq RESTART WITH 1");
         jdbcTemplate.execute("ALTER SEQUENCE users_id_seq RESTART WITH 1");
         jdbcTemplate.execute("ALTER SEQUENCE device_id_seq RESTART WITH 1");
         jdbcTemplate.execute("ALTER SEQUENCE refresh_token_id_seq RESTART WITH 1");
+        jdbcTemplate.execute("ALTER SEQUENCE pending_notification_id_seq RESTART WITH 1");
     }
 
     protected User createTestUser() {

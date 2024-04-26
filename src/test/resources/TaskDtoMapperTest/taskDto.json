@@ -6,7 +6,8 @@
   "description": "test_dfd0ba852ba1",
   "pendingNotifications": [
     {
-      "remindIn": "2028-12-16 17:13:18"
+      "amount": 1,
+      "timeType": "HOURS"
     }
   ]
 }

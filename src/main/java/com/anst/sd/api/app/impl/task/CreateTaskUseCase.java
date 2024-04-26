@@ -3,6 +3,7 @@ package com.anst.sd.api.app.impl.task;
 import com.anst.sd.api.app.api.project.ProjectRepository;
 import com.anst.sd.api.app.api.task.CreateTaskInBound;
 import com.anst.sd.api.app.api.task.TaskRepository;
+import com.anst.sd.api.domain.notification.PendingNotification;
 import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.task.Task;
 import com.anst.sd.api.domain.task.TaskStatus;
@@ -11,7 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -19,6 +21,7 @@ import java.time.LocalDateTime;
 public class CreateTaskUseCase implements CreateTaskInBound {
     private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
+    private final DateConverterDelegate dateConverterDelegate;
 
     @Override
     @Transactional
@@ -28,9 +31,10 @@ public class CreateTaskUseCase implements CreateTaskInBound {
         task.setProject(project);
         task.setStatus(TaskStatus.BACKLOG);
         if (task.getPendingNotifications() != null) {
-            task.getPendingNotifications().removeIf(notification -> notification.getRemindIn()
-                    .isBefore(LocalDateTime.now()));
-            task.getPendingNotifications().forEach(notification -> notification.setTask(task));
+            List<PendingNotification> convertedNotifications = task.getPendingNotifications().stream()
+                    .map(notification -> dateConverterDelegate.convertToInstant(task.getDeadline(), notification))
+                    .collect(Collectors.toList());
+            task.setPendingNotifications(convertedNotifications);
         }
         return taskRepository.save(task);
     }

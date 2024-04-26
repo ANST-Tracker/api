@@ -14,6 +14,7 @@ import org.mockito.Mock;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -26,10 +27,12 @@ class CreateTaskUseCaseTest extends AbstractUnitTest {
     private TaskRepository taskRepository;
     @Mock
     private ProjectRepository projectRepository;
+    @Mock
+    private DateConverterDelegate dateConverterDelegate;
 
     @BeforeEach
     void setUp() {
-        useCase = new CreateTaskUseCase(taskRepository, projectRepository);
+        useCase = new CreateTaskUseCase(taskRepository, projectRepository, dateConverterDelegate);
         when(taskRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
     }
 
@@ -39,6 +42,8 @@ class CreateTaskUseCaseTest extends AbstractUnitTest {
         Project project = createTestProject(user);
         when(projectRepository.getByIdAndUserId(1L, 1L)).thenReturn(project);
         Task task = createTask();
+        when(dateConverterDelegate.convertToInstant(any(LocalDateTime.class), any(PendingNotification.class)))
+                .thenReturn(task.getPendingNotifications().get(0));
 
         Task result = useCase.create(1L, 1L, task);
 
@@ -52,13 +57,18 @@ class CreateTaskUseCaseTest extends AbstractUnitTest {
 
     private Task createTask() {
         Task task = new Task();
-        PendingNotification pendingNotification = new PendingNotification();
+        PendingNotification pendingNotification = createPendingNotification();
         task.setData("testData");
         task.setDescription("testDescription");
         task.setDeadline(DEADLINE);
-        pendingNotification.setTask(task);
-        pendingNotification.setRemindIn(DEADLINE);
         task.setPendingNotifications(List.of(pendingNotification));
         return task;
+    }
+
+    private PendingNotification createPendingNotification() {
+        PendingNotification pendingNotification = new PendingNotification();
+        pendingNotification.setAmount(20);
+        pendingNotification.setTimeType(TimeUnit.HOURS);
+        return pendingNotification;
     }
 }

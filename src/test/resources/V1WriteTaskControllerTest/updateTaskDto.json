@@ -5,7 +5,12 @@
   "status": "IN_PROGRESS",
   "pendingNotifications": [
     {
-      "remindIn": "2028-12-16 17:13:18"
+      "amount": 1000,
+      "timeType": "MINUTES"
+    },
+    {
+      "amount": 10,
+      "timeType": "SECONDS"
     }
   ]
 }

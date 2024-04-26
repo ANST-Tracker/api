@@ -6,18 +6,23 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.util.concurrent.TimeUnit;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
-@Entity(name = "pending_notification")
-@Table(name = "pending_notifications")
+@Entity
+@Table(name = "pending_notification")
 public class PendingNotification extends DomainObject {
+    @Column(name = "remind", nullable = false)
+    private Instant remindIn;
     @Column(nullable = false)
-    private LocalDateTime remindIn;
+    private int amount;
+    @Column(name = "time_type", nullable = false)
+    private TimeUnit timeType;
     @ManyToOne
     @JoinColumn(name = "task_id")
     @JsonBackReference
