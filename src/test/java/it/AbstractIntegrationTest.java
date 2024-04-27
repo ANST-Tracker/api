@@ -73,13 +73,13 @@ public abstract class AbstractIntegrationTest {
 
     @BeforeEach
     void clearDataBase() {
+        pendingNotificationJpaRepository.deleteAll();
         userCodeMongoRepository.deleteAll();
         taskJpaRepository.deleteAll();
         projectJpaRepository.deleteAll();
         refreshTokenJpaRepository.deleteAll();
         deviceJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
-        pendingNotificationJpaRepository.deleteAll();
         jdbcTemplate.execute("ALTER SEQUENCE task_id_seq RESTART WITH 1");
         jdbcTemplate.execute("ALTER SEQUENCE project_id_seq RESTART WITH 1");
         jdbcTemplate.execute("ALTER SEQUENCE users_id_seq RESTART WITH 1");

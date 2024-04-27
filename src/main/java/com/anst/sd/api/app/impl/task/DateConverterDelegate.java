@@ -13,10 +13,10 @@ import java.time.ZoneOffset;
 public class DateConverterDelegate {
     public PendingNotification convertToInstant(LocalDateTime deadline, PendingNotification pendingNotification) {
         Instant deadlineInstant = deadline.toInstant(ZoneOffset.UTC);
-        Instant remindInstant = deadlineInstant.minus(
+        Instant executionInstant = deadlineInstant.minus(
                 pendingNotification.getAmount(),
                 pendingNotification.getTimeType().toChronoUnit());
-        pendingNotification.setRemindIn(remindInstant);
+        pendingNotification.setExecutionDate(executionInstant);
         return pendingNotification;
     }
 }

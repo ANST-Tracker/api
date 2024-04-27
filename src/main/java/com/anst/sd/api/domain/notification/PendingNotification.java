@@ -18,8 +18,8 @@ import java.util.concurrent.TimeUnit;
 @Entity
 @Table(name = "pending_notification")
 public class PendingNotification extends DomainObject {
-    @Column(name = "remind", nullable = false)
-    private Instant remindIn;
+    @Column(name = "execution_date")
+    private Instant executionDate;
     @Column(nullable = false)
     private int amount;
     @Column(name = "time_type", nullable = false)

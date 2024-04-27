@@ -7,7 +7,6 @@ import java.util.concurrent.TimeUnit;
 
 @Converter(autoApply = true)
 public class TimeUnitConverter implements AttributeConverter<TimeUnit, String> {
-
     @Override
     public String convertToDatabaseColumn(TimeUnit attribute) {
         return attribute != null ? attribute.name() : null;
