@@ -3,6 +3,7 @@ package com.anst.sd.api.adapter.persistence.relational;
 import com.anst.sd.api.domain.task.Task;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -21,5 +22,6 @@ public interface TaskJpaRepository extends JpaRepository<Task, Long>, PagingAndS
         where task.id = :id
         and task.project.user.id = :userId
         """)
+    @EntityGraph(attributePaths = {"pendingNotifications"})
     Optional<Task> findTaskByIdAndUserId(Long id, Long userId);
 }

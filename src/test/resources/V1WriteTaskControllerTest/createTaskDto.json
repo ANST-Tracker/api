@@ -6,10 +6,6 @@
     {
       "amount": 1000,
       "timeType": "MINUTES"
-    },
-    {
-      "amount": 10,
-      "timeType": "SECONDS"
     }
   ]
 }

@@ -19,6 +19,17 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@NamedEntityGraph(
+        name = "Task.withProjectAndNotifications",
+        attributeNodes = {
+                @NamedAttributeNode("project"),
+                @NamedAttributeNode(value = "pendingNotifications", subgraph = "pendingNotificationsSubgraph")
+        },
+        subgraphs = {
+                @NamedSubgraph(name = "pendingNotificationsSubgraph", attributeNodes = {
+                @NamedAttributeNode("executionDate"), @NamedAttributeNode("amount"), @NamedAttributeNode("timeType")})
+        }
+)
 public class Task extends DomainObject {
     @Column
     private String data;
@@ -32,7 +43,7 @@ public class Task extends DomainObject {
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "task", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "task", fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<PendingNotification> pendingNotifications = new ArrayList<>();
     @Column(nullable = false)

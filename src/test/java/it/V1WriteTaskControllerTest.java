@@ -94,8 +94,7 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
-        Task task = taskJpaRepository.findAll().get(0);
-        assertEquals(1, task.getPendingNotifications().size());
+        assertEquals(1, pendingNotificationJpaRepository.findAll().size());
     }
 
     @Test
@@ -221,8 +220,7 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
-        task = taskJpaRepository.findAll().get(0);
-        assertEquals(1, task.getPendingNotifications().size());
+        assertEquals(1, pendingNotificationJpaRepository.findAll().size());
     }
 
     private Task createTask(Project project) {

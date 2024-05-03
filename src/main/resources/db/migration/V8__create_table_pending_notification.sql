@@ -1,7 +1,7 @@
 create table pending_notification
 (
     id        bigint primary key generated always as identity,
-    remind    timestamptz,
+    execution_date    timestamptz,
     amount    bigint  not null,
     time_type varchar not null,
     task_id   bigint
