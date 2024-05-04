@@ -1,4 +1,4 @@
-package com.anst.sd.api.adapter.telegram;
+package com.anst.sd.api.adapter.telegram.dto;
 
 import lombok.AccessLevel;
 import lombok.Data;

@@ -27,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 class V1ReadTaskControllerTest extends AbstractIntegrationTest {
     private static final String API_URL = "/task";
+
     private User user;
     private Project project;
 

@@ -114,7 +114,7 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
 
     @Test
     void deleteTask_failed_notFound() throws Exception {
-        createTask(project);
+        createTaskWithProject(project);
 
         performAuthenticated(user, MockMvcRequestBuilders
                 .delete(API_URL + "/5433"))
@@ -168,7 +168,7 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
 
     @Test
     void updateTask_failed_validationError() throws Exception {
-        Task task = createTask(project);
+        Task task = createTaskWithProject(project);
         UpdateTaskDto request = readFromFile("/V1WriteTaskControllerTest/updateTaskDto.json", UpdateTaskDto.class);
         request.setData("");
 
@@ -211,7 +211,7 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
         assertEquals(1, pendingNotificationJpaRepository.findAll().size());
     }
 
-    private Task createTask(Project project) {
+    private Task createTaskWithProject(Project project) {
         Task task = new Task();
         task.setData("testData");
         task.setStatus(TaskStatus.IN_PROGRESS);

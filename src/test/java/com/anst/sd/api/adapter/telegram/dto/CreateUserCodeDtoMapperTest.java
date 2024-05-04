@@ -1,6 +1,8 @@
-package com.anst.sd.api.adapter.telegram;
+package com.anst.sd.api.adapter.telegram.dto;
 
 import com.anst.sd.api.AbstractUnitTest;
+import com.anst.sd.api.adapter.telegram.dto.CreateUserCodeDto;
+import com.anst.sd.api.adapter.telegram.dto.CreateUserCodeDtoMapper;
 import com.anst.sd.api.domain.security.UserCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

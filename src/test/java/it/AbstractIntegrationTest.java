@@ -4,8 +4,11 @@ import com.anst.sd.api.AnstApiTodoApplication;
 import com.anst.sd.api.adapter.persistence.mongo.UserCodeMongoRepository;
 import com.anst.sd.api.adapter.persistence.relational.*;
 import com.anst.sd.api.adapter.telegram.CreateUserCodeMessageSupplier;
+import com.anst.sd.api.adapter.telegram.TelegramBotFeignClient;
 import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.project.ProjectType;
+import com.anst.sd.api.domain.task.Task;
+import com.anst.sd.api.domain.task.TaskStatus;
 import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.security.app.api.JwtResponse;
 import com.anst.sd.api.security.app.impl.JwtService;
@@ -65,14 +68,19 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     protected UserJpaRepository userJpaRepository;
     @Autowired
+    protected NotificationJpaRepository notificationJpaRepository;
+    @Autowired
     protected PendingNotificationJpaRepository pendingNotificationJpaRepository;
     @Autowired
     protected JdbcTemplate jdbcTemplate;
     @MockBean
     protected CreateUserCodeMessageSupplier createUserCodeMessageSupplier;
+    @MockBean
+    protected TelegramBotFeignClient telegramBotFeignClient;
 
     @BeforeEach
     void clearDataBase() {
+        notificationJpaRepository.deleteAll();
         pendingNotificationJpaRepository.deleteAll();
         userCodeMongoRepository.deleteAll();
         taskJpaRepository.deleteAll();
@@ -105,6 +113,15 @@ public abstract class AbstractIntegrationTest {
         project.setProjectType(ProjectType.BASE);
         project.setUser(user);
         return projectJpaRepository.save(project);
+    }
+
+    protected Task createTask(Project project) {
+        Task task = new Task();
+        task.setData("testData");
+        task.setStatus(TaskStatus.IN_PROGRESS);
+        task.setDescription("testData");
+        task.setProject(project);
+        return taskJpaRepository.save(task);
     }
 
     // ===================================================================================================================

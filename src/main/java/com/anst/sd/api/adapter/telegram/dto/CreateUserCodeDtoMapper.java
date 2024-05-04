@@ -1,4 +1,4 @@
-package com.anst.sd.api.adapter.telegram;
+package com.anst.sd.api.adapter.telegram.dto;
 
 import com.anst.sd.api.domain.security.UserCode;
 import org.mapstruct.Mapper;

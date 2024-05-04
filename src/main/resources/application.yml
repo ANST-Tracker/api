@@ -1,6 +1,3 @@
-pom:
-  propertiesFileName: properties-pom.yaml
-
 logging:
   level:
     root: info
@@ -60,6 +57,18 @@ security:
     refresh:
       secret: refreshSecret
       expiration: 168h
+
+shedlock:
+  default-lock-at-most-for: 30s
+  notification-sending:
+    execution-delay: 5000
+    lock-at-least-for: 1s
+    lock-at-most-for: 4s
+
+service:
+  telegram-bot:
+    api:
+      url: https://localhost:8889 #url сервиса telegram-bot или заглушки. Нужно указать
 
 pageable:
   size: 20
