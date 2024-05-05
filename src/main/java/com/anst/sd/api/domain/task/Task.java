@@ -20,6 +20,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @NamedEntityGraph(
+        name = "Task.pendingNotifications",
         attributeNodes = {
                 @NamedAttributeNode("project"),
                 @NamedAttributeNode(value = "pendingNotifications", subgraph = "pendingNotificationsSubgraph")
