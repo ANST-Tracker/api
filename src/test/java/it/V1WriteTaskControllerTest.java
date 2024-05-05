@@ -1,5 +1,6 @@
 package it;
 
+import com.anst.sd.api.adapter.rest.task.dto.PendingNotificationDto;
 import com.anst.sd.api.adapter.rest.task.write.dto.CreateTaskDto;
 import com.anst.sd.api.adapter.rest.task.write.dto.UpdateTaskDto;
 import com.anst.sd.api.domain.notification.PendingNotification;
@@ -84,7 +85,7 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
     @Test
     void createTask_withNotification_successfully() throws Exception {
         CreateTaskDto request = readFromFile("/V1WriteTaskControllerTest/createTaskDto.json", CreateTaskDto.class);
-        PendingNotification notification = createPendingNotification();
+        PendingNotificationDto notification = createPendingNotificationDto();
         request.setPendingNotifications(List.of(notification));
 
         performAuthenticated(user, MockMvcRequestBuilders
@@ -210,7 +211,7 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
     void updateTask_withNotification_successfully() throws Exception {
         Task task = createTaskWithPendingNotification(project);
         UpdateTaskDto request = readFromFile("/V1WriteTaskControllerTest/updateTaskDto.json", UpdateTaskDto.class);
-        PendingNotification notification = createPendingNotification();
+        PendingNotificationDto notification = createPendingNotificationDto();
         request.setPendingNotifications(List.of(notification));
 
         performAuthenticated(user, MockMvcRequestBuilders
@@ -234,13 +235,15 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
 
     private Task createTaskWithPendingNotification(Project project) {
         Task task = createTask(project);
-        PendingNotification pendingNotification = createPendingNotification();
+        PendingNotification pendingNotification = new PendingNotification();
+        pendingNotification.setAmount(10);
+        pendingNotification.setTimeType(TimeUnit.DAYS);
         task.setPendingNotifications(List.of(pendingNotification));
         return taskJpaRepository.save(task);
     }
 
-    private PendingNotification createPendingNotification() {
-        PendingNotification pendingNotification = new PendingNotification();
+    private PendingNotificationDto createPendingNotificationDto() {
+        PendingNotificationDto pendingNotification = new PendingNotificationDto();
         pendingNotification.setAmount(10);
         pendingNotification.setTimeType(TimeUnit.DAYS);
         return pendingNotification;

@@ -1,6 +1,6 @@
 package com.anst.sd.api.adapter.rest.task.write.dto;
 
-import com.anst.sd.api.domain.notification.PendingNotification;
+import com.anst.sd.api.adapter.rest.task.dto.PendingNotificationDto;
 import com.anst.sd.api.domain.task.TaskStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -25,5 +25,5 @@ public class UpdateTaskDto {
     @NotNull
     TaskStatus status;
     Long updatedProjectId;
-    List<PendingNotification> pendingNotifications;
+    List<PendingNotificationDto> pendingNotifications;
 }

@@ -30,7 +30,7 @@ public class CreateTaskUseCase implements CreateTaskInBound {
         Project project = projectRepository.getByIdAndUserId(projectId, userId);
         task.setProject(project);
         task.setStatus(TaskStatus.BACKLOG);
-        if (task.getPendingNotifications() != null) {
+        if (task.getPendingNotifications() != null && task.getDeadline() != null) {
             List<PendingNotification> convertedNotifications = task.getPendingNotifications().stream()
                     .map(notification -> dateConverterDelegate.convertToInstant(task.getDeadline(), notification))
                     .collect(Collectors.toList());

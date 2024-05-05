@@ -1,6 +1,5 @@
 package com.anst.sd.api.adapter.rest.task.dto;
 
-import com.anst.sd.api.domain.notification.PendingNotification;
 import com.anst.sd.api.domain.task.TaskStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -24,5 +23,5 @@ public class TaskInfoDto {
     @NotNull
     TaskStatus status;
     String description;
-    List<PendingNotification> pendingNotifications;
+    List<PendingNotificationDto> pendingNotifications;
 }

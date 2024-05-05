@@ -38,7 +38,7 @@ public class UpdateTaskUseCase implements UpdateTaskInBound {
         original.setDeadline(updated.getDeadline());
         original.setDescription(updated.getDescription());
         original.setStatus(updated.getStatus());
-        if (updated.getPendingNotifications() != null) {
+        if (updated.getPendingNotifications() != null && updated.getDeadline() != null) {
             convertedNotifications = updated.getPendingNotifications().stream()
                     .map(notification -> dateConverterDelegate.convertToInstant(updated.getDeadline(), notification))
                     .collect(Collectors.toList());
