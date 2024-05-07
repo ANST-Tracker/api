@@ -7,6 +7,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Builder
@@ -22,4 +23,5 @@ public class TaskInfoDto {
     @NotNull
     TaskStatus status;
     String description;
+    List<PendingNotificationDto> pendingNotifications;
 }

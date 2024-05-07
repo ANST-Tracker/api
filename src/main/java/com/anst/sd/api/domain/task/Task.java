@@ -1,12 +1,16 @@
 package com.anst.sd.api.domain.task;
 
 import com.anst.sd.api.domain.DomainObject;
+import com.anst.sd.api.domain.notification.PendingNotification;
 import com.anst.sd.api.domain.project.Project;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -28,6 +32,9 @@ public class Task extends DomainObject {
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "task", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<PendingNotification> pendingNotifications = new ArrayList<>();
     @Column(nullable = false)
     private Instant created;
     @Column
@@ -45,4 +52,14 @@ public class Task extends DomainObject {
 
     @Transient
     Long updatedProjectId;
+
+    public void setPendingNotifications(List<PendingNotification> pendingNotifications) {
+        this.pendingNotifications.clear();
+        if (pendingNotifications != null) {
+            this.pendingNotifications.addAll(pendingNotifications);
+            for (PendingNotification p : this.pendingNotifications) {
+                p.setTask(this);
+            }
+        }
+    }
 }

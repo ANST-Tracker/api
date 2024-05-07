@@ -3,5 +3,11 @@
   "data": "test_94935b5b41d8",
   "deadline": "2032-09-17 20:48:37",
   "status": "IN_PROGRESS",
-  "description": "test_dfd0ba852ba1"
+  "description": "test_dfd0ba852ba1",
+  "pendingNotifications": [
+    {
+      "amount": 1,
+      "timeType": "HOURS"
+    }
+  ]
 }

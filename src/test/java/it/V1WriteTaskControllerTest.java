@@ -1,7 +1,9 @@
 package it;
 
+import com.anst.sd.api.adapter.rest.task.dto.PendingNotificationDto;
 import com.anst.sd.api.adapter.rest.task.write.dto.CreateTaskDto;
 import com.anst.sd.api.adapter.rest.task.write.dto.UpdateTaskDto;
+import com.anst.sd.api.domain.notification.PendingNotification;
 import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.task.Task;
 import com.anst.sd.api.domain.task.TaskStatus;
@@ -12,6 +14,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import static com.anst.sd.api.domain.task.TaskStatus.BACKLOG;
 import static com.anst.sd.api.domain.task.TaskStatus.IN_PROGRESS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 class V1WriteTaskControllerTest extends AbstractIntegrationTest {
     private static final String API_URL = "/task";
+
     private User user;
     private Project project;
 
@@ -77,8 +83,24 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void deleteTask_successfully() throws Exception {
-        Task task = createTask(project);
+    void createTask_withNotification_successfully() throws Exception {
+        CreateTaskDto request = readFromFile("/V1WriteTaskControllerTest/createTaskDto.json", CreateTaskDto.class);
+        PendingNotificationDto notification = createPendingNotificationDto();
+        request.setPendingNotifications(List.of(notification));
+
+        performAuthenticated(user, MockMvcRequestBuilders
+                .post(API_URL + "/" + project.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        assertEquals(1, pendingNotificationJpaRepository.findAll().size());
+    }
+
+    @Test
+    void deleteTask_withNotification_successfully() throws Exception {
+        Task task = createTaskWithPendingNotification(project);
 
         performAuthenticated(user, MockMvcRequestBuilders
                 .delete(API_URL + "/" + task.getId()))
@@ -87,6 +109,7 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
                 .andReturn();
 
         assertEquals(0, taskJpaRepository.findAll().size());
+        assertEquals(0, pendingNotificationJpaRepository.findAll().size());
     }
 
     @Test
@@ -102,7 +125,7 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
 
     @Test
     void updateTask_successfully() throws Exception {
-        Task task = createTask(project);
+        Task task = createTaskWithPendingNotification(project);
         UpdateTaskDto request = readFromFile("/V1WriteTaskControllerTest/updateTaskDto.json", UpdateTaskDto.class);
 
         performAuthenticated(user, MockMvcRequestBuilders
@@ -122,7 +145,7 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
 
     @Test
     void updateTask_moveToProject() throws Exception {
-        Task task = createTask(project);
+        Task task = createTaskWithPendingNotification(project);
         Project anotherProject = createProject(user);
         UpdateTaskDto request = readFromFile("/V1WriteTaskControllerTest/updateTaskDto.json", UpdateTaskDto.class);
         request.setUpdatedProjectId(anotherProject.getId());
@@ -171,6 +194,23 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
+    @Test
+    void updateTask_withNotification_successfully() throws Exception {
+        Task task = createTaskWithPendingNotification(project);
+        UpdateTaskDto request = readFromFile("/V1WriteTaskControllerTest/updateTaskDto.json", UpdateTaskDto.class);
+        PendingNotificationDto notification = createPendingNotificationDto();
+        request.setPendingNotifications(List.of(notification));
+
+        performAuthenticated(user, MockMvcRequestBuilders
+                .put(API_URL + "/" + task.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        assertEquals(1, pendingNotificationJpaRepository.findAll().size());
+    }
+
     private Task createTask(Project project) {
         Task task = new Task();
         task.setData("testData");
@@ -178,5 +218,21 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
         task.setDescription("testData");
         task.setProject(project);
         return taskJpaRepository.save(task);
+    }
+
+    private Task createTaskWithPendingNotification(Project project) {
+        Task task = createTask(project);
+        PendingNotification pendingNotification = new PendingNotification();
+        pendingNotification.setAmount(10);
+        pendingNotification.setTimeType(TimeUnit.DAYS);
+        task.setPendingNotifications(List.of(pendingNotification));
+        return taskJpaRepository.save(task);
+    }
+
+    private PendingNotificationDto createPendingNotificationDto() {
+        PendingNotificationDto pendingNotification = new PendingNotificationDto();
+        pendingNotification.setAmount(10);
+        pendingNotification.setTimeType(TimeUnit.DAYS);
+        return pendingNotification;
     }
 }

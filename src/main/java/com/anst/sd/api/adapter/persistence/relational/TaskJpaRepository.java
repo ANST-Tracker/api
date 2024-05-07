@@ -15,11 +15,12 @@ public interface TaskJpaRepository extends JpaRepository<Task, Long>, PagingAndS
     Page<Task> findTasksByProjectUserIdAndProjectId(Long userId, Long projectId, Pageable page);
 
     @Query("""
-        select task from Task task
-        join fetch task.project
-        join fetch task.project.user
-        where task.id = :id
-        and task.project.user.id = :userId
-        """)
+            select task from Task task
+            join fetch task.project
+            join fetch task.project.user
+            join fetch task.pendingNotifications
+            where task.id = :id
+            and task.project.user.id = :userId
+            """)
     Optional<Task> findTaskByIdAndUserId(Long id, Long userId);
 }

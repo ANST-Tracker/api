@@ -1,5 +1,6 @@
 package com.anst.sd.api.adapter.rest.task.write.dto;
 
+import com.anst.sd.api.adapter.rest.task.dto.PendingNotificationDto;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -18,4 +20,5 @@ public class CreateTaskDto {
     String data;
     LocalDateTime deadline;
     String description;
+    List<PendingNotificationDto> pendingNotifications;
 }

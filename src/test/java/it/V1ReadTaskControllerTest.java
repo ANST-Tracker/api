@@ -3,6 +3,7 @@ package it;
 import com.anst.sd.api.adapter.rest.task.dto.TaskInfoDto;
 import com.anst.sd.api.adapter.rest.task.read.dto.TaskFilterRequestDto;
 import com.anst.sd.api.app.api.DateRangeFilter;
+import com.anst.sd.api.domain.notification.PendingNotification;
 import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.task.Task;
 import com.anst.sd.api.domain.task.TaskStatus;
@@ -17,6 +18,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -166,6 +168,9 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
         task.setStatus(TaskStatus.IN_PROGRESS);
         task.setDescription("testData");
         task.setProject(project);
+        PendingNotification pendingNotification = createNotifications();
+        pendingNotification.setTask(task);
+        task.setPendingNotifications(List.of(pendingNotification));
         return taskJpaRepository.save(task);
     }
 
@@ -181,5 +186,12 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
             tasks.add(task);
         }
         return taskJpaRepository.saveAll(tasks);
+    }
+
+    private PendingNotification createNotifications() {
+        PendingNotification pendingNotification = new PendingNotification();
+        pendingNotification.setAmount(10);
+        pendingNotification.setTimeType(TimeUnit.DAYS);
+        return pendingNotification;
     }
 }

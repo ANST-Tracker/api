@@ -1,5 +1,6 @@
 package com.anst.sd.api.adapter.rest.task.write.dto;
 
+import com.anst.sd.api.adapter.rest.task.dto.PendingNotificationDto;
 import com.anst.sd.api.domain.task.TaskStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -23,4 +25,5 @@ public class UpdateTaskDto {
     @NotNull
     TaskStatus status;
     Long updatedProjectId;
+    List<PendingNotificationDto> pendingNotifications;
 }
