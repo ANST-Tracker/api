@@ -19,17 +19,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@NamedEntityGraph(
-        name = "task-project-notifications",
-        attributeNodes = {
-                @NamedAttributeNode("project"),
-                @NamedAttributeNode(value = "pendingNotifications", subgraph = "pendingNotificationsSubgraph")
-        },
-        subgraphs = {
-                @NamedSubgraph(name = "pendingNotificationsSubgraph", attributeNodes = {
-                @NamedAttributeNode("executionDate"), @NamedAttributeNode("amount"), @NamedAttributeNode("timeType")})
-        }
-)
 public class Task extends DomainObject {
     @Column
     private String data;

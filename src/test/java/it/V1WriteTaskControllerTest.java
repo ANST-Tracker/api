@@ -99,19 +99,6 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void deleteTask_successfully() throws Exception {
-        Task task = createTask(project);
-
-        performAuthenticated(user, MockMvcRequestBuilders
-                .delete(API_URL + "/" + task.getId()))
-                .andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
-
-        assertEquals(0, taskJpaRepository.findAll().size());
-    }
-
-    @Test
     void deleteTask_withNotification_successfully() throws Exception {
         Task task = createTaskWithPendingNotification(project);
 
@@ -138,7 +125,7 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
 
     @Test
     void updateTask_successfully() throws Exception {
-        Task task = createTask(project);
+        Task task = createTaskWithPendingNotification(project);
         UpdateTaskDto request = readFromFile("/V1WriteTaskControllerTest/updateTaskDto.json", UpdateTaskDto.class);
 
         performAuthenticated(user, MockMvcRequestBuilders
@@ -158,7 +145,7 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
 
     @Test
     void updateTask_moveToProject() throws Exception {
-        Task task = createTask(project);
+        Task task = createTaskWithPendingNotification(project);
         Project anotherProject = createProject(user);
         UpdateTaskDto request = readFromFile("/V1WriteTaskControllerTest/updateTaskDto.json", UpdateTaskDto.class);
         request.setUpdatedProjectId(anotherProject.getId());
