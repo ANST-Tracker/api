@@ -19,8 +19,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 class V1WriteProjectControllerTest extends AbstractIntegrationTest {
     private static final String API_URL = "/project";
 
-    private User user;
-
     @BeforeEach
     void prepareData() {
         user = createTestUser();

@@ -7,7 +7,6 @@ import com.anst.sd.api.domain.notification.PendingNotification;
 import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.task.Task;
 import com.anst.sd.api.domain.task.TaskStatus;
-import com.anst.sd.api.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -18,7 +17,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -27,9 +25,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 class V1ReadTaskControllerTest extends AbstractIntegrationTest {
     private static final String API_URL = "/task";
-
-    private User user;
-    private Project project;
 
     @BeforeEach
     void prepareData() {
@@ -62,7 +57,8 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
 
     @Test
     void getTaskById_successfully() throws Exception {
-        Task task = createTask(project);
+        PendingNotification notification = createNotification();
+        Task task = createTask(project, notification);
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
             .get(API_URL + "/" + task.getId()))
@@ -163,18 +159,6 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
         return task;
     }
 
-    private Task createTask(Project project) {
-        Task task = new Task();
-        task.setData("testData");
-        task.setStatus(TaskStatus.IN_PROGRESS);
-        task.setDescription("testData");
-        task.setProject(project);
-        PendingNotification pendingNotification = createNotifications();
-        pendingNotification.setTask(task);
-        task.setPendingNotifications(List.of(pendingNotification));
-        return taskJpaRepository.save(task);
-    }
-
     private List<Task> createTasks(Project project, Integer count) {
         List<Task> tasks = new ArrayList<>();
         for (int i = 0; i < count; ++i) {
@@ -183,16 +167,8 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
             task.setStatus(TaskStatus.IN_PROGRESS);
             task.setDescription("testDesc" + i);
             task.setProject(project);
-
             tasks.add(task);
         }
         return taskJpaRepository.saveAll(tasks);
-    }
-
-    private PendingNotification createNotifications() {
-        PendingNotification pendingNotification = new PendingNotification();
-        pendingNotification.setAmount(10);
-        pendingNotification.setTimeType(TimeUnit.DAYS);
-        return pendingNotification;
     }
 }

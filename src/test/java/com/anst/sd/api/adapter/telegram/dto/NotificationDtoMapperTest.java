@@ -6,8 +6,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class NotificationDtoMapperTest extends AbstractUnitTest {
     private NotificationDtoMapper mapper;
 

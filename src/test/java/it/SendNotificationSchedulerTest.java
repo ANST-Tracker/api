@@ -3,9 +3,7 @@ package it;
 import com.anst.sd.api.adapter.telegram.dto.NotificationDto;
 import com.anst.sd.api.domain.notification.Notification;
 import com.anst.sd.api.domain.notification.PendingNotification;
-import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.task.Task;
-import com.anst.sd.api.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -19,8 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 
 class SendNotificationSchedulerTest extends AbstractIntegrationTest {
-    private User user;
-    private Project project;
     private Task task;
     @Captor
     private ArgumentCaptor<NotificationDto> notificationDtoArgumentCaptor;
@@ -29,7 +25,7 @@ class SendNotificationSchedulerTest extends AbstractIntegrationTest {
     void setUp() {
         user = createTestUser();
         project = createProject(user);
-        task = createTask(project);
+        task = createTask(project, null);
     }
 
     @Test
