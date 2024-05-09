@@ -4,13 +4,13 @@ on:
   workflow_dispatch:
     branches:
       - '*'
-  pull_request:
-    types:
-      - opened
-      - reopened
-  push:
-    branches:
-      - '*'
+#  pull_request:
+#    types:
+#      - opened
+#      - reopened
+#  push:
+#    branches:
+#      - '*'
 
 jobs:
   run-tests:
