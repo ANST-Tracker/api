@@ -37,6 +37,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -137,6 +138,7 @@ public abstract class AbstractIntegrationTest {
         PendingNotification pendingNotification = new PendingNotification();
         pendingNotification.setAmount(10);
         pendingNotification.setTimeType(TimeUnit.DAYS);
+        pendingNotification.setExecutionDate(Instant.now().plusSeconds(1000));
         return pendingNotification;
     }
 

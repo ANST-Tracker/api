@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
     }
 )
 public class PendingNotification extends DomainObject {
-    @Column(name = "execution_date")
+    @Column(name = "execution_date", nullable = false)
     private Instant executionDate;
     @Column(nullable = false)
     private int amount;

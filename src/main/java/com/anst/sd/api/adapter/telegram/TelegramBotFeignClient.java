@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @FeignClient(name = "telegram-bot", url = "${service.telegram-bot.api.url}")
 public interface TelegramBotFeignClient {
-    @PostMapping("/api/v1/internal/checking-accounts/bics")
+    @PostMapping("/internal/notification")
     void sendNotification(@RequestBody NotificationDto notificationDto);
 }
