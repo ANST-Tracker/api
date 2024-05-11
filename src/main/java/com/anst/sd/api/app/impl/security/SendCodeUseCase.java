@@ -4,6 +4,7 @@ import com.anst.sd.api.app.api.security.CodeAlreadySentException;
 import com.anst.sd.api.app.api.security.SendCodeInbound;
 import com.anst.sd.api.app.api.security.SendCodeOutbound;
 import com.anst.sd.api.app.api.security.UserCodeRepository;
+import com.anst.sd.api.app.api.user.UserRepository;
 import com.anst.sd.api.domain.security.UserCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,13 +24,15 @@ public class SendCodeUseCase implements SendCodeInbound {
     private Long codeTimeToLive;
     private final UserCodeRepository userCodeRepository;
     private final SendCodeOutbound sendCodeOutbound;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public String send(String telegramId) {
+    public String send(String telegramId, String username) {
         log.info("Create user code processing started");
-        String authCode = CodeGenerationDelegate.generate();
-
+        if (username != null) {
+            telegramId = userRepository.getByUsername(username).getTelegramId();
+        }
         Optional<UserCode> userCodeOptional = userCodeRepository.findByTelegramId(telegramId);
         UserCode userCode;
         if (userCodeOptional.isPresent()) {
@@ -39,6 +42,7 @@ public class SendCodeUseCase implements SendCodeInbound {
             userCode = new UserCode(telegramId);
         }
         userCode.setExpirationTime(Instant.now().plusSeconds(codeTimeToLive));
+        String authCode = CodeGenerationDelegate.generate();
         userCode.setCode(authCode);
 
         userCodeRepository.save(userCode);

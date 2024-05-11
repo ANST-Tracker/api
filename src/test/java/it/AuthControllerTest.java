@@ -7,6 +7,7 @@ import com.anst.sd.api.domain.project.ProjectType;
 import com.anst.sd.api.domain.security.UserCode;
 import com.anst.sd.api.domain.user.User;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -115,24 +116,38 @@ class AuthControllerTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void sendCode_successfully() throws Exception {
+    void sendCode_successfully_byTelegramId() throws Exception {
         String telegramId = "testId";
 
-        String code = sendGetCodeRequest(telegramId);
+        String code = sendGetCodeRequest(telegramId, null);
 
         assertEquals(5, code.length());
         verify(createUserCodeMessageSupplier).send(any());
     }
 
     @Test
+    void sendCode_successfully_byUsername() throws Exception {
+        user = createTestUser();
+        String telegramId = "testId";
+
+        String code = sendGetCodeRequest(telegramId, user.getUsername());
+
+        assertEquals(5, code.length());
+        ArgumentCaptor<UserCode> userCodeArgumentCaptor = ArgumentCaptor.forClass(UserCode.class);
+        verify(createUserCodeMessageSupplier).send(userCodeArgumentCaptor.capture());
+        UserCode userCode = userCodeArgumentCaptor.getValue();
+        assertEquals(user.getTelegramId(), userCode.getTelegramId());
+    }
+
+    @Test
     void sendCode_failed_codeAlreadySent() throws Exception {
         String telegramId = "testId";
-        sendGetCodeRequest(telegramId);
+        sendGetCodeRequest(telegramId, null);
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                 .post(API_URL + "/code/send")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new SendCodeRequestDto(telegramId))))
+                .content(objectMapper.writeValueAsString(new SendCodeRequestDto(telegramId, null))))
             .andDo(print())
             .andExpect(MockMvcResultMatchers.status().isBadRequest())
             .andReturn();
@@ -144,7 +159,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
     @Test
     void verifyCode_successfully() throws Exception {
         String telegramId = "testId";
-        String code = sendGetCodeRequest(telegramId);
+        String code = sendGetCodeRequest(telegramId, null);
 
         MvcResult mvcResult = sendVerifyCodeRequest(telegramId, code, MockMvcResultMatchers.status().isOk());
 
@@ -156,7 +171,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
     @Test
     void verifyCode_failed_expiredCode() throws Exception {
         String telegramId = "testId";
-        String code = sendGetCodeRequest(telegramId);
+        String code = sendGetCodeRequest(telegramId, null);
         UserCode userCode = userCodeMongoRepository.findAll().get(0);
         userCode.setExpirationTime(Instant.now().minusSeconds(1));
         userCodeMongoRepository.save(userCode);
@@ -170,7 +185,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
     @Test
     void verifyCode_failed_wrongCode() throws Exception {
         String telegramId = "testId";
-        sendGetCodeRequest(telegramId);
+        sendGetCodeRequest(telegramId, null);
 
         MvcResult mvcResult = sendVerifyCodeRequest(telegramId, "wrong", MockMvcResultMatchers.status().isUnauthorized());
 
@@ -188,17 +203,17 @@ class AuthControllerTest extends AbstractIntegrationTest {
     }
 
     private String createToken(String telegramId) throws Exception {
-        String code = sendGetCodeRequest(telegramId);
+        String code = sendGetCodeRequest(telegramId, null);
         MvcResult mvcResult = sendVerifyCodeRequest(telegramId, code, MockMvcResultMatchers.status().isOk());
         JwtResponseDto responseDto = getFromResponse(mvcResult, JwtResponseDto.class);
         return responseDto.getAccessToken();
     }
 
-    private String sendGetCodeRequest(String telegramId) throws Exception {
+    private String sendGetCodeRequest(String telegramId, String username) throws Exception {
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
                 .post(API_URL + "/code/send")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new SendCodeRequestDto(telegramId))))
+                .content(objectMapper.writeValueAsString(new SendCodeRequestDto(telegramId, username))))
             .andDo(print())
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andReturn();
