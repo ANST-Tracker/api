@@ -71,7 +71,7 @@ shedlock:
 service:
   telegram-bot:
     api:
-      url:
+      url: ${SERVICE_TELEGRAM_BOT_API_URL}
 
 pageable:
   size: 20
