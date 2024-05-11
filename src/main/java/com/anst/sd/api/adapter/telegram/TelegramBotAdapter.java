@@ -25,7 +25,7 @@ public class TelegramBotAdapter implements SendNotificationOutbound {
             NotificationDto requestDto = notificationDtoMapper.mapToDto(pendingNotification);
             telegramBotFeignClient.sendNotification(requestDto);
         } catch (FeignException e) {
-            log.error("Error occurred while sending notification request");
+            log.error("Error occurred while sending notification request", e);
             throw new ServiceUnavailableException(e);
         }
     }
