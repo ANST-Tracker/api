@@ -16,9 +16,9 @@ public interface TaskJpaRepository extends JpaRepository<Task, Long>, PagingAndS
 
     @Query("""
             select task from Task task
-            join fetch task.project p
-            join fetch p.user u
-            join fetch task.pendingNotifications
+            left join fetch task.project p
+            left join fetch p.user u
+            left join fetch task.pendingNotifications
             where task.id = :id
             and u.id = :userId
             """)

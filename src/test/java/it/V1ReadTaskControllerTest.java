@@ -56,7 +56,7 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void getTaskById_successfully() throws Exception {
+    void getTaskById_successfully_withNotification() throws Exception {
         PendingNotification notification = createNotification();
         Task task = createTask(project, notification);
 
@@ -65,6 +65,21 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
             .andDo(print())
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andReturn();
+
+        TaskInfoDto responseDto = getFromResponse(response, TaskInfoDto.class);
+        assertEquals("testData", responseDto.getData());
+        assertEquals(task.getId(), responseDto.getId());
+    }
+
+    @Test
+    void getTaskById_successfully_() throws Exception {
+        Task task = createTask(project, null);
+
+        MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
+                .get(API_URL + "/" + task.getId()))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
 
         TaskInfoDto responseDto = getFromResponse(response, TaskInfoDto.class);
         assertEquals("testData", responseDto.getData());
