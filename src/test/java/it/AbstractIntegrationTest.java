@@ -4,8 +4,12 @@ import com.anst.sd.api.AnstApiTodoApplication;
 import com.anst.sd.api.adapter.persistence.mongo.UserCodeMongoRepository;
 import com.anst.sd.api.adapter.persistence.relational.*;
 import com.anst.sd.api.adapter.telegram.CreateUserCodeMessageSupplier;
+import com.anst.sd.api.adapter.telegram.TelegramBotFeignClient;
+import com.anst.sd.api.domain.notification.PendingNotification;
 import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.project.ProjectType;
+import com.anst.sd.api.domain.task.Task;
+import com.anst.sd.api.domain.task.TaskStatus;
 import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.security.app.api.JwtResponse;
 import com.anst.sd.api.security.app.impl.JwtService;
@@ -33,8 +37,10 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Instant;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -65,14 +71,22 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     protected UserJpaRepository userJpaRepository;
     @Autowired
+    protected NotificationJpaRepository notificationJpaRepository;
+    @Autowired
     protected PendingNotificationJpaRepository pendingNotificationJpaRepository;
     @Autowired
     protected JdbcTemplate jdbcTemplate;
     @MockBean
     protected CreateUserCodeMessageSupplier createUserCodeMessageSupplier;
+    @MockBean
+    protected TelegramBotFeignClient telegramBotFeignClient;
+
+    protected User user;
+    protected Project project;
 
     @BeforeEach
     void clearDataBase() {
+        notificationJpaRepository.deleteAll();
         pendingNotificationJpaRepository.deleteAll();
         userCodeMongoRepository.deleteAll();
         taskJpaRepository.deleteAll();
@@ -105,6 +119,27 @@ public abstract class AbstractIntegrationTest {
         project.setProjectType(ProjectType.BASE);
         project.setUser(user);
         return projectJpaRepository.save(project);
+    }
+
+    protected Task createTask(Project project, PendingNotification pendingNotification) {
+        Task task = new Task();
+        task.setData("testData");
+        task.setStatus(TaskStatus.IN_PROGRESS);
+        task.setDescription("testData");
+        task.setProject(project);
+        if (pendingNotification != null) {
+            pendingNotification.setTask(task);
+            task.setPendingNotifications(List.of(pendingNotification));
+        }
+        return taskJpaRepository.save(task);
+    }
+
+    protected PendingNotification createNotification() {
+        PendingNotification pendingNotification = new PendingNotification();
+        pendingNotification.setAmount(10);
+        pendingNotification.setTimeType(TimeUnit.DAYS);
+        pendingNotification.setExecutionDate(Instant.now().plusSeconds(1000));
+        return pendingNotification;
     }
 
     // ===================================================================================================================

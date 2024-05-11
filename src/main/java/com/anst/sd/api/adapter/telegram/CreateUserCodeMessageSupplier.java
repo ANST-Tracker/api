@@ -1,6 +1,8 @@
 package com.anst.sd.api.adapter.telegram;
 
 import com.anst.sd.api.adapter.KafkaMessageMapper;
+import com.anst.sd.api.adapter.telegram.dto.CreateUserCodeDto;
+import com.anst.sd.api.adapter.telegram.dto.CreateUserCodeDtoMapper;
 import com.anst.sd.api.app.api.security.SendCodeOutbound;
 import com.anst.sd.api.domain.security.UserCode;
 import lombok.RequiredArgsConstructor;

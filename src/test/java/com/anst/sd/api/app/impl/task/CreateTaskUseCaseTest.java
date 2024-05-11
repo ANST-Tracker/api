@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -61,6 +62,8 @@ class CreateTaskUseCaseTest extends AbstractUnitTest {
         task.setData("testData");
         task.setDescription("testDescription");
         task.setDeadline(DEADLINE);
+        pendingNotification.setTask(task);
+        pendingNotification.setExecutionDate(DEADLINE.toInstant(ZoneOffset.UTC));
         task.setPendingNotifications(List.of(pendingNotification));
         return task;
     }
