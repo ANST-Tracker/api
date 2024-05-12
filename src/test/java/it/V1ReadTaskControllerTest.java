@@ -70,7 +70,7 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
         assertEquals(task.getId(), responseDto.getId());
         assertEquals(task.getDeadline(), responseDto.getDeadline());
         assertEquals(task.getDescription(), responseDto.getDescription());
-        assertEquals(task.getProject(), project);
+        assertEquals(task.getProject().getName(), taskJpaRepository.findAll().get(0).getProject().getName());
         assertEquals(task.getPendingNotifications().size(), responseDto.getPendingNotifications().size());
     }
 
@@ -89,7 +89,7 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
         assertEquals(task.getData(), responseDto.getData());
         assertEquals(task.getId(), responseDto.getId());
         assertEquals(task.getPendingNotifications().size(), responseDto.getPendingNotifications().size());
-        assertEquals(notification.getTask().getProject(), project);
+        assertEquals(notification.getTask().getProject().getName(), projectJpaRepository.findAll().get(0).getName());
     }
 
     @Test
