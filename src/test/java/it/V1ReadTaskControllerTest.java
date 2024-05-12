@@ -57,18 +57,39 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
 
     @Test
     void getTaskById_successfully() throws Exception {
+        Task task = createTask(project, null);
+
+        MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
+                .get(API_URL + "/" + task.getId()))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        TaskInfoDto responseDto = getFromResponse(response, TaskInfoDto.class);
+        assertEquals(task.getData(), responseDto.getData());
+        assertEquals(task.getId(), responseDto.getId());
+        assertEquals(task.getDeadline(), responseDto.getDeadline());
+        assertEquals(task.getDescription(), responseDto.getDescription());
+        assertEquals(task.getProject().getName(), taskJpaRepository.findAll().get(0).getProject().getName());
+        assertEquals(task.getPendingNotifications().size(), responseDto.getPendingNotifications().size());
+    }
+
+    @Test
+    void getTaskById_withNotification_successfully() throws Exception {
         PendingNotification notification = createNotification();
         Task task = createTask(project, notification);
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
-            .get(API_URL + "/" + task.getId()))
-            .andDo(print())
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andReturn();
+                .get(API_URL + "/" + task.getId()))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
 
         TaskInfoDto responseDto = getFromResponse(response, TaskInfoDto.class);
-        assertEquals("testData", responseDto.getData());
+        assertEquals(task.getData(), responseDto.getData());
         assertEquals(task.getId(), responseDto.getId());
+        assertEquals(task.getPendingNotifications().size(), responseDto.getPendingNotifications().size());
+        assertEquals(notification.getTask().getProject().getName(), projectJpaRepository.findAll().get(0).getName());
     }
 
     @Test
