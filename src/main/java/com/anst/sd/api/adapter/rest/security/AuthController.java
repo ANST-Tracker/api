@@ -90,7 +90,7 @@ public class AuthController {
 
     @PostMapping("code/send")
     public ResponseEntity<String> sendCode(@RequestBody @Valid SendCodeRequestDto sendCodeRequestDto) {
-        String code = sendCodeInbound.send(sendCodeRequestDto.getTelegramId());
+        String code = sendCodeInbound.send(sendCodeRequestDto.getTelegramId(), sendCodeRequestDto.getUsername());
         if (returnCode) {
             return ResponseEntity.ok(code);
         }
