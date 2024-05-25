@@ -157,11 +157,25 @@ class AuthControllerTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void verifyCode_successfully() throws Exception {
+    void verifyCode_successfully_byTelegramId() throws Exception {
         String telegramId = "testId";
         String code = sendGetCodeRequest(telegramId, null);
 
-        MvcResult mvcResult = sendVerifyCodeRequest(telegramId, code, MockMvcResultMatchers.status().isOk());
+        MvcResult mvcResult = sendVerifyCodeRequest(telegramId, code, null, MockMvcResultMatchers.status().isOk());
+
+        JwtResponseDto responseDto = getFromResponse(mvcResult, JwtResponseDto.class);
+        assertNotNull(responseDto.getAccessToken());
+        assertNull(responseDto.getRefreshToken());
+    }
+
+    @Test
+    void verifyCode_successfully_byUsername() throws Exception {
+        user = createTestUser();
+        String telegramId = "testId";
+
+        String code = sendGetCodeRequest(telegramId, user.getUsername());
+
+        MvcResult mvcResult = sendVerifyCodeRequest(telegramId, code, user.getUsername(),MockMvcResultMatchers.status().isOk());
 
         JwtResponseDto responseDto = getFromResponse(mvcResult, JwtResponseDto.class);
         assertNotNull(responseDto.getAccessToken());
@@ -176,7 +190,8 @@ class AuthControllerTest extends AbstractIntegrationTest {
         userCode.setExpirationTime(Instant.now().minusSeconds(1));
         userCodeMongoRepository.save(userCode);
 
-        MvcResult mvcResult = sendVerifyCodeRequest(telegramId, code, MockMvcResultMatchers.status().isUnauthorized());
+        MvcResult mvcResult = sendVerifyCodeRequest(telegramId, code, null,
+                MockMvcResultMatchers.status().isUnauthorized());
 
         ErrorInfoDto errorInfoDto = getFromResponse(mvcResult, ErrorInfoDto.class);
         assertEquals("Code is expired", errorInfoDto.getMessage());
@@ -187,7 +202,8 @@ class AuthControllerTest extends AbstractIntegrationTest {
         String telegramId = "testId";
         sendGetCodeRequest(telegramId, null);
 
-        MvcResult mvcResult = sendVerifyCodeRequest(telegramId, "wrong", MockMvcResultMatchers.status().isUnauthorized());
+        MvcResult mvcResult = sendVerifyCodeRequest(telegramId, "wrong",null,
+                MockMvcResultMatchers.status().isUnauthorized());
 
         ErrorInfoDto errorInfoDto = getFromResponse(mvcResult, ErrorInfoDto.class);
         assertEquals("Wrong code", errorInfoDto.getMessage());
@@ -204,7 +220,8 @@ class AuthControllerTest extends AbstractIntegrationTest {
 
     private String createToken(String telegramId) throws Exception {
         String code = sendGetCodeRequest(telegramId, null);
-        MvcResult mvcResult = sendVerifyCodeRequest(telegramId, code, MockMvcResultMatchers.status().isOk());
+        MvcResult mvcResult = sendVerifyCodeRequest(telegramId, code,null,
+                MockMvcResultMatchers.status().isOk());
         JwtResponseDto responseDto = getFromResponse(mvcResult, JwtResponseDto.class);
         return responseDto.getAccessToken();
     }
@@ -220,11 +237,12 @@ class AuthControllerTest extends AbstractIntegrationTest {
         return getFromResponse(mvcResult, String.class);
     }
 
-    private MvcResult sendVerifyCodeRequest(String telegramId, String code, ResultMatcher resultMatcher) throws Exception {
+    private MvcResult sendVerifyCodeRequest(String telegramId, String code, String username,
+                                            ResultMatcher resultMatcher) throws Exception {
         return mockMvc.perform(MockMvcRequestBuilders
                 .post(API_URL + "/code/verify")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new VerifyCodeRequestDto(telegramId, code))))
+                .content(objectMapper.writeValueAsString(new VerifyCodeRequestDto(telegramId, code, username))))
             .andDo(print())
             .andExpect(resultMatcher)
             .andReturn();

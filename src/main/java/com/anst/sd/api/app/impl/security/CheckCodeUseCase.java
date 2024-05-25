@@ -2,6 +2,7 @@ package com.anst.sd.api.app.impl.security;
 
 import com.anst.sd.api.app.api.security.CheckCodeInbound;
 import com.anst.sd.api.app.api.security.UserCodeRepository;
+import com.anst.sd.api.app.api.user.UserRepository;
 import com.anst.sd.api.domain.security.UserCode;
 import com.anst.sd.api.security.app.api.AuthException;
 import com.anst.sd.api.security.app.impl.JwtService;
@@ -22,10 +23,14 @@ public class CheckCodeUseCase implements CheckCodeInbound {
 
     private final UserCodeRepository userCodeRepository;
     private final JwtService jwtService;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE, noRollbackFor = AuthException.class)
-    public String check(String telegramId, String code) {
+    public String check(String telegramId, String code, String username) {
+        if (username != null) {
+            telegramId = userRepository.getByUsername(username).getTelegramId();
+        }
         UserCode userCode = userCodeRepository.getByTelegramId(telegramId);
         validateUserCode(userCode, code);
         userCodeRepository.delete(userCode);
