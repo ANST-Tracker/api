@@ -22,7 +22,6 @@ public class CreateTaskDto {
     String data;
     LocalDateTime deadline;
     String description;
-    @NotNull
     TaskStatus status;
     List<PendingNotificationDto> pendingNotifications;
 }
