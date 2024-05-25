@@ -1,6 +1,7 @@
 package com.anst.sd.api.adapter.rest.task.write.dto;
 
 import com.anst.sd.api.adapter.rest.task.dto.PendingNotificationDto;
+import com.anst.sd.api.domain.task.TaskStatus;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -20,5 +21,6 @@ public class CreateTaskDto {
     String data;
     LocalDateTime deadline;
     String description;
+    TaskStatus status;
     List<PendingNotificationDto> pendingNotifications;
 }
