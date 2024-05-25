@@ -99,7 +99,8 @@ public class AuthController {
 
     @PostMapping("code/verify")
     public ResponseEntity<JwtResponseDto> verifyCode(@RequestBody @Valid VerifyCodeRequestDto verifyCodeRequestDto) {
-        String token = checkCodeInbound.check(verifyCodeRequestDto.getTelegramId(), verifyCodeRequestDto.getCode());
+        String token = checkCodeInbound.check(verifyCodeRequestDto.getTelegramId(), verifyCodeRequestDto.getCode(),
+                verifyCodeRequestDto.getUsername());
         return ResponseEntity.ok(new JwtResponseDto(token, null));
     }
 }
