@@ -29,7 +29,7 @@ public class SendCodeUseCase implements SendCodeInbound {
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public String send(String telegramId, String username) {
-        log.info("Create user code processing started");
+        log.info("Create user code processing started for telegramId {} username {}", telegramId, username);
         if (username != null) {
             telegramId = userRepository.getByUsername(username).getTelegramId();
         }
@@ -45,8 +45,8 @@ public class SendCodeUseCase implements SendCodeInbound {
         String authCode = CodeGenerationDelegate.generate();
         userCode.setCode(authCode);
 
-        userCodeRepository.save(userCode);
         sendCodeOutbound.send(userCode);
+        userCodeRepository.save(userCode);
         return authCode;
     }
 

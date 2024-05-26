@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -33,9 +32,21 @@ public class CreateTaskUseCase implements CreateTaskInBound {
         if (task.getPendingNotifications() != null && task.getDeadline() != null) {
             List<PendingNotification> convertedNotifications = task.getPendingNotifications().stream()
                     .map(notification -> dateConverterDelegate.convertToInstant(task.getDeadline(), notification))
-                    .collect(Collectors.toList());
+                    .toList();
             task.setPendingNotifications(convertedNotifications);
         }
         return taskRepository.save(task);
+    }
+
+    @Override
+    @Transactional
+    public void create(String userTelegramId, String name) {
+        log.info("Internal: creating task for telegram user {} with name {}", userTelegramId, name);
+        Project bucketProject = projectRepository.getBucketProject(userTelegramId);
+        Task task = new Task()
+            .setData(name)
+            .setProject(bucketProject)
+            .setStatus(TaskStatus.BACKLOG);
+        taskRepository.save(task);
     }
 }
