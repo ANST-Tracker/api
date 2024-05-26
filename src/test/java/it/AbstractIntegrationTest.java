@@ -118,7 +118,7 @@ public abstract class AbstractIntegrationTest {
     }
 
     protected Project createProject(User user, ProjectType projectType) {
-        return projectJpaRepository.save(createBaseProject(user, ProjectType.BUCKET));
+        return projectJpaRepository.save(createBaseProject(user, projectType));
     }
 
     private Project createBaseProject(User user, ProjectType projectType) {

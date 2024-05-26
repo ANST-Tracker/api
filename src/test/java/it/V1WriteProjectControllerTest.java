@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static com.anst.sd.api.domain.project.ProjectType.BASE;
+import static com.anst.sd.api.domain.project.ProjectType.BUCKET;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -47,7 +48,7 @@ class V1WriteProjectControllerTest extends AbstractIntegrationTest {
 
     @Test
     void deleteProject_bucket() throws Exception {
-        Project project = createProject(user, ProjectType.BUCKET);
+        Project project = createProject(user, BUCKET);
 
         performAuthenticated(user, MockMvcRequestBuilders
             .delete(API_URL + "/" + project.getId()))
