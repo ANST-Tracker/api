@@ -10,6 +10,7 @@ import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.project.ProjectType;
 import com.anst.sd.api.domain.security.Role;
 import com.anst.sd.api.domain.user.User;
+import com.anst.sd.api.security.app.api.JwtResponse;
 import com.anst.sd.api.security.app.impl.JwtService;
 import com.anst.sd.api.security.domain.ERole;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -33,17 +31,19 @@ public class RegisterUserUseCase implements RegisterUserInBound {
     private final PasswordEncoder encoder;
     private final RoleRepository roleRepository;
     private final ProjectRepository projectRepository;
+    private final GenerateTokensDelegate generateTokensDelegate;
 
     @Override
     @Transactional
-    public User register(User user) {
+    public JwtResponse register(User user, UUID deviceToken) {
         log.info("User registration processing for username {}", user.getUsername());
         validateUser(user);
         user.setPassword(encoder.encode(user.getPassword()));
         addUserRole(user);
         user = userRepository.save(user);
         createUserBucketProject(user);
-        return user;
+
+        return generateTokensDelegate.generate(user, deviceToken);
     }
 
     // ===================================================================================================================
@@ -61,7 +61,7 @@ public class RegisterUserUseCase implements RegisterUserInBound {
     private void addUserRole(User user) {
         Set<Role> roles = new HashSet<>();
         Role userRole = roleRepository.findByName(ERole.USER)
-            .orElseThrow(() -> new RoleNotFoundException(ERole.USER.name()));
+                .orElseThrow(() -> new RoleNotFoundException(ERole.USER.name()));
         roles.add(userRole);
         user.setRoles(roles);
     }
@@ -77,7 +77,7 @@ public class RegisterUserUseCase implements RegisterUserInBound {
         String telegramIdFromJwt = jwtService.getJwtAuth().getTelegramId();
         if (!telegramIdFromJwt.equals(user.getTelegramId())) {
             errors.add("Trying to register user with telegramId %s by token for another id %s"
-                .formatted(user.getTelegramId(), telegramIdFromJwt));
+                    .formatted(user.getTelegramId(), telegramIdFromJwt));
         }
         if (!errors.isEmpty()) {
             throw new RegisterUserException(StringUtils.join(errors, '\n'));

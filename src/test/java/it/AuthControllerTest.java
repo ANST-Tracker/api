@@ -78,8 +78,8 @@ class AuthControllerTest extends AbstractIntegrationTest {
         JwtResponseDto jwtResponseDto = getFromResponse(mvcResult, JwtResponseDto.class);
         assertNotNull(jwtResponseDto.getAccessToken());
         assertNotNull(jwtResponseDto.getRefreshToken());
-        assertEquals(1, refreshTokenJpaRepository.findAll().size());
-        assertEquals(1, deviceJpaRepository.findAll().size());
+        assertEquals(2, refreshTokenJpaRepository.findAll().size());
+        assertEquals(2, deviceJpaRepository.findAll().size());
     }
 
     @Test

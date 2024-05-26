@@ -3,5 +3,6 @@
   "firstName": "firstName",
   "lastName": "lastName",
   "telegramId": "telegramId",
-  "password": "password"
+  "password": "password",
+  "deviceToken": "91f2a235-ac71-4559-b2d3-c73822984acf"
 }

@@ -1,15 +1,12 @@
 package com.anst.sd.api.adapter.rest.security;
 
 import com.anst.sd.api.adapter.rest.security.dto.*;
-import com.anst.sd.api.adapter.rest.user.dto.UserDtoMapper;
-import com.anst.sd.api.adapter.rest.user.dto.UserInfoDto;
 import com.anst.sd.api.app.api.security.CheckCodeInbound;
 import com.anst.sd.api.app.api.security.RefreshTokenInBound;
 import com.anst.sd.api.app.api.security.SendCodeInbound;
 import com.anst.sd.api.app.api.user.LoginUserInBound;
 import com.anst.sd.api.app.api.user.RegisterUserException;
 import com.anst.sd.api.app.api.user.RegisterUserInBound;
-import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.security.app.api.JwtResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,7 +32,6 @@ public class AuthController {
     private final LoginUserInBound loginUserInBound;
     private final RegisterUserInBound registerUserInBound;
     private final CheckCodeInbound checkCodeInbound;
-    private final UserDtoMapper userDtoMapper;
     private final SignupRequestDomainMapper signUpRequestDomainMapper;
     private final JwtResponseDtoMapper jwtResponseDtoMapper;
     private final SendCodeInbound sendCodeInbound;
@@ -77,15 +73,16 @@ public class AuthController {
                             useReturnTypeSchema = true)
             })
     @PostMapping("/signup")
-    public ResponseEntity<UserInfoDto> registerUser(
+    public ResponseEntity<JwtResponseDto> registerUser(
             @Valid @RequestBody SignupRequestDto signUpRequestDto,
             BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
             throw new RegisterUserException(bindingResult.getAllErrors().toString());
         }
-        User registeredUser = registerUserInBound.register(signUpRequestDomainMapper.mapToDomain(signUpRequestDto));
-        return ResponseEntity.ok(userDtoMapper.mapToDto(registeredUser));
+        JwtResponse registeredUser = registerUserInBound.register(signUpRequestDomainMapper.mapToDomain(signUpRequestDto),
+                signUpRequestDto.getDeviceToken());
+        return ResponseEntity.ok(jwtResponseDtoMapper.mapToDto(registeredUser));
     }
 
     @PostMapping("code/send")
