@@ -1,9 +1,11 @@
 package it;
 
+import com.anst.sd.api.adapter.rest.task.write.dto.CreateTaskInternalDto;
 import com.anst.sd.api.domain.project.ProjectType;
 import com.anst.sd.api.domain.task.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -26,7 +28,10 @@ class V1WriteTaskInternalControllerTest extends AbstractIntegrationTest {
         createProject(user, ProjectType.BUCKET);
 
         mockMvc.perform(MockMvcRequestBuilders
-            .post(API_URL + "/" + user.getTelegramId() + "/" + taskName))
+                .post(API_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(
+                    new CreateTaskInternalDto(user.getTelegramId(), taskName))))
             .andDo(print())
             .andExpect(MockMvcResultMatchers.status().isOk());
 
@@ -38,10 +43,11 @@ class V1WriteTaskInternalControllerTest extends AbstractIntegrationTest {
 
     @Test
     void createTask_failed_noBucket() throws Exception {
-        String taskName = "taskName";
-
         mockMvc.perform(MockMvcRequestBuilders
-                .post(API_URL + "/" + user.getTelegramId() + "/" + taskName))
+                .post(API_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(
+                    new CreateTaskInternalDto(user.getTelegramId(), "taskName"))))
             .andDo(print())
 
             .andExpect(MockMvcResultMatchers.status().isNotFound());

@@ -1,12 +1,14 @@
 package com.anst.sd.api.adapter.rest.task.write;
 
+import com.anst.sd.api.adapter.rest.task.write.dto.CreateTaskInternalDto;
 import com.anst.sd.api.app.api.task.CreateTaskInBound;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,8 +27,8 @@ public class V1WriteTaskInternalController {
                             description = "Task created successfully",
                             useReturnTypeSchema = true)
             })
-    @PostMapping("/{userTelegramId}/{name}")
-    public void createTask(@PathVariable String userTelegramId, @PathVariable String name) {
-        createTaskInBound.create(userTelegramId, name);
+    @PostMapping
+    public void createTask(@RequestBody @Valid CreateTaskInternalDto request) {
+        createTaskInBound.create(request.getUserTelegramId(), request.getName());
     }
 }
