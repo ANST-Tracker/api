@@ -9,7 +9,6 @@ import lombok.experimental.FieldDefaults;
 
 import java.util.UUID;
 
-
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
