@@ -3,7 +3,6 @@ package it;
 import com.anst.sd.api.adapter.rest.project.write.dto.CreateProjectDto;
 import com.anst.sd.api.adapter.rest.project.write.dto.UpdateProjectDto;
 import com.anst.sd.api.domain.project.Project;
-import com.anst.sd.api.domain.project.ProjectType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -147,12 +146,4 @@ class V1WriteProjectControllerTest extends AbstractIntegrationTest {
 
             .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
-
-//    private Project createProject(User user, ProjectType projectType) {
-//        Project project = new Project();
-//        project.setUser(user);
-//        project.setName("test");
-//        project.setProjectType(projectType);
-//        return projectJpaRepository.save(project);
-//    }
 }

@@ -27,12 +27,12 @@ public class CreateTaskUseCase implements CreateTaskInBound {
     public Task create(Long userId, Long projectId, Task task) {
         log.info("Creating task with userId {} in project {}", userId, projectId);
         Project project = projectRepository.getByIdAndUserId(projectId, userId);
-        task.setProject(project);
-        task.setStatus(TaskStatus.BACKLOG);
+        task.setProject(project)
+            .setStatus(TaskStatus.BACKLOG);
         if (task.getPendingNotifications() != null && task.getDeadline() != null) {
             List<PendingNotification> convertedNotifications = task.getPendingNotifications().stream()
-                    .map(notification -> dateConverterDelegate.convertToInstant(task.getDeadline(), notification))
-                    .toList();
+                .map(notification -> dateConverterDelegate.convertToInstant(task.getDeadline(), notification))
+                .toList();
             task.setPendingNotifications(convertedNotifications);
         }
         return taskRepository.save(task);
