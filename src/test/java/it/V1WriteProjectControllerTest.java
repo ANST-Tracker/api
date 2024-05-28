@@ -3,8 +3,6 @@ package it;
 import com.anst.sd.api.adapter.rest.project.write.dto.CreateProjectDto;
 import com.anst.sd.api.adapter.rest.project.write.dto.UpdateProjectDto;
 import com.anst.sd.api.domain.project.Project;
-import com.anst.sd.api.domain.project.ProjectType;
-import com.anst.sd.api.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -12,6 +10,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static com.anst.sd.api.domain.project.ProjectType.BASE;
+import static com.anst.sd.api.domain.project.ProjectType.BUCKET;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -48,7 +47,7 @@ class V1WriteProjectControllerTest extends AbstractIntegrationTest {
 
     @Test
     void deleteProject_bucket() throws Exception {
-        Project project = createProject(user, ProjectType.BUCKET);
+        Project project = createProject(user, BUCKET);
 
         performAuthenticated(user, MockMvcRequestBuilders
             .delete(API_URL + "/" + project.getId()))
@@ -146,17 +145,5 @@ class V1WriteProjectControllerTest extends AbstractIntegrationTest {
             .andDo(print())
 
             .andExpect(MockMvcResultMatchers.status().isBadRequest());
-    }
-
-    // ===================================================================================================================
-    // = Implementation
-    // ===================================================================================================================
-
-    private Project createProject(User user, ProjectType projectType) {
-        Project project = new Project();
-        project.setUser(user);
-        project.setName("test");
-        project.setProjectType(projectType);
-        return projectJpaRepository.save(project);
     }
 }

@@ -9,6 +9,8 @@ public interface ProjectRepository {
 
     Project getByIdAndUserId(Long id, Long userId);
 
+    Project getBucketProject(String telegramUserId);
+
     List<Project> findByUserId(Long userId);
 
     void deleteById(Long id);

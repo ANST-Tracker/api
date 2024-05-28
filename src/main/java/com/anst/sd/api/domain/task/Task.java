@@ -6,6 +6,7 @@ import com.anst.sd.api.domain.project.Project;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.Accessors;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Accessors(chain = true)
 public class Task extends DomainObject {
     @Column
     private String data;

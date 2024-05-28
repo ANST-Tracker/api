@@ -114,11 +114,19 @@ public abstract class AbstractIntegrationTest {
     }
 
     protected Project createProject(User user) {
+        return projectJpaRepository.save(createBaseProject(user, ProjectType.BASE));
+    }
+
+    protected Project createProject(User user, ProjectType projectType) {
+        return projectJpaRepository.save(createBaseProject(user, projectType));
+    }
+
+    private Project createBaseProject(User user, ProjectType projectType) {
         Project project = new Project();
         project.setName("test");
-        project.setProjectType(ProjectType.BASE);
+        project.setProjectType(projectType);
         project.setUser(user);
-        return projectJpaRepository.save(project);
+        return project;
     }
 
     protected Task createTask(Project project, PendingNotification pendingNotification) {

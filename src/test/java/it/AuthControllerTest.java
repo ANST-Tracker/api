@@ -122,6 +122,9 @@ class AuthControllerTest extends AbstractIntegrationTest {
         String code = sendGetCodeRequest(telegramId, null);
 
         assertEquals(5, code.length());
+        UserCode userCode = userCodeMongoRepository.findUserCodeByTelegramId(telegramId).get();
+        assertEquals(telegramId, userCode.getTelegramId());
+        assertEquals(code, userCode.getCode());
         verify(createUserCodeMessageSupplier).send(any());
     }
 
