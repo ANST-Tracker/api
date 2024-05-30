@@ -69,31 +69,30 @@ class AuthControllerTest extends AbstractIntegrationTest {
 
     @Test
     void loginUser_successfully() throws Exception {
-        SignupRequestDto dto = readFromFile("/AuthControllerTest/registerUserDto.json", SignupRequestDto.class);
-        registerUser(dto.getTelegramId(), dto, MockMvcResultMatchers.status().isOk());
-        LoginRequestDto loginRequestDto = new LoginRequestDto(dto.getUsername(), dto.getPassword(), UUID.randomUUID());
+        user = createTestUser();
+        user.setPassword("password");
+        LoginRequestDto loginRequestDto = new LoginRequestDto(user.getUsername(), user.getPassword(), UUID.randomUUID());
 
-        MvcResult mvcResult = loginUser(dto.getTelegramId(), loginRequestDto, MockMvcResultMatchers.status().isOk());
+        MvcResult mvcResult = loginUser(user.getTelegramId(), loginRequestDto, MockMvcResultMatchers.status().isOk());
 
         JwtResponseDto jwtResponseDto = getFromResponse(mvcResult, JwtResponseDto.class);
         assertNotNull(jwtResponseDto.getAccessToken());
         assertNotNull(jwtResponseDto.getRefreshToken());
-        assertEquals(2, refreshTokenJpaRepository.findAll().size());
-        assertEquals(2, deviceJpaRepository.findAll().size());
+        assertEquals(1, refreshTokenJpaRepository.findAll().size());
+        assertEquals(1, deviceJpaRepository.findAll().size());
     }
 
     @Test
     void loginUser_failed_differentTelegramId() throws Exception {
-        SignupRequestDto dto = readFromFile("/AuthControllerTest/registerUserDto.json", SignupRequestDto.class);
-        final String userTgId = dto.getTelegramId();
+        user = createTestUser();
+        user.setPassword("password");
         final String differentTgId = "differentId";
-        registerUser(userTgId, dto, MockMvcResultMatchers.status().isOk());
-        LoginRequestDto loginRequestDto = new LoginRequestDto(dto.getUsername(), dto.getPassword(), UUID.randomUUID());
+        LoginRequestDto loginRequestDto = new LoginRequestDto(user.getUsername(), user.getPassword(), UUID.randomUUID());
 
         MvcResult mvcResult = loginUser(differentTgId, loginRequestDto, MockMvcResultMatchers.status().isUnauthorized());
 
         ErrorInfoDto errorInfoDto = getFromResponse(mvcResult, ErrorInfoDto.class);
-        assertEquals("Trying to login user with tgId %s with token for tgId %s".formatted(userTgId, differentTgId),
+        assertEquals("Trying to login user with tgId %s with token for tgId %s".formatted(user.getTelegramId(), differentTgId),
             errorInfoDto.getMessage());
     }
 
