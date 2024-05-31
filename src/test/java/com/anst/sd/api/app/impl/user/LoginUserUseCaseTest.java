@@ -1,8 +1,6 @@
 package com.anst.sd.api.app.impl.user;
 
 import com.anst.sd.api.AbstractUnitTest;
-import com.anst.sd.api.app.api.device.DeviceRepository;
-import com.anst.sd.api.app.api.security.RefreshTokenRepository;
 import com.anst.sd.api.app.api.user.UserRepository;
 import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.security.app.api.AuthException;
@@ -25,16 +23,14 @@ class LoginUserUseCaseTest extends AbstractUnitTest {
     @Mock
     private PasswordEncoder passwordEncoder;
     @Mock
-    private DeviceRepository deviceRepository;
-    @Mock
     private JwtService jwtService;
     @Mock
-    private RefreshTokenRepository refreshTokenRepository;
+    private GenerateTokensDelegate generateTokensDelegate;
     private LoginUserUseCase useCase;
 
     @BeforeEach
     void setUp() {
-        useCase = new LoginUserUseCase(userRepository, passwordEncoder, deviceRepository, jwtService, refreshTokenRepository);
+        useCase = new LoginUserUseCase(userRepository, passwordEncoder, jwtService, generateTokensDelegate);
     }
 
     @Test

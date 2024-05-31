@@ -1,11 +1,13 @@
 package com.anst.sd.api.adapter.rest.security.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -19,4 +21,6 @@ public class SignupRequestDto {
     String telegramId;
     @NotBlank
     String password;
+    @NotNull
+    UUID deviceToken;
 }

@@ -26,6 +26,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -49,6 +50,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @AutoConfigureMockMvc
 public abstract class AbstractIntegrationTest {
     public static final Long DEVICE_ID = 1L;
+    public static final String USER_PASSWORD = "password";
 
     @Autowired
     protected MockMvc mockMvc;
@@ -76,6 +78,8 @@ public abstract class AbstractIntegrationTest {
     protected PendingNotificationJpaRepository pendingNotificationJpaRepository;
     @Autowired
     protected JdbcTemplate jdbcTemplate;
+    @Autowired
+    protected PasswordEncoder encoder;
     @MockBean
     protected CreateUserCodeMessageSupplier createUserCodeMessageSupplier;
     @MockBean
@@ -104,9 +108,9 @@ public abstract class AbstractIntegrationTest {
 
     protected User createTestUser() {
         User user = new User();
-        user.setTelegramId("telegramId");
-        user.setPassword("password");
         user.setUsername("username");
+        user.setPassword(encoder.encode(USER_PASSWORD));
+        user.setTelegramId("eridiium");
         user.setFirstName("firstName");
         user.setLastName("lastName");
         user.setRoles(Set.of(roleJpaRepository.findByName(ERole.USER).get()));
