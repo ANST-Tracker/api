@@ -54,9 +54,14 @@ class AuthControllerTest extends AbstractIntegrationTest {
     void registerUser_successfully() throws Exception {
         SignupRequestDto dto = readFromFile("/AuthControllerTest/registerUserDto.json", SignupRequestDto.class);
 
-        registerUser(dto.getTelegramId(), dto, MockMvcResultMatchers.status().isOk());
+        MvcResult mvcResult = registerUser(dto.getTelegramId(), dto, MockMvcResultMatchers.status().isOk());
 
+        JwtResponseDto jwtResponseDto = getFromResponse(mvcResult, JwtResponseDto.class);
+        assertNotNull(jwtResponseDto.getAccessToken());
+        assertNotNull(jwtResponseDto.getRefreshToken());
         assertEquals(1, userJpaRepository.findAll().size());
+        assertEquals(1, refreshTokenJpaRepository.findAll().size());
+        assertEquals(1, deviceJpaRepository.findAll().size());
         User registeredUser = userJpaRepository.findAll().get(0);
         assertEquals(dto.getTelegramId(), registeredUser.getTelegramId());
         assertEquals(dto.getLastName(), registeredUser.getLastName());
@@ -70,7 +75,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
     @Test
     void loginUser_successfully() throws Exception {
         user = createTestUser();
-        user.setPassword("password");
+        user.setPassword(USER_PASSWORD);
         LoginRequestDto loginRequestDto = new LoginRequestDto(user.getUsername(), user.getPassword(), UUID.randomUUID());
 
         MvcResult mvcResult = loginUser(user.getTelegramId(), loginRequestDto, MockMvcResultMatchers.status().isOk());
@@ -85,7 +90,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
     @Test
     void loginUser_failed_differentTelegramId() throws Exception {
         user = createTestUser();
-        user.setPassword("password");
+        user.setPassword(USER_PASSWORD);
         final String differentTgId = "differentId";
         LoginRequestDto loginRequestDto = new LoginRequestDto(user.getUsername(), user.getPassword(), UUID.randomUUID());
 

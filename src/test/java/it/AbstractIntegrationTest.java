@@ -50,6 +50,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @AutoConfigureMockMvc
 public abstract class AbstractIntegrationTest {
     public static final Long DEVICE_ID = 1L;
+    public static final String USER_PASSWORD = "password";
 
     @Autowired
     protected MockMvc mockMvc;
@@ -108,7 +109,7 @@ public abstract class AbstractIntegrationTest {
     protected User createTestUser() {
         User user = new User();
         user.setUsername("username");
-        user.setPassword(encoder.encode("password"));
+        user.setPassword(encoder.encode(USER_PASSWORD));
         user.setTelegramId("eridiium");
         user.setFirstName("firstName");
         user.setLastName("lastName");
