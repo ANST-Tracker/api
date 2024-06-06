@@ -13,14 +13,13 @@ import java.time.Instant;
 @Builder(toBuilder = true)
 public class ErrorInfoDto {
     private Long timestamp;
-    private String message;
     private ErrorType type;
 
-    public static ErrorInfoDto createErrorInfo(Exception e) {
+    public static ErrorInfoDto createErrorInfo(ErrorType errorType) {
         return ErrorInfoDto.builder()
-                .message(e.getMessage())
-                .timestamp(Instant.now().toEpochMilli())
-                .build();
+            .timestamp(Instant.now().toEpochMilli())
+            .type(errorType)
+            .build();
     }
 
     public enum ErrorType {
