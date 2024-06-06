@@ -35,18 +35,18 @@ public class V1WriteTaskController {
     private final TaskDomainMapper taskDomainMapper;
 
     @Operation(
-            summary = "Create a new task",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Task created successfully",
-                            useReturnTypeSchema = true)
-            })
+        summary = "Create a new task",
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Task created successfully",
+                useReturnTypeSchema = true)
+        })
     @PostMapping("/{projectId}")
     public ResponseEntity<TaskInfoDto> createTask(
-            @Valid @RequestBody CreateTaskDto request,
-            @PathVariable Long projectId,
-            BindingResult bindingResult) {
+        @Valid @RequestBody CreateTaskDto request,
+        @PathVariable Long projectId,
+        BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new TaskValidationException();
         }
@@ -56,18 +56,18 @@ public class V1WriteTaskController {
     }
 
     @Operation(
-            summary = "Update task",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Task updated successfully",
-                            useReturnTypeSchema = true)
-            })
+        summary = "Update task",
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Task updated successfully",
+                useReturnTypeSchema = true)
+        })
     @PutMapping("/{id}")
     public ResponseEntity<IdResponseDto> updateTask(
-            @PathVariable Long id,
-            @Valid @RequestBody UpdateTaskDto request,
-            BindingResult bindingResult) {
+        @PathVariable Long id,
+        @Valid @RequestBody UpdateTaskDto request,
+        BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new TaskValidationException(id);
         }
@@ -77,13 +77,13 @@ public class V1WriteTaskController {
     }
 
     @Operation(
-            summary = "Delete task by ID",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Task deleted successfully",
-                            useReturnTypeSchema = true)
-            })
+        summary = "Delete task by ID",
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Task deleted successfully",
+                useReturnTypeSchema = true)
+        })
     @DeleteMapping("/{id}")
     public ResponseEntity<IdResponseDto> deleteTask(@Parameter(description = "Task ID") @PathVariable Long id) {
         Task task = deleteTaskInBound.delete(jwtService.getJwtAuth().getUserId(), id);

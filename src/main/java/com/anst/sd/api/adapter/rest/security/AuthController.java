@@ -37,13 +37,13 @@ public class AuthController {
     private final SendCodeInbound sendCodeInbound;
 
     @Operation(
-            summary = "Refresh an access token",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Access token refreshed successfully",
-                            useReturnTypeSchema = true)
-            })
+        summary = "Refresh an access token",
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Access token refreshed successfully",
+                useReturnTypeSchema = true)
+        })
     @PostMapping("/refresh")
     public ResponseEntity<JwtResponseDto> refresh(@Valid @RequestBody RefreshRequestDto request) {
         JwtResponse response = refreshTokenInBound.refresh(request.getRefreshToken());
@@ -51,13 +51,13 @@ public class AuthController {
     }
 
     @Operation(
-            summary = "User authentication",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "User authenticated successfully",
-                            useReturnTypeSchema = true)
-            })
+        summary = "User authentication",
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "User authenticated successfully",
+                useReturnTypeSchema = true)
+        })
     @PostMapping("/signin")
     public ResponseEntity<JwtResponseDto> loginUser(@Valid @RequestBody LoginRequestDto request) {
         JwtResponse response = loginUserInBound.login(request.getUsername(), request.getPassword(), request.getDeviceToken());
@@ -65,23 +65,22 @@ public class AuthController {
     }
 
     @Operation(
-            summary = "User registration",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "User registered successfully",
-                            useReturnTypeSchema = true)
-            })
+        summary = "User registration",
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "User registered successfully",
+                useReturnTypeSchema = true)
+        })
     @PostMapping("/signup")
     public ResponseEntity<JwtResponseDto> registerUser(
-            @Valid @RequestBody SignupRequestDto signUpRequestDto,
-            BindingResult bindingResult
-    ) {
+        @Valid @RequestBody SignupRequestDto signUpRequestDto,
+        BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new RegisterUserException(bindingResult.getAllErrors().toString());
         }
         JwtResponse registeredUser = registerUserInBound.register(signUpRequestDomainMapper.mapToDomain(signUpRequestDto),
-                signUpRequestDto.getDeviceToken());
+            signUpRequestDto.getDeviceToken());
         return ResponseEntity.ok(jwtResponseDtoMapper.mapToDto(registeredUser));
     }
 
@@ -97,7 +96,7 @@ public class AuthController {
     @PostMapping("code/verify")
     public ResponseEntity<JwtResponseDto> verifyCode(@RequestBody @Valid VerifyCodeRequestDto verifyCodeRequestDto) {
         String token = checkCodeInbound.check(verifyCodeRequestDto.getTelegramId(), verifyCodeRequestDto.getCode(),
-                verifyCodeRequestDto.getUsername());
+            verifyCodeRequestDto.getUsername());
         return ResponseEntity.ok(new JwtResponseDto(token, null));
     }
 }

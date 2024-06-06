@@ -20,6 +20,8 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
+import static com.anst.sd.api.adapter.rest.dto.ErrorInfoDto.ErrorType.AUTH;
+import static com.anst.sd.api.adapter.rest.dto.ErrorInfoDto.ErrorType.CLIENT;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -40,14 +42,12 @@ class AuthControllerTest extends AbstractIntegrationTest {
     @Test
     void registerUser_failed_differentTelegramIds() throws Exception {
         SignupRequestDto dto = readFromFile("/AuthControllerTest/registerUserDto.json", SignupRequestDto.class);
-        final String userTgId = dto.getTelegramId();
-        final String differentTgId = "differentId";
+        String differentTgId = "differentId";
 
         MvcResult mvcResult = registerUser(differentTgId, dto, MockMvcResultMatchers.status().isBadRequest());
 
         ErrorInfoDto errorInfoDto = getFromResponse(mvcResult, ErrorInfoDto.class);
-        assertEquals("Can't register user. Reason Trying to register user with telegramId %s by token for another id %s"
-                .formatted(userTgId, differentTgId), errorInfoDto.getMessage());
+        assertEquals(CLIENT, errorInfoDto.getType());
     }
 
     @Test
@@ -90,15 +90,13 @@ class AuthControllerTest extends AbstractIntegrationTest {
     @Test
     void loginUser_failed_differentTelegramId() throws Exception {
         user = createTestUser();
-        user.setPassword(USER_PASSWORD);
-        final String differentTgId = "differentId";
-        LoginRequestDto loginRequestDto = new LoginRequestDto(user.getUsername(), user.getPassword(), UUID.randomUUID());
+        String differentTgId = "differentId";
+        LoginRequestDto loginRequestDto = new LoginRequestDto(user.getUsername(), USER_PASSWORD, UUID.randomUUID());
 
         MvcResult mvcResult = loginUser(differentTgId, loginRequestDto, MockMvcResultMatchers.status().isUnauthorized());
 
         ErrorInfoDto errorInfoDto = getFromResponse(mvcResult, ErrorInfoDto.class);
-        assertEquals("Trying to login user with tgId %s with token for tgId %s".formatted(user.getTelegramId(), differentTgId),
-            errorInfoDto.getMessage());
+        assertEquals(AUTH, errorInfoDto.getType());
     }
 
     @Test
@@ -160,7 +158,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
             .andReturn();
 
         ErrorInfoDto errorResponse = getFromResponse(mvcResult, ErrorInfoDto.class);
-        assertEquals("Code already sent to telegramId " + telegramId, errorResponse.getMessage());
+        assertEquals(CLIENT, errorResponse.getType());
     }
 
     @Test
@@ -201,7 +199,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
                 MockMvcResultMatchers.status().isUnauthorized());
 
         ErrorInfoDto errorInfoDto = getFromResponse(mvcResult, ErrorInfoDto.class);
-        assertEquals("Code is expired", errorInfoDto.getMessage());
+        assertEquals(AUTH, errorInfoDto.getType());
     }
 
     @Test
@@ -213,7 +211,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
                 MockMvcResultMatchers.status().isUnauthorized());
 
         ErrorInfoDto errorInfoDto = getFromResponse(mvcResult, ErrorInfoDto.class);
-        assertEquals("Wrong code", errorInfoDto.getMessage());
+        assertEquals(AUTH, errorInfoDto.getType());
     }
 
     // ===================================================================================================================
