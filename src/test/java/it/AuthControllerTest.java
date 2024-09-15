@@ -4,10 +4,12 @@ import com.anst.sd.api.adapter.rest.dto.ErrorInfoDto;
 import com.anst.sd.api.adapter.rest.security.dto.*;
 import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.project.ProjectType;
+import com.anst.sd.api.domain.security.Device;
 import com.anst.sd.api.domain.security.UserCode;
 import com.anst.sd.api.domain.user.User;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -18,7 +20,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.UUID;
 
 import static com.anst.sd.api.adapter.rest.dto.ErrorInfoDto.ErrorType.AUTH;
 import static com.anst.sd.api.adapter.rest.dto.ErrorInfoDto.ErrorType.CLIENT;
@@ -60,8 +61,10 @@ class AuthControllerTest extends AbstractIntegrationTest {
         assertNotNull(jwtResponseDto.getAccessToken());
         assertNotNull(jwtResponseDto.getRefreshToken());
         assertEquals(1, userJpaRepository.findAll().size());
-        assertEquals(1, refreshTokenJpaRepository.findAll().size());
         assertEquals(1, deviceJpaRepository.findAll().size());
+        Device device = deviceJpaRepository.findAll().get(0);
+        assertEquals(USER_AGENT, device.getUserAgent());
+        assertNotNull(device.getRemoteAddress());
         User registeredUser = userJpaRepository.findAll().get(0);
         assertEquals(dto.getTelegramId(), registeredUser.getTelegramId());
         assertEquals(dto.getLastName(), registeredUser.getLastName());
@@ -76,22 +79,24 @@ class AuthControllerTest extends AbstractIntegrationTest {
     void loginUser_successfully() throws Exception {
         user = createTestUser();
         user.setPassword(USER_PASSWORD);
-        LoginRequestDto loginRequestDto = new LoginRequestDto(user.getUsername(), user.getPassword(), UUID.randomUUID());
+        LoginRequestDto loginRequestDto = new LoginRequestDto(user.getUsername(), user.getPassword());
 
         MvcResult mvcResult = loginUser(user.getTelegramId(), loginRequestDto, MockMvcResultMatchers.status().isOk());
 
         JwtResponseDto jwtResponseDto = getFromResponse(mvcResult, JwtResponseDto.class);
         assertNotNull(jwtResponseDto.getAccessToken());
         assertNotNull(jwtResponseDto.getRefreshToken());
-        assertEquals(1, refreshTokenJpaRepository.findAll().size());
         assertEquals(1, deviceJpaRepository.findAll().size());
+        Device device = deviceJpaRepository.findAll().get(0);
+        assertEquals(USER_AGENT, device.getUserAgent());
+        assertNotNull(device.getRemoteAddress());
     }
 
     @Test
     void loginUser_failed_differentTelegramId() throws Exception {
         user = createTestUser();
         String differentTgId = "differentId";
-        LoginRequestDto loginRequestDto = new LoginRequestDto(user.getUsername(), USER_PASSWORD, UUID.randomUUID());
+        LoginRequestDto loginRequestDto = new LoginRequestDto(user.getUsername(), USER_PASSWORD);
 
         MvcResult mvcResult = loginUser(differentTgId, loginRequestDto, MockMvcResultMatchers.status().isUnauthorized());
 
@@ -103,7 +108,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
     void refreshToken_suspiciousActivity() throws Exception {
         SignupRequestDto dto = readFromFile("/AuthControllerTest/registerUserDto.json", SignupRequestDto.class);
         registerUser(dto.getTelegramId(), dto, MockMvcResultMatchers.status().isOk());
-        LoginRequestDto loginRequestDto = new LoginRequestDto(dto.getUsername(), dto.getPassword(), UUID.randomUUID());
+        LoginRequestDto loginRequestDto = new LoginRequestDto(dto.getUsername(), dto.getPassword());
         MvcResult loginResult = loginUser(dto.getTelegramId(), loginRequestDto, MockMvcResultMatchers.status().isOk());
         JwtResponseDto jwtResponseDto = getFromResponse(loginResult, JwtResponseDto.class);
         RefreshRequestDto refreshRequestDto = new RefreshRequestDto(jwtResponseDto.getRefreshToken());
@@ -124,7 +129,8 @@ class AuthControllerTest extends AbstractIntegrationTest {
         String code = sendGetCodeRequest(telegramId, null);
 
         assertEquals(5, code.length());
-        UserCode userCode = userCodeMongoRepository.findUserCodeByTelegramId(telegramId).get();
+        UserCode userCode = userCodeMongoRepository.findUserCodeByTelegramId(telegramId)
+            .orElseThrow();
         assertEquals(telegramId, userCode.getTelegramId());
         assertEquals(code, userCode.getCode());
         verify(createUserCodeMessageSupplier).send(any());
@@ -180,7 +186,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
 
         String code = sendGetCodeRequest(telegramId, user.getUsername());
 
-        MvcResult mvcResult = sendVerifyCodeRequest(telegramId, code, user.getUsername(),MockMvcResultMatchers.status().isOk());
+        MvcResult mvcResult = sendVerifyCodeRequest(telegramId, code, user.getUsername(), MockMvcResultMatchers.status().isOk());
 
         JwtResponseDto responseDto = getFromResponse(mvcResult, JwtResponseDto.class);
         assertNotNull(responseDto.getAccessToken());
@@ -196,7 +202,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
         userCodeMongoRepository.save(userCode);
 
         MvcResult mvcResult = sendVerifyCodeRequest(telegramId, code, null,
-                MockMvcResultMatchers.status().isUnauthorized());
+            MockMvcResultMatchers.status().isUnauthorized());
 
         ErrorInfoDto errorInfoDto = getFromResponse(mvcResult, ErrorInfoDto.class);
         assertEquals(AUTH, errorInfoDto.getType());
@@ -207,8 +213,8 @@ class AuthControllerTest extends AbstractIntegrationTest {
         String telegramId = "testId";
         sendGetCodeRequest(telegramId, null);
 
-        MvcResult mvcResult = sendVerifyCodeRequest(telegramId, "wrong",null,
-                MockMvcResultMatchers.status().isUnauthorized());
+        MvcResult mvcResult = sendVerifyCodeRequest(telegramId, "wrong", null,
+            MockMvcResultMatchers.status().isUnauthorized());
 
         ErrorInfoDto errorInfoDto = getFromResponse(mvcResult, ErrorInfoDto.class);
         assertEquals(AUTH, errorInfoDto.getType());
@@ -225,8 +231,8 @@ class AuthControllerTest extends AbstractIntegrationTest {
 
     private String createToken(String telegramId) throws Exception {
         String code = sendGetCodeRequest(telegramId, null);
-        MvcResult mvcResult = sendVerifyCodeRequest(telegramId, code,null,
-                MockMvcResultMatchers.status().isOk());
+        MvcResult mvcResult = sendVerifyCodeRequest(telegramId, code, null,
+            MockMvcResultMatchers.status().isOk());
         JwtResponseDto responseDto = getFromResponse(mvcResult, JwtResponseDto.class);
         return responseDto.getAccessToken();
     }
@@ -243,7 +249,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
     }
 
     private MvcResult sendVerifyCodeRequest(String telegramId, String code, String username,
-                                            ResultMatcher resultMatcher) throws Exception {
+        ResultMatcher resultMatcher) throws Exception {
         return mockMvc.perform(MockMvcRequestBuilders
                 .post(API_URL + "/code/verify")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -257,7 +263,8 @@ class AuthControllerTest extends AbstractIntegrationTest {
         return performTelegramAuthenticated(telegramId, MockMvcRequestBuilders
                 .post(API_URL + "/signup")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(signupRequestDto)))
+                .content(objectMapper.writeValueAsString(signupRequestDto))
+                .header(HttpHeaders.USER_AGENT, USER_AGENT))
             .andDo(print())
             .andExpect(resultMatcher)
             .andReturn();
@@ -267,7 +274,8 @@ class AuthControllerTest extends AbstractIntegrationTest {
         return performTelegramAuthenticated(telegramId, MockMvcRequestBuilders
                 .post(API_URL + "/signin")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(loginRequestDto)))
+                .content(objectMapper.writeValueAsString(loginRequestDto))
+                .header(HttpHeaders.USER_AGENT, USER_AGENT))
             .andDo(print())
             .andExpect(resultMatcher)
             .andReturn();

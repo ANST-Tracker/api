@@ -7,18 +7,21 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.Instant;
-import java.util.UUID;
 
 @Entity
 @Setter
 @Getter
 @Table(name = "device")
 public class Device extends DomainObject {
-    @Column
-    private UUID deviceToken;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+    @Column
+    private String token;
+    @Column(name = "user_agent")
+    private String userAgent;
+    @Column(name = "ip")
+    private String remoteAddress;
 
     @Column(name = "last_login")
     private Instant lastLogin;
@@ -36,9 +39,8 @@ public class Device extends DomainObject {
         lastLogin = Instant.now();
     }
 
-    public static Device createDevice(UUID token, User user) {
+    public static Device createDevice(User user) {
         Device device = new Device();
-        device.deviceToken = token;
         device.user = user;
         return device;
     }
