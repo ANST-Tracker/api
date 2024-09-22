@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/task")
 @RestController
 @RequiredArgsConstructor
-public class V1WriteTaskController {
+public class  V1WriteTaskController {
     private final UpdateTaskInBound updateTaskInBound;
     private final DeleteTaskInBound deleteTaskInBound;
     private final JwtService jwtService;

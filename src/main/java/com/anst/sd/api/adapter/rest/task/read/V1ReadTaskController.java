@@ -72,6 +72,7 @@ public class V1ReadTaskController {
         })
     @PostMapping("/find-by-filter")
     public ResponseEntity<List<TaskInfoDto>> searchTasks(@RequestBody TaskFilterRequestDto taskFilterRequestDto) {
+        //TODO: Do search refactor with tags
         TaskFilter filterRequest = filterRequestDomainMapper.mapToDomain(taskFilterRequestDto);
         List<Task> result = filterTasksInBound.filter(jwtService.getJwtAuth().getUserId(), filterRequest);
         return ResponseEntity.ok(taskDtoMapper.mapToDto(result));

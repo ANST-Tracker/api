@@ -5,6 +5,7 @@ import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.security.Device;
 import com.anst.sd.api.domain.security.RefreshToken;
 import com.anst.sd.api.domain.security.Role;
+import com.anst.sd.api.domain.tag.Tag;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -47,6 +48,8 @@ public class User extends DomainObject {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private List<Device> devices;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    private List<Tag> tags;
     @Column(nullable = false)
     private Instant created;
     @Column
