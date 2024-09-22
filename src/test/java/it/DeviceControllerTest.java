@@ -59,7 +59,7 @@ class DeviceControllerTest extends AbstractIntegrationTest {
         device.setUser(user);
         device.setLastLogin(Instant.now());
         device.setToken("token");
-        device.setRemoteAddress("95.79.189.79");
+        device.setIp("95.79.189.79");
         device.setUserAgent(USER_AGENT);
         return deviceJpaRepository.save(device);
     }

@@ -20,8 +20,8 @@ public class Device extends DomainObject {
     private String token;
     @Column(name = "user_agent")
     private String userAgent;
-    @Column(name = "ip")
-    private String remoteAddress;
+    @Column
+    private String ip;
 
     @Column(name = "last_login")
     private Instant lastLogin;

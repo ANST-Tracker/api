@@ -42,7 +42,7 @@ public class GetDevicesUseCase implements GetDevicesInbound {
     private DeviceInfo getDeviceInfo(Device device) {
         DeviceInfo deviceInfo = new DeviceInfo();
         deviceInfo.setLastLogin(device.getLastLogin());
-        deviceInfo.setIpAddress(device.getRemoteAddress());
+        deviceInfo.setIpAddress(device.getIp());
         deviceInfo.setDeviceName(getDeviceName(device.getUserAgent()));
         deviceInfo.setLocationName(getDeviceLocation(device));
         return deviceInfo;
@@ -60,15 +60,14 @@ public class GetDevicesUseCase implements GetDevicesInbound {
 
     private String getDeviceLocation(Device device) {
         try {
-            InetAddress ipAddress = InetAddress.getByName(device.getRemoteAddress());
+            InetAddress ipAddress = InetAddress.getByName(device.getIp());
             CityResponse cityResponse = databaseReader.city(ipAddress);
 
-            return String.format("%s, %s",
-                cityResponse.getCountry().getName(),
+            return String.format("%s, %s", cityResponse.getCountry().getName(),
                 cityResponse.getCity().getName());
         } catch (Exception e) {
             log.warn("Error while getting device {} location by ip {}",
-                device.getId(), device.getRemoteAddress());
+                device.getId(), device.getIp());
             return null;
         }
     }

@@ -58,7 +58,7 @@ public class RefreshTokenUseCase implements RefreshTokenInBound {
 
     private void fillDeviceInfo(Device device) {
         JwtAuth jwtAuth = jwtService.getJwtAuth();
-        device.setRemoteAddress(jwtAuth.getRemoteAddress());
+        device.setIp(jwtAuth.getRemoteAddress());
         device.setUserAgent(jwtAuth.getUserAgent());
     }
 }

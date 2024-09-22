@@ -64,7 +64,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
         assertEquals(1, deviceJpaRepository.findAll().size());
         Device device = deviceJpaRepository.findAll().get(0);
         assertEquals(USER_AGENT, device.getUserAgent());
-        assertNotNull(device.getRemoteAddress());
+        assertNotNull(device.getIp());
         User registeredUser = userJpaRepository.findAll().get(0);
         assertEquals(dto.getTelegramId(), registeredUser.getTelegramId());
         assertEquals(dto.getLastName(), registeredUser.getLastName());
@@ -89,7 +89,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
         assertEquals(1, deviceJpaRepository.findAll().size());
         Device device = deviceJpaRepository.findAll().get(0);
         assertEquals(USER_AGENT, device.getUserAgent());
-        assertNotNull(device.getRemoteAddress());
+        assertNotNull(device.getIp());
     }
 
     @Test
