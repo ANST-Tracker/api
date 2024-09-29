@@ -5,6 +5,8 @@ import com.anst.sd.api.adapter.rest.tag.dto.TagInfoDto;
 import com.anst.sd.api.app.api.tag.GetTagsInBound;
 import com.anst.sd.api.domain.tag.Tag;
 import com.anst.sd.api.security.app.impl.JwtService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,14 @@ public class V1ReadTagController {
     private final GetTagsInBound getTagsInBound;
     private final TagDtoMapper tagDtoMapper;
 
+    @Operation(
+            summary = "Get all tags for the authenticated user",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Tags retrieved successfully",
+                            useReturnTypeSchema = true)
+            })
     @GetMapping("/list")
     public ResponseEntity<List<TagInfoDto>> getTags() {
         List<Tag> tags = getTagsInBound.get(jwtService.getJwtAuth().getUserId());

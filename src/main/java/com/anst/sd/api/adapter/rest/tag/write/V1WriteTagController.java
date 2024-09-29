@@ -12,7 +12,9 @@ import com.anst.sd.api.app.api.tag.TagValidationException;
 import com.anst.sd.api.app.api.tag.UpdateTagInBound;
 import com.anst.sd.api.domain.tag.Tag;
 import com.anst.sd.api.security.app.impl.JwtService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +34,17 @@ public class V1WriteTagController {
     private final TagDomainMapper tagDomainMapper;
     private final TagDtoMapper tagDtoMapper;
 
+    @Operation(
+            summary = "Create a new tag",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Tag created successfully",
+                            useReturnTypeSchema = true),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Invalid input")
+            })
     @PostMapping
     public ResponseEntity<TagInfoDto> createTag(
             @Valid @RequestBody CreateTagDto request,
@@ -44,9 +57,23 @@ public class V1WriteTagController {
         return ResponseEntity.ok(tagDtoMapper.mapToDto(result));
     }
 
+    @Operation(
+            summary = "Update an existing tag",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Tag updated successfully",
+                            useReturnTypeSchema = true),
+                    @ApiResponse(
+                            responseCode = "400",
+                            description = "Invalid input"),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Tag not found")
+            })
     @PutMapping("/{id}")
     public ResponseEntity<TagInfoDto> updateTag(
-            @PathVariable Long id,
+            @Parameter(description = "Tag ID") @PathVariable Long id,
             @Valid @RequestBody UpdateTagDto request,
             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -57,6 +84,17 @@ public class V1WriteTagController {
         return ResponseEntity.ok(tagDtoMapper.mapToDto(result));
     }
 
+    @Operation(
+            summary = "Delete a tag",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Tag deleted successfully",
+                            useReturnTypeSchema = true),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Tag not found")
+            })
     @DeleteMapping("/{id}")
     public ResponseEntity<IdResponseDto> deleteTag(@Parameter(description = "Tag ID") @PathVariable Long id) {
         Tag tag = deleteTagInBound.delete(jwtService.getJwtAuth().getUserId(), id);
