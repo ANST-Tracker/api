@@ -44,7 +44,7 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
         requestDto.setDeadline(dateRangeFilter);
         requestDto.setStatus(List.of(TaskStatus.BACKLOG));
         requestDto.setProjectIds(List.of(project.getId()));
-        requestDto.setTags(List.of("HOME"));
+        requestDto.setTags(List.of("HOME", "STUDY", "GYM"));
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
                 .post(API_URL + "/find-by-filter")
@@ -163,16 +163,18 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
         Tag smartTag = createAndSaveTag("SMART", project.getUser());
         Tag homeTag = createAndSaveTag("HOME", project.getUser());
         Tag workTag = createAndSaveTag("WORK", project.getUser());
+        Tag studyTag = createAndSaveTag("STUDY", project.getUser());
+        Tag gymTag = createAndSaveTag("GYM", project.getUser());
 
         Task task1 = createBaseTaskForFilter(project);
         task1.setStatus(TaskStatus.IN_PROGRESS);
         task1.setDeadline(LocalDateTime.now().plusDays(10));
-        task1.setTags(List.of(smartTag));
+        task1.setTags(List.of(smartTag, gymTag, workTag));
 
         Task task2 = createBaseTaskForFilter(project);
         task2.setStatus(TaskStatus.BACKLOG);
         task2.setDeadline(LocalDateTime.now().plusDays(8));
-        task2.setTags(List.of(homeTag));
+        task2.setTags(List.of(homeTag, studyTag, gymTag));
 
         Task task3 = createBaseTaskForFilter(project);
         task3.setStatus(TaskStatus.DONE);
@@ -186,6 +188,7 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
         Tag tag = new Tag();
         tag.setName(name);
         tag.setUser(user);
+        tag.setColor("#FFFFF");
         return tagJpaRepository.save(tag);
     }
 

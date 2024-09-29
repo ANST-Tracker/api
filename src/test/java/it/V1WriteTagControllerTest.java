@@ -18,8 +18,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 class V1WriteTagControllerTest extends AbstractIntegrationTest {
     private static final String API_URL = "/tag";
 
-    private User user;
-
     @BeforeEach
     void prepareData() {
         user = createTestUser();

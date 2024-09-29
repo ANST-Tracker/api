@@ -49,7 +49,7 @@ class CreateTaskUseCaseTest extends AbstractUnitTest {
         when(dateConverterDelegate.convertToInstant(any(LocalDateTime.class), any(PendingNotification.class)))
                 .thenReturn(task.getPendingNotifications().get(0));
 
-        Task result = useCase.create(1L, 1L, task, null);
+        Task result = useCase.create(1L, 1L, task);
 
         assertEquals(TaskStatus.BACKLOG, result.getStatus());
         assertEquals(project.getId(), result.getProject().getId());

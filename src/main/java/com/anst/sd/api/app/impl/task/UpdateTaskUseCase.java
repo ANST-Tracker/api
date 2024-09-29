@@ -27,14 +27,14 @@ public class UpdateTaskUseCase implements UpdateTaskInBound {
 
     @Override
     @Transactional
-    public Task update(Long userId, Long taskId, Task updated, List<Long> updatedTagIds) {
+    public Task update(Long userId, Long taskId, Task updated) {
         log.info("Updating task with id {} and userId {}", taskId, userId);
         Task task = taskRepository.findByIdAndUser(taskId, userId);
-        mergeTask(task, updated, userId, updatedTagIds);
+        mergeTask(task, updated, userId);
         return taskRepository.save(task);
     }
 
-    private void mergeTask(Task original, Task updated, Long userId, List<Long> updatedTagIds) {
+    private void mergeTask(Task original, Task updated, Long userId) {
         List<PendingNotification> convertedNotifications = new ArrayList<>();
         original.setData(updated.getData());
         original.setDeadline(updated.getDeadline());
@@ -51,7 +51,10 @@ public class UpdateTaskUseCase implements UpdateTaskInBound {
             Project newProject = projectRepository.getByIdAndUserId(updated.getUpdatedProjectId(), userId);
             original.setProject(newProject);
         }
-        if (updatedTagIds != null) {
+        if (updated.getTags() != null) {
+            List<Long> updatedTagIds = updated.getTags().stream()
+                    .map(Tag::getId)
+                    .toList();
             List<Tag> updatedTags = tagRepository.findAllByIds(updatedTagIds);
             original.setTags(updatedTags);
         }

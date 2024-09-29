@@ -21,15 +21,12 @@ public class CreateTagUseCase implements CreateTagInBound {
     @Override
     @Transactional
     public Tag create(Tag tag, Long userId) {
-        validateTag(tag.getName(), userId);
+        log.info("Creating tag name {} with userId {}", tag.getName(), userId);
+        if (tagRepository.existsByNameAndUserId(tag.getName(), userId)) {
+            throw new TagValidationException();
+        }
         User user = userRepository.getById(userId);
         tag.setUser(user);
         return tagRepository.save(tag);
-    }
-
-    private void validateTag(String name, Long userId) {
-        if (tagRepository.existsByNameAndUserId(name, userId)) {
-            throw new TagValidationException();
-        }
     }
 }

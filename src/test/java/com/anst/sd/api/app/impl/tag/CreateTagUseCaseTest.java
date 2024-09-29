@@ -33,10 +33,10 @@ class CreateTagUseCaseTest extends AbstractUnitTest {
         tag.setName("TestTag");
         User user = new User();
         user.setId(userId);
-
         when(tagRepository.existsByNameAndUserId(tag.getName(), userId)).thenReturn(false);
         when(userRepository.getById(userId)).thenReturn(user);
         when(tagRepository.save(tag)).thenReturn(tag);
+
         Tag result = useCase.create(tag, userId);
 
         assertNotNull(result);

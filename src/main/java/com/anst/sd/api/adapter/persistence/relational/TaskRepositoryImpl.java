@@ -26,7 +26,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -80,10 +82,11 @@ public class TaskRepositoryImpl implements TaskRepository {
                                                    Root<Task> taskRoot,
                                                    TaskJoinPredicates taskJoinPredicates) {
         List<Predicate> predicates = new ArrayList<>();
+        Map<String, Join<?, ?>> joinPredicates = new HashMap<>();
         addSimplePredicates(filter, taskRoot, predicates);
         addDateRangePredicates(criteriaBuilder, filter, taskRoot, predicates);
         addProjectPredicates(criteriaBuilder, filter, predicates, taskJoinPredicates);
-        addTagsPredicates(criteriaBuilder, filter, taskRoot, predicates);
+        addTagsPredicates(criteriaBuilder, filter, taskRoot, predicates, joinPredicates);
         return predicates;
     }
 
@@ -105,9 +108,13 @@ public class TaskRepositoryImpl implements TaskRepository {
         }
     }
 
-    private void addTagsPredicates(CriteriaBuilder criteriaBuilder, TaskFilter filter, Root<Task> taskRoot, List<Predicate> predicates) {
+    private void addTagsPredicates(CriteriaBuilder criteriaBuilder, TaskFilter filter, Root<Task> taskRoot,
+                                   List<Predicate> predicates, Map<String, Join<?, ?>> joinPredicates) {
         if (!CollectionUtils.isEmpty(filter.getTags())) {
-            Join<Task, Tag> tagJoin = taskRoot.join(Task_.tags, JoinType.INNER);
+            ListJoin<Task, Tag> tagJoin = (ListJoin<Task, Tag>) joinPredicates.computeIfAbsent(
+                    "tags",
+                    k -> taskRoot.join(Task_.tags, JoinType.LEFT)
+            );
 
             List<Predicate> tagPredicates = filter.getTags().stream()
                     .map(tagName -> criteriaBuilder.equal(tagJoin.get(Tag_.name), tagName))
@@ -116,6 +123,7 @@ public class TaskRepositoryImpl implements TaskRepository {
             predicates.add(criteriaBuilder.or(tagPredicates.toArray(new Predicate[0])));
         }
     }
+
 
     private void addDateRangePredicates(CriteriaBuilder criteriaBuilder,
                                         TaskFilter filter,

@@ -22,8 +22,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Slf4j
 @RequestMapping("/task")
 @RestController
@@ -52,9 +50,8 @@ public class V1WriteTaskController {
         if (bindingResult.hasErrors()) {
             throw new TaskValidationException();
         }
-        List<Long> tagIds = request.getTagIds();
         Task task = taskDomainMapper.mapToDomain(request);
-        Task result = createTaskInBound.create(jwtService.getJwtAuth().getUserId(), projectId, task, tagIds);
+        Task result = createTaskInBound.create(jwtService.getJwtAuth().getUserId(), projectId, task);
         return ResponseEntity.ok(taskDtoMapper.mapToDto(result));
     }
 
@@ -74,9 +71,8 @@ public class V1WriteTaskController {
         if (bindingResult.hasErrors()) {
             throw new TaskValidationException(id);
         }
-        List<Long> updatedTagIds = request.getTagIds();
         Task task = taskDomainMapper.mapToDomain(request);
-        Task result = updateTaskInBound.update(jwtService.getJwtAuth().getUserId(), id, task, updatedTagIds);
+        Task result = updateTaskInBound.update(jwtService.getJwtAuth().getUserId(), id, task);
         return ResponseEntity.ok(new IdResponseDto(result.getId()));
     }
 

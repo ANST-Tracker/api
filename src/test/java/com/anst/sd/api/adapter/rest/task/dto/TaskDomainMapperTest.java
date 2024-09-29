@@ -4,17 +4,10 @@ import com.anst.sd.api.AbstractUnitTest;
 import com.anst.sd.api.adapter.rest.task.write.dto.CreateTaskDto;
 import com.anst.sd.api.adapter.rest.task.write.dto.UpdateTaskDto;
 import com.anst.sd.api.domain.task.Task;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
 
 class TaskDomainMapperTest extends AbstractUnitTest {
-    private TaskDomainMapper mapper;
-
-    @BeforeEach
-    void setUp() {
-        mapper = Mappers.getMapper(TaskDomainMapper.class);
-    }
+    private TaskDomainMapper mapper = new TaskDomainMapperImpl_();
 
     @Test
     void mapToDomain__createTaskDto() {

@@ -27,14 +27,17 @@ public class CreateTaskUseCase implements CreateTaskInBound {
 
     @Override
     @Transactional
-    public Task create(Long userId, Long projectId, Task task, List<Long> tagIds) {
+    public Task create(Long userId, Long projectId, Task task) {
         log.info("Creating task with userId {} in project {}", userId, projectId);
         Project project = projectRepository.getByIdAndUserId(projectId, userId);
         task.setProject(project)
                 .setStatus(TaskStatus.BACKLOG);
-        if (tagIds != null) {
-            List<Tag> tags = tagRepository.findAllByIds(tagIds);
-            task.setTags(tags);
+        if (task.getTags() != null && !task.getTags().isEmpty()) {
+            List<Long> tags = task.getTags().stream()
+                    .map(Tag::getId)
+                    .toList();
+            List<Tag> fullTags = tagRepository.findAllByIds(tags);
+            task.setTags(fullTags);
         }
         if (task.getPendingNotifications() != null && task.getDeadline() != null) {
             List<PendingNotification> convertedNotifications = task.getPendingNotifications().stream()
