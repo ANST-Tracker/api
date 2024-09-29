@@ -12,8 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
-
 import static com.anst.sd.api.security.app.api.AuthErrorMessages.INVALID_PASSWORD;
 
 @Slf4j
@@ -27,7 +25,7 @@ public class LoginUserUseCase implements LoginUserInBound {
 
     @Override
     @Transactional
-    public JwtResponse login(String username, String password, UUID deviceToken) {
+    public JwtResponse login(String username, String password) {
         log.info("Logging user with username {}", username);
         User user = userRepository.getByUsername(username);
 
@@ -40,6 +38,6 @@ public class LoginUserUseCase implements LoginUserInBound {
             throw new AuthException("Trying to login user with tgId %s with token for tgId %s".formatted(user.getTelegramId(), tokenTgId));
         }
 
-        return generateTokensDelegate.generate(user, deviceToken);
+        return generateTokensDelegate.generate(user);
     }
 }

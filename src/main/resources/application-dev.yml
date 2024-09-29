@@ -61,6 +61,9 @@ security:
       secret: ${JWT_REFRESH_SECRET}
       expiration: 168h
 
+settings:
+  dev-mode: true
+
 shedlock:
   default-lock-at-most-for: 30s
   notification-sending:

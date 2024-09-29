@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -49,8 +50,9 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @ActiveProfiles({"test"})
 @AutoConfigureMockMvc
 public abstract class AbstractIntegrationTest {
-    public static final Long DEVICE_ID = 1L;
-    public static final String USER_PASSWORD = "password";
+    protected static final Long DEVICE_ID = 1L;
+    protected static final String USER_PASSWORD = "password";
+    protected static final String USER_AGENT = "Mozilla/5.0 (iPhone; CPU iPhone OS 5_1_1 like Mac OS X) AppleWebKit/534.46 (KHTML, like Gecko) Version/5.1 Mobile/9B206 Safari/7534.48.3";
 
     @Autowired
     protected MockMvc mockMvc;
@@ -59,9 +61,9 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     protected ObjectMapper objectMapper;
     @Autowired
-    protected DeviceJpaRepository deviceJpaRepository;
+    protected RedissonClient redissonClient;
     @Autowired
-    protected RefreshTokenJpaRepository refreshTokenJpaRepository;
+    protected DeviceJpaRepository deviceJpaRepository;
     @Autowired
     protected RoleJpaRepository roleJpaRepository;
     @Autowired
@@ -95,14 +97,12 @@ public abstract class AbstractIntegrationTest {
         userCodeMongoRepository.deleteAll();
         taskJpaRepository.deleteAll();
         projectJpaRepository.deleteAll();
-        refreshTokenJpaRepository.deleteAll();
         deviceJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
         jdbcTemplate.execute("ALTER SEQUENCE task_id_seq RESTART WITH 1");
         jdbcTemplate.execute("ALTER SEQUENCE project_id_seq RESTART WITH 1");
         jdbcTemplate.execute("ALTER SEQUENCE users_id_seq RESTART WITH 1");
         jdbcTemplate.execute("ALTER SEQUENCE device_id_seq RESTART WITH 1");
-        jdbcTemplate.execute("ALTER SEQUENCE refresh_token_id_seq RESTART WITH 1");
         jdbcTemplate.execute("ALTER SEQUENCE pending_notification_id_seq RESTART WITH 1");
     }
 
