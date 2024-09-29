@@ -13,8 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -48,10 +46,10 @@ class RegisterUserUseCaseTest extends AbstractUnitTest {
         user.setTelegramId(telegramJwt);
         when(jwtService.getJwtAuth()).thenReturn(JwtAuth.builder().telegramId(telegramJwt).build());
 
-        assertThrows(RegisterUserException.class, () -> registerUserUseCase.register(user, UUID.randomUUID()),
-                """
-                        Telegram id is already in use
-                        Username is already taken
-                        """);
+        assertThrows(RegisterUserException.class, () -> registerUserUseCase.register(user),
+            """
+                Telegram id is already in use
+                Username is already taken
+                """);
     }
 }

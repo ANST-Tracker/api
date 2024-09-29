@@ -7,6 +7,7 @@ import com.anst.sd.api.app.api.security.SendCodeInbound;
 import com.anst.sd.api.app.api.user.LoginUserInBound;
 import com.anst.sd.api.app.api.user.RegisterUserException;
 import com.anst.sd.api.app.api.user.RegisterUserInBound;
+import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.security.app.api.JwtResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -60,7 +61,7 @@ public class AuthController {
         })
     @PostMapping("/signin")
     public ResponseEntity<JwtResponseDto> loginUser(@Valid @RequestBody LoginRequestDto request) {
-        JwtResponse response = loginUserInBound.login(request.getUsername(), request.getPassword(), request.getDeviceToken());
+        JwtResponse response = loginUserInBound.login(request.getUsername(), request.getPassword());
         return ResponseEntity.ok(jwtResponseDtoMapper.mapToDto(response));
     }
 
@@ -79,8 +80,8 @@ public class AuthController {
         if (bindingResult.hasErrors()) {
             throw new RegisterUserException(bindingResult.getAllErrors().toString());
         }
-        JwtResponse registeredUser = registerUserInBound.register(signUpRequestDomainMapper.mapToDomain(signUpRequestDto),
-            signUpRequestDto.getDeviceToken());
+        User user = signUpRequestDomainMapper.mapToDomain(signUpRequestDto);
+        JwtResponse registeredUser = registerUserInBound.register(user);
         return ResponseEntity.ok(jwtResponseDtoMapper.mapToDto(registeredUser));
     }
 

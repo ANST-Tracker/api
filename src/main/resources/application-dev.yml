@@ -15,8 +15,8 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    password: ${POSTGRES_USERNAME}
-    username: ${POSTGRES_PASSWORD}
+    password: ${POSTGRES_PASSWORD}
+    username: ${POSTGRES_USERNAME}
     url: ${POSTGRES_URL}
   jpa:
     hibernate:
@@ -60,6 +60,9 @@ security:
     refresh:
       secret: ${JWT_REFRESH_SECRET}
       expiration: 168h
+
+settings:
+  dev-mode: true
 
 shedlock:
   default-lock-at-most-for: 30s

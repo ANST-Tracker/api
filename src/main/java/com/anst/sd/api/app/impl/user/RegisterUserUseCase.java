@@ -35,7 +35,7 @@ public class RegisterUserUseCase implements RegisterUserInBound {
 
     @Override
     @Transactional
-    public JwtResponse register(User user, UUID deviceToken) {
+    public JwtResponse register(User user) {
         log.info("User registration processing for username {}", user.getUsername());
         validateUser(user);
         user.setPassword(encoder.encode(user.getPassword()));
@@ -43,7 +43,7 @@ public class RegisterUserUseCase implements RegisterUserInBound {
         user = userRepository.save(user);
         createUserBucketProject(user);
 
-        return generateTokensDelegate.generate(user, deviceToken);
+        return generateTokensDelegate.generate(user);
     }
 
     // ===================================================================================================================

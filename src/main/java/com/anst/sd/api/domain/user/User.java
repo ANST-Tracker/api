@@ -3,7 +3,6 @@ package com.anst.sd.api.domain.user;
 import com.anst.sd.api.domain.DomainObject;
 import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.security.Device;
-import com.anst.sd.api.domain.security.RefreshToken;
 import com.anst.sd.api.domain.security.Role;
 import com.anst.sd.api.domain.tag.Tag;
 import jakarta.persistence.*;
@@ -42,10 +41,6 @@ public class User extends DomainObject {
     private Set<Role> roles = new HashSet<>();
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "user")
     private List<Project> projects;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
-    private List<RefreshToken> tokens;
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
     private List<Device> devices;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)

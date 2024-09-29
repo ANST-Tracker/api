@@ -24,6 +24,7 @@ import static org.mockito.Mockito.when;
 
 class CreateTaskUseCaseTest extends AbstractUnitTest {
     private static final LocalDateTime DEADLINE = LocalDateTime.now().plusDays(5);
+
     private CreateTaskUseCase useCase;
     @Mock
     private TaskRepository taskRepository;
