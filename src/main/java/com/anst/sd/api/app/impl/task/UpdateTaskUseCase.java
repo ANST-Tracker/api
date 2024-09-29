@@ -1,10 +1,12 @@
 package com.anst.sd.api.app.impl.task;
 
 import com.anst.sd.api.app.api.project.ProjectRepository;
+import com.anst.sd.api.app.api.tag.TagRepository;
 import com.anst.sd.api.app.api.task.TaskRepository;
 import com.anst.sd.api.app.api.task.UpdateTaskInBound;
 import com.anst.sd.api.domain.notification.PendingNotification;
 import com.anst.sd.api.domain.project.Project;
+import com.anst.sd.api.domain.tag.Tag;
 import com.anst.sd.api.domain.task.Task;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -22,17 +23,18 @@ public class UpdateTaskUseCase implements UpdateTaskInBound {
     private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
     private final DateConverterDelegate dateConverterDelegate;
+    private final TagRepository tagRepository;
 
     @Override
     @Transactional
-    public Task update(Long userId, Long taskId, Task updated) {
+    public Task update(Long userId, Long taskId, Task updated, List<Long> updatedTagIds) {
         log.info("Updating task with id {} and userId {}", taskId, userId);
         Task task = taskRepository.findByIdAndUser(taskId, userId);
-        mergeTask(task, updated, userId);
+        mergeTask(task, updated, userId, updatedTagIds);
         return taskRepository.save(task);
     }
 
-    private void mergeTask(Task original, Task updated, Long userId) {
+    private void mergeTask(Task original, Task updated, Long userId, List<Long> updatedTagIds) {
         List<PendingNotification> convertedNotifications = new ArrayList<>();
         original.setData(updated.getData());
         original.setDeadline(updated.getDeadline());
@@ -41,13 +43,17 @@ public class UpdateTaskUseCase implements UpdateTaskInBound {
         if (updated.getPendingNotifications() != null && updated.getDeadline() != null) {
             convertedNotifications = updated.getPendingNotifications().stream()
                     .map(notification -> dateConverterDelegate.convertToInstant(updated.getDeadline(), notification))
-                    .collect(Collectors.toList());
+                    .toList();
         }
         original.setPendingNotifications(convertedNotifications);
         if (updated.getUpdatedProjectId() != null &&
-            !updated.getUpdatedProjectId().equals(original.getProject().getId())) {
+                !updated.getUpdatedProjectId().equals(original.getProject().getId())) {
             Project newProject = projectRepository.getByIdAndUserId(updated.getUpdatedProjectId(), userId);
             original.setProject(newProject);
+        }
+        if (updatedTagIds != null) {
+            List<Tag> updatedTags = tagRepository.findAllByIds(updatedTagIds);
+            original.setTags(updatedTags);
         }
     }
 }

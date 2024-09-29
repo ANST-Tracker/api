@@ -27,4 +27,11 @@ public class Tag extends DomainObject {
     private User user;
     @ManyToMany(mappedBy = "tags")
     private List<Task> tasks;
+
+    @PreRemove
+    private void removeTagFromTasks() {
+        for (Task task : tasks) {
+            task.getTags().remove(this);
+        }
+    }
 }

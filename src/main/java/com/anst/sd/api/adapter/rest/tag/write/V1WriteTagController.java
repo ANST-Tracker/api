@@ -8,6 +8,7 @@ import com.anst.sd.api.adapter.rest.tag.write.dto.TagDomainMapper;
 import com.anst.sd.api.adapter.rest.tag.write.dto.UpdateTagDto;
 import com.anst.sd.api.app.api.tag.CreateTagInBound;
 import com.anst.sd.api.app.api.tag.DeleteTagInBound;
+import com.anst.sd.api.app.api.tag.TagValidationException;
 import com.anst.sd.api.app.api.tag.UpdateTagInBound;
 import com.anst.sd.api.domain.tag.Tag;
 import com.anst.sd.api.security.app.impl.JwtService;
@@ -36,7 +37,7 @@ public class V1WriteTagController {
             @Valid @RequestBody CreateTagDto request,
             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            throw new RuntimeException();
+            throw new TagValidationException();
         }
         Tag tag = tagDomainMapper.mapToDomain(request);
         Tag result = createTagInBound.create(tag, jwtService.getJwtAuth().getUserId());
@@ -49,7 +50,7 @@ public class V1WriteTagController {
             @Valid @RequestBody UpdateTagDto request,
             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            throw new RuntimeException();
+            throw new TagValidationException();
         }
         Tag tag = tagDomainMapper.mapToDomain(request);
         Tag result = updateTagInBound.update(jwtService.getJwtAuth().getUserId(), id, tag);

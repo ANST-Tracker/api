@@ -2,6 +2,7 @@ package com.anst.sd.api.app.impl.task;
 
 import com.anst.sd.api.AbstractUnitTest;
 import com.anst.sd.api.app.api.project.ProjectRepository;
+import com.anst.sd.api.app.api.tag.TagRepository;
 import com.anst.sd.api.app.api.task.TaskRepository;
 import com.anst.sd.api.domain.notification.PendingNotification;
 import com.anst.sd.api.domain.project.Project;
@@ -30,10 +31,12 @@ class CreateTaskUseCaseTest extends AbstractUnitTest {
     private ProjectRepository projectRepository;
     @Mock
     private DateConverterDelegate dateConverterDelegate;
+    @Mock
+    private TagRepository tagRepository;
 
     @BeforeEach
     void setUp() {
-        useCase = new CreateTaskUseCase(taskRepository, projectRepository, dateConverterDelegate);
+        useCase = new CreateTaskUseCase(taskRepository, projectRepository, dateConverterDelegate, tagRepository);
         when(taskRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
     }
 
@@ -46,7 +49,7 @@ class CreateTaskUseCaseTest extends AbstractUnitTest {
         when(dateConverterDelegate.convertToInstant(any(LocalDateTime.class), any(PendingNotification.class)))
                 .thenReturn(task.getPendingNotifications().get(0));
 
-        Task result = useCase.create(1L, 1L, task);
+        Task result = useCase.create(1L, 1L, task, null);
 
         assertEquals(TaskStatus.BACKLOG, result.getStatus());
         assertEquals(project.getId(), result.getProject().getId());

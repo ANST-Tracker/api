@@ -22,11 +22,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RequestMapping("/task")
 @RestController
 @RequiredArgsConstructor
-public class  V1WriteTaskController {
+public class V1WriteTaskController {
     private final UpdateTaskInBound updateTaskInBound;
     private final DeleteTaskInBound deleteTaskInBound;
     private final JwtService jwtService;
@@ -35,55 +37,57 @@ public class  V1WriteTaskController {
     private final TaskDomainMapper taskDomainMapper;
 
     @Operation(
-        summary = "Create a new task",
-        responses = {
-            @ApiResponse(
-                responseCode = "200",
-                description = "Task created successfully",
-                useReturnTypeSchema = true)
-        })
+            summary = "Create a new task",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Task created successfully",
+                            useReturnTypeSchema = true)
+            })
     @PostMapping("/{projectId}")
     public ResponseEntity<TaskInfoDto> createTask(
-        @Valid @RequestBody CreateTaskDto request,
-        @PathVariable Long projectId,
-        BindingResult bindingResult) {
+            @Valid @RequestBody CreateTaskDto request,
+            @PathVariable Long projectId,
+            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new TaskValidationException();
         }
+        List<Long> tagIds = request.getTagIds();
         Task task = taskDomainMapper.mapToDomain(request);
-        Task result = createTaskInBound.create(jwtService.getJwtAuth().getUserId(), projectId, task);
+        Task result = createTaskInBound.create(jwtService.getJwtAuth().getUserId(), projectId, task, tagIds);
         return ResponseEntity.ok(taskDtoMapper.mapToDto(result));
     }
 
     @Operation(
-        summary = "Update task",
-        responses = {
-            @ApiResponse(
-                responseCode = "200",
-                description = "Task updated successfully",
-                useReturnTypeSchema = true)
-        })
+            summary = "Update task",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Task updated successfully",
+                            useReturnTypeSchema = true)
+            })
     @PutMapping("/{id}")
     public ResponseEntity<IdResponseDto> updateTask(
-        @PathVariable Long id,
-        @Valid @RequestBody UpdateTaskDto request,
-        BindingResult bindingResult) {
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateTaskDto request,
+            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new TaskValidationException(id);
         }
+        List<Long> updatedTagIds = request.getTagIds();
         Task task = taskDomainMapper.mapToDomain(request);
-        Task result = updateTaskInBound.update(jwtService.getJwtAuth().getUserId(), id, task);
+        Task result = updateTaskInBound.update(jwtService.getJwtAuth().getUserId(), id, task, updatedTagIds);
         return ResponseEntity.ok(new IdResponseDto(result.getId()));
     }
 
     @Operation(
-        summary = "Delete task by ID",
-        responses = {
-            @ApiResponse(
-                responseCode = "200",
-                description = "Task deleted successfully",
-                useReturnTypeSchema = true)
-        })
+            summary = "Delete task by ID",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Task deleted successfully",
+                            useReturnTypeSchema = true)
+            })
     @DeleteMapping("/{id}")
     public ResponseEntity<IdResponseDto> deleteTask(@Parameter(description = "Task ID") @PathVariable Long id) {
         Task task = deleteTaskInBound.delete(jwtService.getJwtAuth().getUserId(), id);

@@ -67,6 +67,8 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     protected TaskJpaRepository taskJpaRepository;
     @Autowired
+    protected TagJpaRepository tagJpaRepository;
+    @Autowired
     protected UserCodeMongoRepository userCodeMongoRepository;
     @Autowired
     protected ProjectJpaRepository projectJpaRepository;
