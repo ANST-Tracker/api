@@ -31,72 +31,72 @@ import static com.anst.sd.api.adapter.rest.dto.ErrorInfoDto.createErrorInfo;
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-  @Nullable
-  @Override
-  protected ResponseEntity<Object> handleExceptionInternal(
-          @NonNull Exception ex,
-          @Nullable Object body,
-          @NonNull HttpHeaders headers,
-          @NonNull HttpStatusCode statusCode,
-          @NonNull WebRequest request) {
-    logger.error(ex.getMessage(), ex);
-    var errorInfo = createErrorInfo(SERVER);
-    return super.handleExceptionInternal(ex, errorInfo, headers, statusCode, request);
-  }
+    @Nullable
+    @Override
+    protected ResponseEntity<Object> handleExceptionInternal(
+            @NonNull Exception ex,
+            @Nullable Object body,
+            @NonNull HttpHeaders headers,
+            @NonNull HttpStatusCode statusCode,
+            @NonNull WebRequest request) {
+        logger.error(ex.getMessage(), ex);
+        var errorInfo = createErrorInfo(SERVER);
+        return super.handleExceptionInternal(ex, errorInfo, headers, statusCode, request);
+    }
 
-  @ExceptionHandler(AuthException.class)
-  public ResponseEntity<Object> handle(AuthException ex) {
-    logger.error(ex.getMessage(), ex);
-    var errorInfo = createErrorInfo(AUTH);
-    return new ResponseEntity<>(errorInfo, HttpStatus.UNAUTHORIZED);
-  }
+    @ExceptionHandler(AuthException.class)
+    public ResponseEntity<Object> handle(AuthException ex) {
+        logger.error(ex.getMessage(), ex);
+        var errorInfo = createErrorInfo(AUTH);
+        return new ResponseEntity<>(errorInfo, HttpStatus.UNAUTHORIZED);
+    }
 
-  @ExceptionHandler({TaskValidationException.class, ProjectValidationException.class, TagValidationException.class})
-  public ResponseEntity<Object> handleValidation(Exception ex) {
-    logger.error(ex.getMessage(), ex);
-    var errorInfo = createErrorInfo(CLIENT);
-    return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
-  }
+    @ExceptionHandler({TaskValidationException.class, ProjectValidationException.class, TagValidationException.class})
+    public ResponseEntity<Object> handleValidation(Exception ex) {
+        logger.error(ex.getMessage(), ex);
+        var errorInfo = createErrorInfo(CLIENT);
+        return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
+    }
 
-  @ExceptionHandler(RegisterUserException.class)
-  public ResponseEntity<Object> handle(RegisterUserException ex) {
-    logger.error(ex.getMessage(), ex);
-    var errorInfo = createErrorInfo(CLIENT);
-    return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
-  }
+    @ExceptionHandler(RegisterUserException.class)
+    public ResponseEntity<Object> handle(RegisterUserException ex) {
+        logger.error(ex.getMessage(), ex);
+        var errorInfo = createErrorInfo(CLIENT);
+        return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
+    }
 
-  @ExceptionHandler(AccessDeniedException.class)
-  public ResponseEntity<Object> handle(AccessDeniedException ex) {
-    logger.error(ex.getMessage(), ex);
-    var errorInfo = createErrorInfo(AUTH);
-    return new ResponseEntity<>(errorInfo, HttpStatus.FORBIDDEN);
-  }
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Object> handle(AccessDeniedException ex) {
+        logger.error(ex.getMessage(), ex);
+        var errorInfo = createErrorInfo(AUTH);
+        return new ResponseEntity<>(errorInfo, HttpStatus.FORBIDDEN);
+    }
 
-  @ExceptionHandler(RuntimeException.class)
-  public ResponseEntity<Object> handle(RuntimeException ex) {
-    logger.error(ex.getMessage(), ex);
-    var errorInfo = createErrorInfo(SERVER);
-    return new ResponseEntity<>(errorInfo, HttpStatus.INTERNAL_SERVER_ERROR);
-  }
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Object> handle(RuntimeException ex) {
+        logger.error(ex.getMessage(), ex);
+        var errorInfo = createErrorInfo(SERVER);
+        return new ResponseEntity<>(errorInfo, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
-  @ExceptionHandler(CodeAlreadySentException.class)
-  public ResponseEntity<Object> handle(CodeAlreadySentException ex) {
-    logger.error(ex.getMessage(), ex);
-    var errorInfo = createErrorInfo(CLIENT);
-    return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
-  }
+    @ExceptionHandler(CodeAlreadySentException.class)
+    public ResponseEntity<Object> handle(CodeAlreadySentException ex) {
+        logger.error(ex.getMessage(), ex);
+        var errorInfo = createErrorInfo(CLIENT);
+        return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
+    }
 
-  @ExceptionHandler({
-          DeviceNotFoundException.class,
-          RoleNotFoundException.class,
-          TaskNotFoundException.class,
-          TagNotFoundException.class,
-          UserNotFoundException.class,
-          ProjectNotFoundException.class,
-          UserCodeNotFoundException.class})
-  public ResponseEntity<Object> handleNotFound(Exception ex) {
-    logger.error(ex.getMessage(), ex);
-    var errorInfo = createErrorInfo(CLIENT);
-    return new ResponseEntity<>(errorInfo, HttpStatus.NOT_FOUND);
-  }
+    @ExceptionHandler({
+            DeviceNotFoundException.class,
+            RoleNotFoundException.class,
+            TaskNotFoundException.class,
+            TagNotFoundException.class,
+            UserNotFoundException.class,
+            ProjectNotFoundException.class,
+            UserCodeNotFoundException.class})
+    public ResponseEntity<Object> handleNotFound(Exception ex) {
+        logger.error(ex.getMessage(), ex);
+        var errorInfo = createErrorInfo(CLIENT);
+        return new ResponseEntity<>(errorInfo, HttpStatus.NOT_FOUND);
+    }
 }

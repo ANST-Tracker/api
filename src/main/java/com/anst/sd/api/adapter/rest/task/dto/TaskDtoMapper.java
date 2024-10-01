@@ -7,7 +7,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface TaskDtoMapper {
-  TaskInfoDto mapToDto(Task source);
+    TaskInfoDto mapToDto(Task source);
 
-  List<TaskInfoDto> mapToDto(List<Task> source);
+    List<TaskInfoDto> mapToDto(List<Task> source);
 }

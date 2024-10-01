@@ -31,15 +31,15 @@ import java.util.concurrent.TimeUnit;
         }
 )
 public class PendingNotification extends DomainObject {
-  @Column(name = "execution_date", nullable = false)
-  private Instant executionDate;
-  @Column(nullable = false)
-  private int amount;
-  @Column(name = "time_type", nullable = false)
-  @Convert(converter = TimeUnitConverter.class)
-  private TimeUnit timeType;
-  @ManyToOne(optional = false)
-  @JoinColumn(name = "task_id")
-  @JsonBackReference
-  private Task task;
+    @Column(name = "execution_date", nullable = false)
+    private Instant executionDate;
+    @Column(nullable = false)
+    private int amount;
+    @Column(name = "time_type", nullable = false)
+    @Convert(converter = TimeUnitConverter.class)
+    private TimeUnit timeType;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "task_id")
+    @JsonBackReference
+    private Task task;
 }

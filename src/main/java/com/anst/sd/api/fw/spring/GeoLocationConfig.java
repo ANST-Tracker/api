@@ -14,24 +14,24 @@ import java.io.InputStream;
 @Slf4j
 @Configuration
 public class GeoLocationConfig {
-  private final ResourceLoader resourceLoader;
+    private final ResourceLoader resourceLoader;
 
-  public GeoLocationConfig(ResourceLoader resourceLoader) {
-    this.resourceLoader = resourceLoader;
-  }
-
-  @Bean
-  public DatabaseReader databaseReader() {
-    try {
-      Resource resource = resourceLoader.getResource("classpath:maxmind/GeoLite2-City.mmdb");
-      InputStream dbAsStream = resource.getInputStream();
-      return new DatabaseReader
-              .Builder(dbAsStream)
-              .fileMode(Reader.FileMode.MEMORY)
-              .build();
-    } catch (IOException | NullPointerException e) {
-      log.error("Database reader could not be initialized.", e);
-      return null;
+    public GeoLocationConfig(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
     }
-  }
+
+    @Bean
+    public DatabaseReader databaseReader() {
+        try {
+            Resource resource = resourceLoader.getResource("classpath:maxmind/GeoLite2-City.mmdb");
+            InputStream dbAsStream = resource.getInputStream();
+            return new DatabaseReader
+                    .Builder(dbAsStream)
+                    .fileMode(Reader.FileMode.MEMORY)
+                    .build();
+        } catch (IOException | NullPointerException e) {
+            log.error("Database reader could not be initialized.", e);
+            return null;
+        }
+    }
 }

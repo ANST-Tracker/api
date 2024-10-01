@@ -6,13 +6,13 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 public interface TaskRepository {
-  Page<Task> findTasksByUserIdAndProjectId(Long userId, Long projectId, Integer page);
+    Page<Task> findTasksByUserIdAndProjectId(Long userId, Long projectId, Integer page);
 
-  Task save(Task task);
+    Task save(Task task);
 
-  Task findByIdAndUser(Long id, Long userId);
+    Task findByIdAndUser(Long id, Long userId);
 
-  void deleteById(Long id);
+    void deleteById(Long id);
 
-  List<Task> findByFilter(Long userId, TaskFilter filter);
+    List<Task> findByFilter(Long userId, TaskFilter filter);
 }

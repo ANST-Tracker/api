@@ -18,26 +18,26 @@ import static com.anst.sd.api.security.app.api.AuthErrorMessages.INVALID_PASSWOR
 @Service
 @RequiredArgsConstructor
 public class LoginUserUseCase implements LoginUserInBound {
-  private final UserRepository userRepository;
-  private final PasswordEncoder passwordEncoder;
-  private final JwtService jwtService;
-  private final GenerateTokensDelegate generateTokensDelegate;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final GenerateTokensDelegate generateTokensDelegate;
 
-  @Override
-  @Transactional
-  public JwtResponse login(String username, String password) {
-    log.info("Logging user with username {}", username);
-    User user = userRepository.getByUsername(username);
+    @Override
+    @Transactional
+    public JwtResponse login(String username, String password) {
+        log.info("Logging user with username {}", username);
+        User user = userRepository.getByUsername(username);
 
-    if (!passwordEncoder.matches(password, user.getPassword())) {
-      throw new AuthException(INVALID_PASSWORD);
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new AuthException(INVALID_PASSWORD);
+        }
+
+        String tokenTgId = jwtService.getJwtAuth().getTelegramId();
+        if (!user.getTelegramId().equals(tokenTgId)) {
+            throw new AuthException("Trying to login user with tgId %s with token for tgId %s".formatted(user.getTelegramId(), tokenTgId));
+        }
+
+        return generateTokensDelegate.generate(user);
     }
-
-    String tokenTgId = jwtService.getJwtAuth().getTelegramId();
-    if (!user.getTelegramId().equals(tokenTgId)) {
-      throw new AuthException("Trying to login user with tgId %s with token for tgId %s".formatted(user.getTelegramId(), tokenTgId));
-    }
-
-    return generateTokensDelegate.generate(user);
-  }
 }

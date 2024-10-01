@@ -11,9 +11,9 @@ import java.util.List;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TaskFilter {
-  DateRangeFilter deadline;
-  List<TaskStatus> status;
-  Integer page;
-  List<Long> projectIds;
-  List<String> tags;
+    DateRangeFilter deadline;
+    List<TaskStatus> status;
+    Integer page;
+    List<Long> projectIds;
+    List<String> tags;
 }

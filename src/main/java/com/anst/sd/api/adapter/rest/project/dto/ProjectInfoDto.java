@@ -12,10 +12,10 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProjectInfoDto {
-  @NotNull
-  Long id;
-  @NotBlank
-  String name;
-  @NotNull
-  ProjectType type;
+    @NotNull
+    Long id;
+    @NotBlank
+    String name;
+    @NotNull
+    ProjectType type;
 }

@@ -24,61 +24,61 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/project")
 @RequiredArgsConstructor
 public class V1WriteProjectController {
-  private final JwtService jwtService;
-  private final DeleteProjectInbound deleteProjectInbound;
-  private final CreateProjectInbound createProjectInbound;
-  private final UpdateProjectInbound updateProjectInbound;
-  private final ProjectDomainMapper projectDomainMapper;
+    private final JwtService jwtService;
+    private final DeleteProjectInbound deleteProjectInbound;
+    private final CreateProjectInbound createProjectInbound;
+    private final UpdateProjectInbound updateProjectInbound;
+    private final ProjectDomainMapper projectDomainMapper;
 
-  @Operation(
-          summary = "Delete project by ID",
-          responses = {
-                  @ApiResponse(
-                          responseCode = "200",
-                          useReturnTypeSchema = true)
-          })
-  @DeleteMapping("/{id}")
-  public ResponseEntity<IdResponseDto> deleteProject(@PathVariable Long id) {
-    Project project = deleteProjectInbound.delete(id, jwtService.getJwtAuth().getUserId());
-    return ResponseEntity.ok(new IdResponseDto(project.getId()));
-  }
-
-  @Operation(
-          summary = "Create project",
-          responses = {
-                  @ApiResponse(
-                          responseCode = "200",
-                          useReturnTypeSchema = true)
-          })
-  @PostMapping
-  public ResponseEntity<IdResponseDto> createProject(
-          @Valid @RequestBody CreateProjectDto request,
-          BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) {
-      throw new ProjectValidationException();
+    @Operation(
+            summary = "Delete project by ID",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            useReturnTypeSchema = true)
+            })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<IdResponseDto> deleteProject(@PathVariable Long id) {
+        Project project = deleteProjectInbound.delete(id, jwtService.getJwtAuth().getUserId());
+        return ResponseEntity.ok(new IdResponseDto(project.getId()));
     }
-    Project project = projectDomainMapper.mapToDomain(request);
-    Project result = createProjectInbound.create(project, jwtService.getJwtAuth().getUserId());
-    return ResponseEntity.ok(new IdResponseDto(result.getId()));
-  }
 
-  @Operation(
-          summary = "Update project",
-          responses = {
-                  @ApiResponse(
-                          responseCode = "200",
-                          useReturnTypeSchema = true)
-          })
-  @PutMapping("/{id}")
-  public ResponseEntity<IdResponseDto> updateProject(
-          @PathVariable Long id,
-          @Valid @RequestBody UpdateProjectDto request,
-          BindingResult bindingResult) {
-    if (bindingResult.hasErrors()) {
-      throw new ProjectValidationException(id);
+    @Operation(
+            summary = "Create project",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            useReturnTypeSchema = true)
+            })
+    @PostMapping
+    public ResponseEntity<IdResponseDto> createProject(
+            @Valid @RequestBody CreateProjectDto request,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new ProjectValidationException();
+        }
+        Project project = projectDomainMapper.mapToDomain(request);
+        Project result = createProjectInbound.create(project, jwtService.getJwtAuth().getUserId());
+        return ResponseEntity.ok(new IdResponseDto(result.getId()));
     }
-    Project project = projectDomainMapper.mapToDomain(request);
-    Project result = updateProjectInbound.update(id, project, jwtService.getJwtAuth().getUserId());
-    return ResponseEntity.ok(new IdResponseDto(result.getId()));
-  }
+
+    @Operation(
+            summary = "Update project",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            useReturnTypeSchema = true)
+            })
+    @PutMapping("/{id}")
+    public ResponseEntity<IdResponseDto> updateProject(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateProjectDto request,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new ProjectValidationException(id);
+        }
+        Project project = projectDomainMapper.mapToDomain(request);
+        Project result = updateProjectInbound.update(id, project, jwtService.getJwtAuth().getUserId());
+        return ResponseEntity.ok(new IdResponseDto(result.getId()));
+    }
 }

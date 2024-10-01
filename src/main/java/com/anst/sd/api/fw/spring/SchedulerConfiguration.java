@@ -14,13 +14,13 @@ import javax.sql.DataSource;
 @EnableScheduling
 @EnableSchedulerLock(defaultLockAtMostFor = "${shedlock.default-lock-at-most-for}")
 public class SchedulerConfiguration {
-  @Bean
-  public LockProvider lockProvider(DataSource dataSource) {
-    return new JdbcTemplateLockProvider(
-            JdbcTemplateLockProvider.Configuration.builder()
-                    .withJdbcTemplate(new JdbcTemplate(dataSource))
-                    .usingDbTime()
-                    .build()
-    );
-  }
+    @Bean
+    public LockProvider lockProvider(DataSource dataSource) {
+        return new JdbcTemplateLockProvider(
+                JdbcTemplateLockProvider.Configuration.builder()
+                        .withJdbcTemplate(new JdbcTemplate(dataSource))
+                        .usingDbTime()
+                        .build()
+        );
+    }
 }

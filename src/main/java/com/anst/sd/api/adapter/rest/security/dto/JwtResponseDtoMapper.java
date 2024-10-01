@@ -5,5 +5,5 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface JwtResponseDtoMapper {
-  JwtResponseDto mapToDto(JwtResponse source);
+    JwtResponseDto mapToDto(JwtResponse source);
 }

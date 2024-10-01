@@ -5,5 +5,5 @@ import com.anst.sd.api.domain.project.Project;
 import java.util.List;
 
 public interface GetProjectsInbound {
-  List<Project> get(Long userId);
+    List<Project> get(Long userId);
 }

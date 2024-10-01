@@ -10,10 +10,10 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class NotificationRepositoryImpl implements NotificationRepository {
-  private final NotificationJpaRepository notificationJpaRepository;
+    private final NotificationJpaRepository notificationJpaRepository;
 
-  @Override
-  public void saveAll(List<Notification> notifications) {
-    notificationJpaRepository.saveAll(notifications);
-  }
+    @Override
+    public void saveAll(List<Notification> notifications) {
+        notificationJpaRepository.saveAll(notifications);
+    }
 }

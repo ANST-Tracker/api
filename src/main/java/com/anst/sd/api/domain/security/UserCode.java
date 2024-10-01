@@ -18,16 +18,16 @@ import java.time.Instant;
 @Builder(toBuilder = true)
 @Accessors(chain = true)
 public class UserCode {
-  @Id
-  private String id;
-  @Column(unique = true, nullable = false)
-  private String telegramId;
-  @Column(nullable = false)
-  private String code;
-  @Column(nullable = false)
-  private Instant expirationTime;
+    @Id
+    private String id;
+    @Column(unique = true, nullable = false)
+    private String telegramId;
+    @Column(nullable = false)
+    private String code;
+    @Column(nullable = false)
+    private Instant expirationTime;
 
-  public UserCode(String telegramId) {
-    this.telegramId = telegramId;
-  }
+    public UserCode(String telegramId) {
+        this.telegramId = telegramId;
+    }
 }

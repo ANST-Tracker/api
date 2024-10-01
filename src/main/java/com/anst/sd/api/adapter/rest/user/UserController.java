@@ -22,37 +22,37 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
-  private final DeleteUserInBound deleteUserInBound;
-  private final GetUserInBound getUserInBound;
-  private final JwtService jwtService;
-  private final UserDtoMapper userDtoMapper;
+    private final DeleteUserInBound deleteUserInBound;
+    private final GetUserInBound getUserInBound;
+    private final JwtService jwtService;
+    private final UserDtoMapper userDtoMapper;
 
-  @Operation(summary = "Get current user information")
-  @ApiResponse(
-          responseCode = "200",
-          description = "User information received successfully",
-          content = @Content(schema = @Schema(implementation = UserInfoDto.class)))
-  @ApiResponse(
-          responseCode = "409",
-          description = "Username doesn't exists",
-          content = @Content(schema = @Schema(implementation = AuthException.class)))
-  @GetMapping("/current")
-  public ResponseEntity<UserInfoDto> getUser() {
-    User result = getUserInBound.get(jwtService.getJwtAuth().getUserId());
-    return ResponseEntity.ok(userDtoMapper.mapToDto(result));
-  }
+    @Operation(summary = "Get current user information")
+    @ApiResponse(
+            responseCode = "200",
+            description = "User information received successfully",
+            content = @Content(schema = @Schema(implementation = UserInfoDto.class)))
+    @ApiResponse(
+            responseCode = "409",
+            description = "Username doesn't exists",
+            content = @Content(schema = @Schema(implementation = AuthException.class)))
+    @GetMapping("/current")
+    public ResponseEntity<UserInfoDto> getUser() {
+        User result = getUserInBound.get(jwtService.getJwtAuth().getUserId());
+        return ResponseEntity.ok(userDtoMapper.mapToDto(result));
+    }
 
-  @Operation(
-          summary = "Delete current user",
-          responses = {
-                  @ApiResponse(
-                          responseCode = "200",
-                          description = "User deleted successfully",
-                          useReturnTypeSchema = true)
-          })
-  @DeleteMapping("/current")
-  public ResponseEntity<UserInfoDto> deleteUser() {
-    User result = deleteUserInBound.delete(jwtService.getJwtAuth().getUserId());
-    return ResponseEntity.ok(userDtoMapper.mapToDto(result));
-  }
+    @Operation(
+            summary = "Delete current user",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "User deleted successfully",
+                            useReturnTypeSchema = true)
+            })
+    @DeleteMapping("/current")
+    public ResponseEntity<UserInfoDto> deleteUser() {
+        User result = deleteUserInBound.delete(jwtService.getJwtAuth().getUserId());
+        return ResponseEntity.ok(userDtoMapper.mapToDto(result));
+    }
 }

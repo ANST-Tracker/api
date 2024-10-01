@@ -20,43 +20,43 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class UpdateTaskUseCase implements UpdateTaskInBound {
-  private final TaskRepository taskRepository;
-  private final ProjectRepository projectRepository;
-  private final DateConverterDelegate dateConverterDelegate;
-  private final TagRepository tagRepository;
+    private final TaskRepository taskRepository;
+    private final ProjectRepository projectRepository;
+    private final DateConverterDelegate dateConverterDelegate;
+    private final TagRepository tagRepository;
 
-  @Override
-  @Transactional
-  public Task update(Long userId, Long taskId, Task updated) {
-    log.info("Updating task with id {} and userId {}", taskId, userId);
-    Task task = taskRepository.findByIdAndUser(taskId, userId);
-    mergeTask(task, updated, userId);
-    return taskRepository.save(task);
-  }
+    @Override
+    @Transactional
+    public Task update(Long userId, Long taskId, Task updated) {
+        log.info("Updating task with id {} and userId {}", taskId, userId);
+        Task task = taskRepository.findByIdAndUser(taskId, userId);
+        mergeTask(task, updated, userId);
+        return taskRepository.save(task);
+    }
 
-  private void mergeTask(Task original, Task updated, Long userId) {
-    List<PendingNotification> convertedNotifications = new ArrayList<>();
-    original.setData(updated.getData());
-    original.setDeadline(updated.getDeadline());
-    original.setDescription(updated.getDescription());
-    original.setStatus(updated.getStatus());
-    if (updated.getPendingNotifications() != null && updated.getDeadline() != null) {
-      convertedNotifications = updated.getPendingNotifications().stream()
-              .map(notification -> dateConverterDelegate.convertToInstant(updated.getDeadline(), notification))
-              .toList();
+    private void mergeTask(Task original, Task updated, Long userId) {
+        List<PendingNotification> convertedNotifications = new ArrayList<>();
+        original.setData(updated.getData());
+        original.setDeadline(updated.getDeadline());
+        original.setDescription(updated.getDescription());
+        original.setStatus(updated.getStatus());
+        if (updated.getPendingNotifications() != null && updated.getDeadline() != null) {
+            convertedNotifications = updated.getPendingNotifications().stream()
+                    .map(notification -> dateConverterDelegate.convertToInstant(updated.getDeadline(), notification))
+                    .toList();
+        }
+        original.setPendingNotifications(convertedNotifications);
+        if (updated.getUpdatedProjectId() != null &&
+                !updated.getUpdatedProjectId().equals(original.getProject().getId())) {
+            Project newProject = projectRepository.getByIdAndUserId(updated.getUpdatedProjectId(), userId);
+            original.setProject(newProject);
+        }
+        if (updated.getTags() != null) {
+            List<Long> updatedTagIds = updated.getTags().stream()
+                    .map(Tag::getId)
+                    .toList();
+            List<Tag> updatedTags = tagRepository.findAllByIds(updatedTagIds);
+            original.setTags(updatedTags);
+        }
     }
-    original.setPendingNotifications(convertedNotifications);
-    if (updated.getUpdatedProjectId() != null &&
-            !updated.getUpdatedProjectId().equals(original.getProject().getId())) {
-      Project newProject = projectRepository.getByIdAndUserId(updated.getUpdatedProjectId(), userId);
-      original.setProject(newProject);
-    }
-    if (updated.getTags() != null) {
-      List<Long> updatedTagIds = updated.getTags().stream()
-              .map(Tag::getId)
-              .toList();
-      List<Tag> updatedTags = tagRepository.findAllByIds(updatedTagIds);
-      original.setTags(updatedTags);
-    }
-  }
 }

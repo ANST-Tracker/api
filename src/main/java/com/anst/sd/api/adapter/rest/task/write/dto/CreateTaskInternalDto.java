@@ -12,8 +12,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateTaskInternalDto {
-  @NotBlank
-  String userTelegramId;
-  @NotBlank
-  String name;
+    @NotBlank
+    String userTelegramId;
+    @NotBlank
+    String name;
 }

@@ -16,7 +16,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
         UserDetailsServiceAutoConfiguration.class}
 )
 public class AnstApiTodoApplication {
-  public static void main(String[] args) {
-    SpringApplication.run(AnstApiTodoApplication.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(AnstApiTodoApplication.class, args);
+    }
 }

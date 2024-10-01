@@ -12,14 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class DeleteTaskUseCase implements DeleteTaskInBound {
-  private final TaskRepository taskRepository;
+    private final TaskRepository taskRepository;
 
-  @Override
-  @Transactional
-  public Task delete(Long userId, Long id) {
-    log.info("Deleting task with id {} and userId {}", id, userId);
-    Task task = taskRepository.findByIdAndUser(id, userId);
-    taskRepository.deleteById(id);
-    return task;
-  }
+    @Override
+    @Transactional
+    public Task delete(Long userId, Long id) {
+        log.info("Deleting task with id {} and userId {}", id, userId);
+        Task task = taskRepository.findByIdAndUser(id, userId);
+        taskRepository.deleteById(id);
+        return task;
+    }
 }

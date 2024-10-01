@@ -12,14 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class DeleteUserUseCase implements DeleteUserInBound {
-  private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
-  @Override
-  @Transactional
-  public User delete(Long userId) {
-    log.info("Deleting user with id {}", userId);
-    var user = userRepository.getById(userId);
-    userRepository.deleteById(userId);
-    return user;
-  }
+    @Override
+    @Transactional
+    public User delete(Long userId) {
+        log.info("Deleting user with id {}", userId);
+        var user = userRepository.getById(userId);
+        userRepository.deleteById(userId);
+        return user;
+    }
 }

@@ -11,10 +11,10 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 public class RoleRepositoryImpl implements RoleRepository {
-  private final RoleJpaRepository roleJpaRepository;
+    private final RoleJpaRepository roleJpaRepository;
 
-  @Override
-  public Optional<Role> findByName(ERole name) {
-    return roleJpaRepository.findByName(name);
-  }
+    @Override
+    public Optional<Role> findByName(ERole name) {
+        return roleJpaRepository.findByName(name);
+    }
 }

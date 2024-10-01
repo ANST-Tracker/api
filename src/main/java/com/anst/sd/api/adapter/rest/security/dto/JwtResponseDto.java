@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class JwtResponseDto {
-  @NotNull
-  String accessToken;
-  String refreshToken;
+    @NotNull
+    String accessToken;
+    String refreshToken;
 }

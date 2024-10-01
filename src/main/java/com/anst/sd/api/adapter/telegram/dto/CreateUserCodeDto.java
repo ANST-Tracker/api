@@ -7,6 +7,6 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateUserCodeDto {
-  String telegramId;
-  String code;
+    String telegramId;
+    String code;
 }

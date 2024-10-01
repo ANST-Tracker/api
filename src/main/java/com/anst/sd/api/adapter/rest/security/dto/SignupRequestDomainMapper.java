@@ -5,5 +5,5 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface SignupRequestDomainMapper {
-  User mapToDomain(SignupRequestDto source);
+    User mapToDomain(SignupRequestDto source);
 }

@@ -10,34 +10,34 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import java.util.List;
 
 public abstract class TaskDomainMapperDecorator implements TaskDomainMapper {
-  @Autowired
-  @Qualifier("delegate")
-  private TaskDomainMapper delegate;
+    @Autowired
+    @Qualifier("delegate")
+    private TaskDomainMapper delegate;
 
-  @Override
-  public Task mapToDomain(CreateTaskDto source) {
-    Task task = delegate.mapToDomain(source);
-    setTagsFromIds(task, source.getTagIds());
-    return task;
-  }
-
-  @Override
-  public Task mapToDomain(UpdateTaskDto source) {
-    Task task = delegate.mapToDomain(source);
-    setTagsFromIds(task, source.getTagIds());
-    return task;
-  }
-
-  private void setTagsFromIds(Task task, List<Long> tagIds) {
-    if (tagIds != null && !tagIds.isEmpty()) {
-      List<Tag> tags = tagIds.stream()
-              .map(id -> {
-                Tag tag = new Tag();
-                tag.setId(id);
-                return tag;
-              })
-              .toList();
-      task.setTags(tags);
+    @Override
+    public Task mapToDomain(CreateTaskDto source) {
+        Task task = delegate.mapToDomain(source);
+        setTagsFromIds(task, source.getTagIds());
+        return task;
     }
-  }
+
+    @Override
+    public Task mapToDomain(UpdateTaskDto source) {
+        Task task = delegate.mapToDomain(source);
+        setTagsFromIds(task, source.getTagIds());
+        return task;
+    }
+
+    private void setTagsFromIds(Task task, List<Long> tagIds) {
+        if (tagIds != null && !tagIds.isEmpty()) {
+            List<Tag> tags = tagIds.stream()
+                    .map(id -> {
+                        Tag tag = new Tag();
+                        tag.setId(id);
+                        return tag;
+                    })
+                    .toList();
+            task.setTags(tags);
+        }
+    }
 }

@@ -13,14 +13,14 @@ import java.util.UUID;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SignupRequestDto {
-  @NotBlank
-  String username;
-  String firstName;
-  String lastName;
-  @NotBlank
-  String telegramId;
-  @NotBlank
-  String password;
-  @NotNull
-  UUID deviceToken;
+    @NotBlank
+    String username;
+    String firstName;
+    String lastName;
+    @NotBlank
+    String telegramId;
+    @NotBlank
+    String password;
+    @NotNull
+    UUID deviceToken;
 }

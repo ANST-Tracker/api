@@ -12,14 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class DeleteTagUseCase implements DeleteTagInBound {
-  private final TagRepository tagRepository;
+    private final TagRepository tagRepository;
 
-  @Override
-  @Transactional
-  public Tag delete(Long userId, Long id) {
-    log.info("Deleting tag with id {} and userId {}", id, userId);
-    Tag tag = tagRepository.findByIdAndUserId(id, userId);
-    tagRepository.delete(id);
-    return tag;
-  }
+    @Override
+    @Transactional
+    public Tag delete(Long userId, Long id) {
+        log.info("Deleting tag with id {} and userId {}", id, userId);
+        Tag tag = tagRepository.findByIdAndUserId(id, userId);
+        tagRepository.delete(id);
+        return tag;
+    }
 }

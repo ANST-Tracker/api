@@ -11,8 +11,8 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DeviceDto {
-  private String lastLogin;
-  private String locationName;
-  private String deviceName;
-  private String ipAddress;
+    private String lastLogin;
+    private String locationName;
+    private String deviceName;
+    private String ipAddress;
 }

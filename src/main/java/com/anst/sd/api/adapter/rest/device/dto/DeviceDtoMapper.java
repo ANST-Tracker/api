@@ -5,5 +5,5 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface DeviceDtoMapper {
-  DeviceDto mapToDto(DeviceInfo deviceInfo);
+    DeviceDto mapToDto(DeviceInfo deviceInfo);
 }

@@ -5,7 +5,7 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface ProjectDomainMapper {
-  Project mapToDomain(CreateProjectDto source);
+    Project mapToDomain(CreateProjectDto source);
 
-  Project mapToDomain(UpdateProjectDto source);
+    Project mapToDomain(UpdateProjectDto source);
 }

@@ -5,5 +5,5 @@ import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface CreateUserCodeDtoMapper {
-  CreateUserCodeDto mapToDto(UserCode userCode);
+    CreateUserCodeDto mapToDto(UserCode userCode);
 }

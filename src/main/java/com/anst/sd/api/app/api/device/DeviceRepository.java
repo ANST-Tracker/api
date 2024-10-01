@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface DeviceRepository {
-  Optional<Device> findById(Long id);
+    Optional<Device> findById(Long id);
 
-  Device save(Device device);
+    Device save(Device device);
 
-  List<Device> findByUserId(Long userId);
+    List<Device> findByUserId(Long userId);
 
-  Device getByIdAndUserId(Long id, Long userId);
+    Device getByIdAndUserId(Long id, Long userId);
 
-  void deleteAll(List<Device> devices);
+    void deleteAll(List<Device> devices);
 }

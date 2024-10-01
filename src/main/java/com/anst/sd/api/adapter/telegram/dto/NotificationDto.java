@@ -13,12 +13,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NotificationDto {
-  @NotBlank
-  String telegramId;
-  @NotBlank
-  String taskName;
-  @NotBlank
-  String projectName;
-  @NotNull
-  LocalDateTime deadline;
+    @NotBlank
+    String telegramId;
+    @NotBlank
+    String taskName;
+    @NotBlank
+    String projectName;
+    @NotNull
+    LocalDateTime deadline;
 }

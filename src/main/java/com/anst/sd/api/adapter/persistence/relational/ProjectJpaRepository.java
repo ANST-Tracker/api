@@ -10,9 +10,9 @@ import java.util.Optional;
 
 @Repository
 public interface ProjectJpaRepository extends JpaRepository<Project, Long> {
-  Optional<Project> findByIdAndUserId(Long id, Long userId);
+    Optional<Project> findByIdAndUserId(Long id, Long userId);
 
-  List<Project> findAllByUserId(Long userId);
+    List<Project> findAllByUserId(Long userId);
 
-  Optional<Project> findFirstByProjectTypeAndUserTelegramId(ProjectType type, String telegramUserId);
+    Optional<Project> findFirstByProjectTypeAndUserTelegramId(ProjectType type, String telegramUserId);
 }

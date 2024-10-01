@@ -21,21 +21,21 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class V1ReadTagController {
-  private final JwtService jwtService;
-  private final GetTagsInBound getTagsInBound;
-  private final TagDtoMapper tagDtoMapper;
+    private final JwtService jwtService;
+    private final GetTagsInBound getTagsInBound;
+    private final TagDtoMapper tagDtoMapper;
 
-  @Operation(
-          summary = "Get all tags for the authenticated user",
-          responses = {
-                  @ApiResponse(
-                          responseCode = "200",
-                          description = "Tags retrieved successfully",
-                          useReturnTypeSchema = true)
-          })
-  @GetMapping("/list")
-  public ResponseEntity<List<TagInfoDto>> getTags() {
-    List<Tag> tags = getTagsInBound.get(jwtService.getJwtAuth().getUserId());
-    return ResponseEntity.ok(tagDtoMapper.mapToDto(tags));
-  }
+    @Operation(
+            summary = "Get all tags for the authenticated user",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Tags retrieved successfully",
+                            useReturnTypeSchema = true)
+            })
+    @GetMapping("/list")
+    public ResponseEntity<List<TagInfoDto>> getTags() {
+        List<Tag> tags = getTagsInBound.get(jwtService.getJwtAuth().getUserId());
+        return ResponseEntity.ok(tagDtoMapper.mapToDto(tags));
+    }
 }

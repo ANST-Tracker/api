@@ -5,5 +5,5 @@ import com.anst.sd.api.domain.tag.Tag;
 import java.util.List;
 
 public interface GetTagsInBound {
-  List<Tag> get(Long userId);
+    List<Tag> get(Long userId);
 }

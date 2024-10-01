@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface UserCodeMongoRepository extends MongoRepository<UserCode, String> {
-  Optional<UserCode> findUserCodeByTelegramId(String telegramId);
+    Optional<UserCode> findUserCodeByTelegramId(String telegramId);
 }

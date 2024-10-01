@@ -12,15 +12,15 @@ import java.util.Optional;
 
 @Repository
 public interface TaskJpaRepository extends JpaRepository<Task, Long>, PagingAndSortingRepository<Task, Long> {
-  Page<Task> findTasksByProjectUserIdAndProjectId(Long userId, Long projectId, Pageable page);
+    Page<Task> findTasksByProjectUserIdAndProjectId(Long userId, Long projectId, Pageable page);
 
-  @Query("""
-          select task from Task task
-          left join fetch task.project p
-          left join fetch p.user u
-          left join fetch task.pendingNotifications
-          where task.id = :id
-          and u.id = :userId
-          """)
-  Optional<Task> findTaskByIdAndUserId(Long id, Long userId);
+    @Query("""
+            select task from Task task
+            left join fetch task.project p
+            left join fetch p.user u
+            left join fetch task.pendingNotifications
+            where task.id = :id
+            and u.id = :userId
+            """)
+    Optional<Task> findTaskByIdAndUserId(Long id, Long userId);
 }

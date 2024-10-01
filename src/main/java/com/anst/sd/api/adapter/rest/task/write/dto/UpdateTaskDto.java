@@ -18,13 +18,13 @@ import java.util.List;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateTaskDto {
-  @NotBlank
-  String data;
-  LocalDateTime deadline;
-  String description;
-  @NotNull
-  TaskStatus status;
-  Long updatedProjectId;
-  List<PendingNotificationDto> pendingNotifications;
-  List<Long> tagIds;
+    @NotBlank
+    String data;
+    LocalDateTime deadline;
+    String description;
+    @NotNull
+    TaskStatus status;
+    Long updatedProjectId;
+    List<PendingNotificationDto> pendingNotifications;
+    List<Long> tagIds;
 }

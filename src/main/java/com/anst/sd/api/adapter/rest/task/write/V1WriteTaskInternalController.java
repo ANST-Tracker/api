@@ -17,18 +17,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class V1WriteTaskInternalController {
-  private final CreateTaskInBound createTaskInBound;
+    private final CreateTaskInBound createTaskInBound;
 
-  @Operation(
-          summary = "Create a new task",
-          responses = {
-                  @ApiResponse(
-                          responseCode = "200",
-                          description = "Task created successfully",
-                          useReturnTypeSchema = true)
-          })
-  @PostMapping
-  public void createTask(@RequestBody @Valid CreateTaskInternalDto request) {
-    createTaskInBound.create(request.getUserTelegramId(), request.getName());
-  }
+    @Operation(
+            summary = "Create a new task",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Task created successfully",
+                            useReturnTypeSchema = true)
+            })
+    @PostMapping
+    public void createTask(@RequestBody @Valid CreateTaskInternalDto request) {
+        createTaskInBound.create(request.getUserTelegramId(), request.getName());
+    }
 }

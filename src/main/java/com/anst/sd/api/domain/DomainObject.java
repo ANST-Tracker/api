@@ -10,8 +10,8 @@ import lombok.ToString;
 @Setter
 @ToString
 public abstract class DomainObject {
-  @Id
-  @Column(name = "id")
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 }

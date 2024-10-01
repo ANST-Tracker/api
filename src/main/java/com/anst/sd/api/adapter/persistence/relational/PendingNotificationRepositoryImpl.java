@@ -11,15 +11,15 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class PendingNotificationRepositoryImpl implements PendingNotificationRepository {
-  private final PendingNotificationJpaRepository pendingNotificationJpaRepository;
+    private final PendingNotificationJpaRepository pendingNotificationJpaRepository;
 
-  @Override
-  public List<PendingNotification> findReadyToExecution() {
-    return pendingNotificationJpaRepository.findTop100ByExecutionDateBefore(Instant.now());
-  }
+    @Override
+    public List<PendingNotification> findReadyToExecution() {
+        return pendingNotificationJpaRepository.findTop100ByExecutionDateBefore(Instant.now());
+    }
 
-  @Override
-  public void deleteAll(List<PendingNotification> pendingNotifications) {
-    pendingNotificationJpaRepository.deleteAll(pendingNotifications);
-  }
+    @Override
+    public void deleteAll(List<PendingNotification> pendingNotifications) {
+        pendingNotificationJpaRepository.deleteAll(pendingNotifications);
+    }
 }

@@ -13,8 +13,8 @@ import java.time.Instant;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DeviceInfo {
-  private Instant lastLogin;
-  private String locationName;
-  private String deviceName;
-  private String ipAddress;
+    private Instant lastLogin;
+    private String locationName;
+    private String deviceName;
+    private String ipAddress;
 }

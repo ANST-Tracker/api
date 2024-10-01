@@ -12,6 +12,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateProjectDto {
-  @NotBlank
-  String name;
+    @NotBlank
+    String name;
 }

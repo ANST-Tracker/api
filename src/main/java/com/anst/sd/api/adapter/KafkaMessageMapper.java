@@ -10,14 +10,14 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Log4j2
 public class KafkaMessageMapper<T> {
-  private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
-  public String mapToKafkaMessage(T clazz) {
-    try {
-      return objectMapper.writeValueAsString(clazz);
-    } catch (JsonProcessingException e) {
-      log.error("Failed to serialize the object, incorrect object data");
-      throw new RuntimeException(e.getMessage());
+    public String mapToKafkaMessage(T clazz) {
+        try {
+            return objectMapper.writeValueAsString(clazz);
+        } catch (JsonProcessingException e) {
+            log.error("Failed to serialize the object, incorrect object data");
+            throw new RuntimeException(e.getMessage());
+        }
     }
-  }
 }

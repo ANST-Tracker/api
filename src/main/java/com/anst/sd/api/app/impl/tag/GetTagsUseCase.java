@@ -14,12 +14,12 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class GetTagsUseCase implements GetTagsInBound {
-  private final TagRepository tagRepository;
+    private final TagRepository tagRepository;
 
-  @Override
-  @Transactional
-  public List<Tag> get(Long userId) {
-    log.info("Getting tags by userId {}", userId);
-    return tagRepository.findAllByUserId(userId);
-  }
+    @Override
+    @Transactional
+    public List<Tag> get(Long userId) {
+        log.info("Getting tags by userId {}", userId);
+        return tagRepository.findAllByUserId(userId);
+    }
 }

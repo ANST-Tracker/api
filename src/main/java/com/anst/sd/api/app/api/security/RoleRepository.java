@@ -6,5 +6,5 @@ import com.anst.sd.api.security.domain.ERole;
 import java.util.Optional;
 
 public interface RoleRepository {
-  Optional<Role> findByName(ERole name);
+    Optional<Role> findByName(ERole name);
 }

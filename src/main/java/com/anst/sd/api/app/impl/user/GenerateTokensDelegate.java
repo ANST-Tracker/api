@@ -13,26 +13,26 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class GenerateTokensDelegate {
-  private final DeviceRepository deviceRepository;
-  private final JwtService jwtService;
+    private final DeviceRepository deviceRepository;
+    private final JwtService jwtService;
 
-  public JwtResponse generate(User user) {
-    var curDevice = deviceRepository.save(Device.createDevice(user));
-    var tokens = jwtService.generateAccessRefreshTokens(
-            user.getUsername(), user.getId(), curDevice.getId(), ERole.USER);
-    curDevice.setToken(tokens.getRefreshToken());
-    fillDeviceInfo(curDevice);
-    deviceRepository.save(curDevice);
-    return tokens;
-  }
+    public JwtResponse generate(User user) {
+        var curDevice = deviceRepository.save(Device.createDevice(user));
+        var tokens = jwtService.generateAccessRefreshTokens(
+                user.getUsername(), user.getId(), curDevice.getId(), ERole.USER);
+        curDevice.setToken(tokens.getRefreshToken());
+        fillDeviceInfo(curDevice);
+        deviceRepository.save(curDevice);
+        return tokens;
+    }
 
-  // ===================================================================================================================
-  // = Implementation
-  // ===================================================================================================================
+    // ===================================================================================================================
+    // = Implementation
+    // ===================================================================================================================
 
-  private void fillDeviceInfo(Device device) {
-    JwtAuth jwtAuth = jwtService.getJwtAuth();
-    device.setIp(jwtAuth.getRemoteAddress());
-    device.setUserAgent(jwtAuth.getUserAgent());
-  }
+    private void fillDeviceInfo(Device device) {
+        JwtAuth jwtAuth = jwtService.getJwtAuth();
+        device.setIp(jwtAuth.getRemoteAddress());
+        device.setUserAgent(jwtAuth.getUserAgent());
+    }
 }

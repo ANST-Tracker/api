@@ -5,13 +5,13 @@ import com.anst.sd.api.domain.project.Project;
 import java.util.List;
 
 public interface ProjectRepository {
-  Project save(Project project);
+    Project save(Project project);
 
-  Project getByIdAndUserId(Long id, Long userId);
+    Project getByIdAndUserId(Long id, Long userId);
 
-  Project getBucketProject(String telegramUserId);
+    Project getBucketProject(String telegramUserId);
 
-  List<Project> findByUserId(Long userId);
+    List<Project> findByUserId(Long userId);
 
-  void deleteById(Long id);
+    void deleteById(Long id);
 }

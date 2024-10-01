@@ -18,20 +18,20 @@ import java.util.List;
 @Entity
 @Accessors(chain = true)
 public class Tag extends DomainObject {
-  @Column(nullable = false, unique = true)
-  private String name;
-  @Column
-  private String color;
-  @ManyToOne
-  @JoinColumn(name = "user_id", nullable = false)
-  private User user;
-  @ManyToMany(mappedBy = "tags")
-  private List<Task> tasks;
+    @Column(nullable = false, unique = true)
+    private String name;
+    @Column
+    private String color;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+    @ManyToMany(mappedBy = "tags")
+    private List<Task> tasks;
 
-  @PreRemove
-  private void removeTagFromTasks() {
-    for (Task task : tasks) {
-      task.getTags().remove(this);
+    @PreRemove
+    private void removeTagFromTasks() {
+        for (Task task : tasks) {
+            task.getTags().remove(this);
+        }
     }
-  }
 }

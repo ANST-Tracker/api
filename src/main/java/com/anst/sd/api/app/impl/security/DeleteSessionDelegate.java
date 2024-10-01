@@ -15,27 +15,27 @@ import java.util.List;
 @Component
 @Slf4j
 public class DeleteSessionDelegate {
-  private final DeviceRepository deviceRepository;
-  private final JwtService jwtService;
+    private final DeviceRepository deviceRepository;
+    private final JwtService jwtService;
 
-  public void removeSession(Device device) {
-    disableDevices(List.of(device));
-  }
+    public void removeSession(Device device) {
+        disableDevices(List.of(device));
+    }
 
-  public void removeAllSessions(User user) {
-    List<Device> devices = deviceRepository.findByUserId(user.getId());
-    disableDevices(devices);
-  }
+    public void removeAllSessions(User user) {
+        List<Device> devices = deviceRepository.findByUserId(user.getId());
+        disableDevices(devices);
+    }
 
-  // ===================================================================================================================
-  // = Implementation
-  // ===================================================================================================================
+    // ===================================================================================================================
+    // = Implementation
+    // ===================================================================================================================
 
-  private void disableDevices(List<Device> devices) {
-    List<Long> deviceIds = devices.stream()
-            .map(DomainObject::getId)
-            .toList();
-    jwtService.disableAccessTokens(deviceIds);
-    deviceRepository.deleteAll(devices);
-  }
+    private void disableDevices(List<Device> devices) {
+        List<Long> deviceIds = devices.stream()
+                .map(DomainObject::getId)
+                .toList();
+        jwtService.disableAccessTokens(deviceIds);
+        deviceRepository.deleteAll(devices);
+    }
 }

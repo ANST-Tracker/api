@@ -12,8 +12,8 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class VerifyCodeRequestDto {
-  String telegramId;
-  @NotBlank
-  String code;
-  String username;
+    String telegramId;
+    @NotBlank
+    String code;
+    String username;
 }
