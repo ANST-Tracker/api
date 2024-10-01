@@ -14,15 +14,15 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Slf4j
 public class DeleteDeviceUseCase implements DeleteDeviceInbound {
-    private final DeleteSessionDelegate deleteSessionDelegate;
-    private final DeviceRepository deviceRepository;
+  private final DeleteSessionDelegate deleteSessionDelegate;
+  private final DeviceRepository deviceRepository;
 
-    @Override
-    @Transactional(isolation = Isolation.SERIALIZABLE)
-    public Long delete(Long userId, Long deviceId) {
-        log.info("Deleting device {} on user {}", deviceId, userId);
-        Device device = deviceRepository.getByIdAndUserId(deviceId, userId);
-        deleteSessionDelegate.removeSession(device);
-        return deviceId;
-    }
+  @Override
+  @Transactional(isolation = Isolation.SERIALIZABLE)
+  public Long delete(Long userId, Long deviceId) {
+    log.info("Deleting device {} on user {}", deviceId, userId);
+    Device device = deviceRepository.getByIdAndUserId(deviceId, userId);
+    deleteSessionDelegate.removeSession(device);
+    return deviceId;
+  }
 }

@@ -11,10 +11,10 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TagInfoDto {
-    @NotNull
-    Long id;
-    @NotBlank
-    String name;
-    @NotBlank
-    String color;
+  @NotNull
+  Long id;
+  @NotBlank
+  String name;
+  @NotBlank
+  String color;
 }

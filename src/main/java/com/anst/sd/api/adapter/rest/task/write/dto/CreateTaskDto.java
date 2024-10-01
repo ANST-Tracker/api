@@ -17,11 +17,11 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateTaskDto {
-    @NotBlank
-    String data;
-    LocalDateTime deadline;
-    String description;
-    TaskStatus status;
-    List<PendingNotificationDto> pendingNotifications;
-    List<Long> tagIds;
+  @NotBlank
+  String data;
+  LocalDateTime deadline;
+  String description;
+  TaskStatus status;
+  List<PendingNotificationDto> pendingNotifications;
+  List<Long> tagIds;
 }

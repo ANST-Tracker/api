@@ -16,14 +16,14 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TaskInfoDto {
-    @NotNull
-    Long id;
-    @NotBlank
-    String data;
-    LocalDateTime deadline;
-    @NotNull
-    TaskStatus status;
-    String description;
-    List<PendingNotificationDto> pendingNotifications;
-    List<TagInfoDto> tags;
+  @NotNull
+  Long id;
+  @NotBlank
+  String data;
+  LocalDateTime deadline;
+  @NotNull
+  TaskStatus status;
+  String description;
+  List<PendingNotificationDto> pendingNotifications;
+  List<TagInfoDto> tags;
 }

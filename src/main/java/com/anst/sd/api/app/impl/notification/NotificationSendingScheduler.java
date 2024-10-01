@@ -25,49 +25,49 @@ import static com.anst.sd.api.domain.project.ProjectType.BUCKET;
 @RequiredArgsConstructor
 @Slf4j
 public class NotificationSendingScheduler {
-    private final PendingNotificationRepository pendingNotificationRepository;
-    private final NotificationRepository notificationRepository;
-    private final SendNotificationOutbound sendNotificationOutbound;
+  private final PendingNotificationRepository pendingNotificationRepository;
+  private final NotificationRepository notificationRepository;
+  private final SendNotificationOutbound sendNotificationOutbound;
 
-    @Transactional
-    @Scheduled(fixedDelayString = "${shedlock.notification-sending.execution-delay}")
-    @SchedulerLock(name = "notificationSendingTask",
-        lockAtLeastFor = "${shedlock.notification-sending.lock-at-least-for}",
-        lockAtMostFor = "${shedlock.notification-sending.lock-at-most-for}")
-    public void execute() {
-        LockAssert.assertLocked();
-        List<PendingNotification> pendingNotifications = pendingNotificationRepository.findReadyToExecution();
-        if (CollectionUtils.isEmpty(pendingNotifications)) {
-            return;
-        }
-        log.info("Executing {} pending notifications", pendingNotifications.size());
-        List<Notification> archiveNotifications = new ArrayList<>();
-        pendingNotifications.forEach(notification -> {
-            try {
-                sendNotificationOutbound.send(notification);
-            } catch (Exception e) {
-                log.warn("Failed to sent notification for task {}", notification.getTask().getId());
-            }
-            Notification archiveNotification = createNotification(notification);
-            archiveNotifications.add(archiveNotification);
-        });
-        notificationRepository.saveAll(archiveNotifications);
-        pendingNotificationRepository.deleteAll(pendingNotifications);
+  @Transactional
+  @Scheduled(fixedDelayString = "${shedlock.notification-sending.execution-delay}")
+  @SchedulerLock(name = "notificationSendingTask",
+          lockAtLeastFor = "${shedlock.notification-sending.lock-at-least-for}",
+          lockAtMostFor = "${shedlock.notification-sending.lock-at-most-for}")
+  public void execute() {
+    LockAssert.assertLocked();
+    List<PendingNotification> pendingNotifications = pendingNotificationRepository.findReadyToExecution();
+    if (CollectionUtils.isEmpty(pendingNotifications)) {
+      return;
     }
+    log.info("Executing {} pending notifications", pendingNotifications.size());
+    List<Notification> archiveNotifications = new ArrayList<>();
+    pendingNotifications.forEach(notification -> {
+      try {
+        sendNotificationOutbound.send(notification);
+      } catch (Exception e) {
+        log.warn("Failed to sent notification for task {}", notification.getTask().getId());
+      }
+      Notification archiveNotification = createNotification(notification);
+      archiveNotifications.add(archiveNotification);
+    });
+    notificationRepository.saveAll(archiveNotifications);
+    pendingNotificationRepository.deleteAll(pendingNotifications);
+  }
 
-    // ===================================================================================================================
-    // = Implementation
-    // ===================================================================================================================
+  // ===================================================================================================================
+  // = Implementation
+  // ===================================================================================================================
 
-    private Notification createNotification(PendingNotification pendingNotification) {
-        Notification notification = new Notification();
-        notification.setExecutionDate(Instant.now());
-        notification.setTaskId(pendingNotification.getTask().getId());
-        notification.setTaskName(pendingNotification.getTask().getData());
-        Project project = pendingNotification.getTask().getProject();
-        if (!BUCKET.equals(project.getProjectType())) {
-            notification.setProjectName(project.getName());
-        }
-        return notification;
+  private Notification createNotification(PendingNotification pendingNotification) {
+    Notification notification = new Notification();
+    notification.setExecutionDate(Instant.now());
+    notification.setTaskId(pendingNotification.getTask().getId());
+    notification.setTaskName(pendingNotification.getTask().getData());
+    Project project = pendingNotification.getTask().getProject();
+    if (!BUCKET.equals(project.getProjectType())) {
+      notification.setProjectName(project.getName());
     }
+    return notification;
+  }
 }

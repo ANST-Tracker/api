@@ -11,6 +11,6 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SendCodeRequestDto {
-    String telegramId;
-    String username;
+  String telegramId;
+  String username;
 }

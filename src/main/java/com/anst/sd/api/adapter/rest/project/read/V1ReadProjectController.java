@@ -21,20 +21,20 @@ import java.util.List;
 @RequestMapping("/project")
 @RequiredArgsConstructor
 public class V1ReadProjectController {
-    private final JwtService jwtService;
-    private final GetProjectsInbound getProjectsInbound;
-    private final ProjectInfoDtoMapper projectInfoDtoMapper;
+  private final JwtService jwtService;
+  private final GetProjectsInbound getProjectsInbound;
+  private final ProjectInfoDtoMapper projectInfoDtoMapper;
 
-    @Operation(
-        summary = "Get list of projects",
-        responses = {
-            @ApiResponse(
-                responseCode = "200",
-                useReturnTypeSchema = true)
-        })
-    @GetMapping("/list")
-    public ResponseEntity<List<ProjectInfoDto>> getProjects() {
-        List<Project> projects = getProjectsInbound.get(jwtService.getJwtAuth().getUserId());
-        return ResponseEntity.ok(projectInfoDtoMapper.mapToDto(projects));
-    }
+  @Operation(
+          summary = "Get list of projects",
+          responses = {
+                  @ApiResponse(
+                          responseCode = "200",
+                          useReturnTypeSchema = true)
+          })
+  @GetMapping("/list")
+  public ResponseEntity<List<ProjectInfoDto>> getProjects() {
+    List<Project> projects = getProjectsInbound.get(jwtService.getJwtAuth().getUserId());
+    return ResponseEntity.ok(projectInfoDtoMapper.mapToDto(projects));
+  }
 }

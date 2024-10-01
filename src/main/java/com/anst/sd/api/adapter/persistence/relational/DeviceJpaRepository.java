@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface DeviceJpaRepository extends JpaRepository<Device, Long> {
-    List<Device> findAllByUserId(Long userId);
+  List<Device> findAllByUserId(Long userId);
 
-    Optional<Device> findFirstByIdAndUserId(Long id, Long userId);
+  Optional<Device> findFirstByIdAndUserId(Long id, Long userId);
 }

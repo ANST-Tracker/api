@@ -12,8 +12,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateTagDto {
-    @NotBlank
-    String name;
-    @NotBlank
-    String color;
+  @NotBlank
+  String name;
+  @NotBlank
+  String color;
 }

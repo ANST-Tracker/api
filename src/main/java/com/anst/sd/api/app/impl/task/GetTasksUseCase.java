@@ -15,16 +15,16 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class GetTasksUseCase implements GetTasksInBound {
-    private final TaskRepository taskRepository;
+  private final TaskRepository taskRepository;
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<Task> get(Long userId, Long projectId, Integer page) {
-        log.info("Getting tasks by userId {} and projectId {}, page {}", userId, projectId, page);
-        if (page == null || page < 0) {
-            page = 0;
-        }
-        Page<Task> pageResponse = taskRepository.findTasksByUserIdAndProjectId(userId, projectId, page);
-        return pageResponse.toList();
+  @Override
+  @Transactional(readOnly = true)
+  public List<Task> get(Long userId, Long projectId, Integer page) {
+    log.info("Getting tasks by userId {} and projectId {}, page {}", userId, projectId, page);
+    if (page == null || page < 0) {
+      page = 0;
     }
+    Page<Task> pageResponse = taskRepository.findTasksByUserIdAndProjectId(userId, projectId, page);
+    return pageResponse.toList();
+  }
 }

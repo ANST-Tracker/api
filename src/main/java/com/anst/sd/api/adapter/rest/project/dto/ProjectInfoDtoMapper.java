@@ -8,8 +8,8 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface ProjectInfoDtoMapper {
-    @Mapping(source = "projectType", target = "type")
-    ProjectInfoDto mapToDto(Project source);
+  @Mapping(source = "projectType", target = "type")
+  ProjectInfoDto mapToDto(Project source);
 
-    List<ProjectInfoDto> mapToDto(List<Project> source);
+  List<ProjectInfoDto> mapToDto(List<Project> source);
 }

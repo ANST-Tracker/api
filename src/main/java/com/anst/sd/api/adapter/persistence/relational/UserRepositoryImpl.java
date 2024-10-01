@@ -9,36 +9,36 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
-    private final UserJpaRepository userJpaRepository;
+  private final UserJpaRepository userJpaRepository;
 
-    @Override
-    public User getByUsername(String username) {
-        return userJpaRepository.findByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(username));
-    }
+  @Override
+  public User getByUsername(String username) {
+    return userJpaRepository.findByUsername(username)
+            .orElseThrow(() -> new UserNotFoundException(username));
+  }
 
-    @Override
-    public User getById(Long id) {
-        return userJpaRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-    }
+  @Override
+  public User getById(Long id) {
+    return userJpaRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+  }
 
-    @Override
-    public boolean existsByTelegramId(String telegramId) {
-        return userJpaRepository.existsByTelegramId(telegramId);
-    }
+  @Override
+  public boolean existsByTelegramId(String telegramId) {
+    return userJpaRepository.existsByTelegramId(telegramId);
+  }
 
-    @Override
-    public boolean existsByUsername(String username) {
-        return userJpaRepository.existsByUsername(username);
-    }
+  @Override
+  public boolean existsByUsername(String username) {
+    return userJpaRepository.existsByUsername(username);
+  }
 
-    @Override
-    public User save(User user) {
-        return userJpaRepository.save(user);
-    }
+  @Override
+  public User save(User user) {
+    return userJpaRepository.save(user);
+  }
 
-    @Override
-    public void deleteById(Long id) {
-        userJpaRepository.deleteById(id);
-    }
+  @Override
+  public void deleteById(Long id) {
+    userJpaRepository.deleteById(id);
+  }
 }

@@ -9,9 +9,9 @@ import java.util.Optional;
 
 @Repository
 public interface TagJpaRepository extends JpaRepository<Tag, Long> {
-    List<Tag> findAllByUserId(Long userId);
+  List<Tag> findAllByUserId(Long userId);
 
-    Optional<Tag> findByIdAndUserId(Long id, Long userId);
+  Optional<Tag> findByIdAndUserId(Long id, Long userId);
 
-    Boolean existsByNameAndUserId(String name, Long userId);
+  Boolean existsByNameAndUserId(String name, Long userId);
 }

@@ -12,25 +12,25 @@ import java.time.Instant;
 @NoArgsConstructor
 @Builder(toBuilder = true)
 public class ErrorInfoDto {
-    private Long timestamp;
-    private ErrorType type;
+  private Long timestamp;
+  private ErrorType type;
 
-    public static ErrorInfoDto createErrorInfo(ErrorType errorType) {
-        return ErrorInfoDto.builder()
+  public static ErrorInfoDto createErrorInfo(ErrorType errorType) {
+    return ErrorInfoDto.builder()
             .timestamp(Instant.now().toEpochMilli())
             .type(errorType)
             .build();
-    }
+  }
 
-    public enum ErrorType {
-        CLIENT,
-        VALIDATION,
-        AUTH,
-        SERVER;
+  public enum ErrorType {
+    CLIENT,
+    VALIDATION,
+    AUTH,
+    SERVER;
 
-        @Override
-        public String toString() {
-            return this.name();
-        }
+    @Override
+    public String toString() {
+      return this.name();
     }
+  }
 }

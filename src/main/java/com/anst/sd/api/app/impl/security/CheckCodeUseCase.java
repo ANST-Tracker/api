@@ -18,37 +18,37 @@ import java.time.Instant;
 @Service
 @RequiredArgsConstructor
 public class CheckCodeUseCase implements CheckCodeInbound {
-    private static final String EXPIRED_CODE = "Code is expired";
-    private static final String WRONG_CODE_ERROR = "Wrong code";
+  private static final String EXPIRED_CODE = "Code is expired";
+  private static final String WRONG_CODE_ERROR = "Wrong code";
 
-    private final UserCodeRepository userCodeRepository;
-    private final JwtService jwtService;
-    private final UserRepository userRepository;
+  private final UserCodeRepository userCodeRepository;
+  private final JwtService jwtService;
+  private final UserRepository userRepository;
 
-    @Override
-    @Transactional(isolation = Isolation.SERIALIZABLE, noRollbackFor = AuthException.class)
-    public String check(String telegramId, String code, String username) {
-        if (username != null) {
-            telegramId = userRepository.getByUsername(username).getTelegramId();
-        }
-        UserCode userCode = userCodeRepository.getByTelegramId(telegramId);
-        validateUserCode(userCode, code);
-        userCodeRepository.delete(userCode);
-        return jwtService.generateTelegramIdAccessToken(telegramId);
+  @Override
+  @Transactional(isolation = Isolation.SERIALIZABLE, noRollbackFor = AuthException.class)
+  public String check(String telegramId, String code, String username) {
+    if (username != null) {
+      telegramId = userRepository.getByUsername(username).getTelegramId();
     }
+    UserCode userCode = userCodeRepository.getByTelegramId(telegramId);
+    validateUserCode(userCode, code);
+    userCodeRepository.delete(userCode);
+    return jwtService.generateTelegramIdAccessToken(telegramId);
+  }
 
-    // ===================================================================================================================
-    // = Implementation
-    // ===================================================================================================================
+  // ===================================================================================================================
+  // = Implementation
+  // ===================================================================================================================
 
-    private void validateUserCode(UserCode userCode, String code) {
-        if (userCode.getExpirationTime().isBefore(Instant.now())) {
-            userCodeRepository.delete(userCode);
-            throw new AuthException(EXPIRED_CODE);
-        }
-        if (!userCode.getCode().equals(code)) {
-            log.error("Wrong code {} ({} was sent)", code, userCode.getCode());
-            throw new AuthException(WRONG_CODE_ERROR);
-        }
+  private void validateUserCode(UserCode userCode, String code) {
+    if (userCode.getExpirationTime().isBefore(Instant.now())) {
+      userCodeRepository.delete(userCode);
+      throw new AuthException(EXPIRED_CODE);
     }
+    if (!userCode.getCode().equals(code)) {
+      log.error("Wrong code {} ({} was sent)", code, userCode.getCode());
+      throw new AuthException(WRONG_CODE_ERROR);
+    }
+  }
 }

@@ -5,5 +5,5 @@ import com.anst.sd.api.domain.task.Task;
 import java.util.List;
 
 public interface FilterTasksInBound {
-    List<Task> filter(Long userId, TaskFilter taskFilter);
+  List<Task> filter(Long userId, TaskFilter taskFilter);
 }

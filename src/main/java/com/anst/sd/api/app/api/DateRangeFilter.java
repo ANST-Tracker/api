@@ -11,6 +11,6 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 public class DateRangeFilter {
-    private LocalDateTime dateFrom;
-    private LocalDateTime dateTo;
+  private LocalDateTime dateFrom;
+  private LocalDateTime dateTo;
 }

@@ -33,136 +33,136 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class TaskRepositoryImpl implements TaskRepository {
-    private final TaskJpaRepository taskJpaRepository;
-    private final EntityManager entityManager;
-    @Value("${pageable.size}")
-    private Integer pageSize;
+  private final TaskJpaRepository taskJpaRepository;
+  private final EntityManager entityManager;
+  @Value("${pageable.size}")
+  private Integer pageSize;
 
-    @Override
-    public Page<Task> findTasksByUserIdAndProjectId(Long userId, Long projectId, Integer page) {
-        PageRequest pageRequest = PageRequest.of(page, pageSize);
-        return taskJpaRepository.findTasksByProjectUserIdAndProjectId(userId, projectId, pageRequest);
+  @Override
+  public Page<Task> findTasksByUserIdAndProjectId(Long userId, Long projectId, Integer page) {
+    PageRequest pageRequest = PageRequest.of(page, pageSize);
+    return taskJpaRepository.findTasksByProjectUserIdAndProjectId(userId, projectId, pageRequest);
+  }
+
+  @Override
+  public Task save(Task task) {
+    return taskJpaRepository.save(task);
+  }
+
+  @Override
+  public Task findByIdAndUser(Long id, Long userId) {
+    return taskJpaRepository.findTaskByIdAndUserId(id, userId)
+            .orElseThrow(() -> new TaskNotFoundException(id, userId));
+  }
+
+  @Override
+  public void deleteById(Long id) {
+    taskJpaRepository.deleteById(id);
+  }
+
+  @Override
+  public List<Task> findByFilter(Long userId, TaskFilter filter) {
+    try (Session session = entityManager.unwrap(Session.class)) {
+      PageRequest pageRequest = PageRequest.of(filter.getPage(), pageSize);
+
+      CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+      CriteriaQuery<Task> criteriaQuery = criteriaBuilder.createQuery(Task.class);
+      Root<Task> task = criteriaQuery.from(Task.class);
+
+      TaskJoinPredicates taskJoinPredicates = getJoinPredicates(task);
+
+      List<Predicate> predicateList = new ArrayList<>(generateTaskPredicates(
+              criteriaBuilder, filter, task, taskJoinPredicates));
+      return createQueryAndGetResults(session, criteriaQuery, predicateList, pageRequest);
     }
+  }
 
-    @Override
-    public Task save(Task task) {
-        return taskJpaRepository.save(task);
+  private List<Predicate> generateTaskPredicates(CriteriaBuilder criteriaBuilder,
+                                                 TaskFilter filter,
+                                                 Root<Task> taskRoot,
+                                                 TaskJoinPredicates taskJoinPredicates) {
+    List<Predicate> predicates = new ArrayList<>();
+    Map<String, Join<?, ?>> joinPredicates = new HashMap<>();
+    addSimplePredicates(filter, taskRoot, predicates);
+    addDateRangePredicates(criteriaBuilder, filter, taskRoot, predicates);
+    addProjectPredicates(criteriaBuilder, filter, predicates, taskJoinPredicates);
+    addTagsPredicates(criteriaBuilder, filter, taskRoot, predicates, joinPredicates);
+    return predicates;
+  }
+
+  private void addProjectPredicates(CriteriaBuilder criteriaBuilder,
+                                    TaskFilter filter,
+                                    List<Predicate> predicates,
+                                    TaskJoinPredicates taskJoinPredicates) {
+    if (!CollectionUtils.isEmpty(filter.getProjectIds())) {
+      filter.getProjectIds().forEach(projectId -> predicates.add(criteriaBuilder.or(
+              criteriaBuilder.equal(taskJoinPredicates.getProjectJoin().get(Project_.id), projectId))));
     }
+  }
 
-    @Override
-    public Task findByIdAndUser(Long id, Long userId) {
-        return taskJpaRepository.findTaskByIdAndUserId(id, userId)
-                .orElseThrow(() -> new TaskNotFoundException(id, userId));
+  private void addSimplePredicates(TaskFilter filter, Root<Task> taskRoot, List<Predicate> predicates) {
+    if (!CollectionUtils.isEmpty(filter.getStatus())) {
+      Expression<TaskStatus> statusExpression = taskRoot.get(Task_.status);
+      Predicate statusPredicate = statusExpression.in(filter.getStatus());
+      predicates.add(statusPredicate);
     }
+  }
 
-    @Override
-    public void deleteById(Long id) {
-        taskJpaRepository.deleteById(id);
+  private void addTagsPredicates(CriteriaBuilder criteriaBuilder, TaskFilter filter, Root<Task> taskRoot,
+                                 List<Predicate> predicates, Map<String, Join<?, ?>> joinPredicates) {
+    if (!CollectionUtils.isEmpty(filter.getTags())) {
+      ListJoin<Task, Tag> tagJoin = (ListJoin<Task, Tag>) joinPredicates.computeIfAbsent(
+              "tags",
+              k -> taskRoot.join(Task_.tags, JoinType.LEFT)
+      );
+
+      List<Predicate> tagPredicates = filter.getTags().stream()
+              .map(tagName -> criteriaBuilder.equal(tagJoin.get(Tag_.name), tagName))
+              .toList();
+
+      predicates.add(criteriaBuilder.or(tagPredicates.toArray(new Predicate[0])));
     }
+  }
 
-    @Override
-    public List<Task> findByFilter(Long userId, TaskFilter filter) {
-        try (Session session = entityManager.unwrap(Session.class)) {
-            PageRequest pageRequest = PageRequest.of(filter.getPage(), pageSize);
 
-            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-            CriteriaQuery<Task> criteriaQuery = criteriaBuilder.createQuery(Task.class);
-            Root<Task> task = criteriaQuery.from(Task.class);
-
-            TaskJoinPredicates taskJoinPredicates = getJoinPredicates(task);
-
-            List<Predicate> predicateList = new ArrayList<>(generateTaskPredicates(
-                    criteriaBuilder, filter, task, taskJoinPredicates));
-            return createQueryAndGetResults(session, criteriaQuery, predicateList, pageRequest);
-        }
-    }
-
-    private List<Predicate> generateTaskPredicates(CriteriaBuilder criteriaBuilder,
-                                                   TaskFilter filter,
-                                                   Root<Task> taskRoot,
-                                                   TaskJoinPredicates taskJoinPredicates) {
-        List<Predicate> predicates = new ArrayList<>();
-        Map<String, Join<?, ?>> joinPredicates = new HashMap<>();
-        addSimplePredicates(filter, taskRoot, predicates);
-        addDateRangePredicates(criteriaBuilder, filter, taskRoot, predicates);
-        addProjectPredicates(criteriaBuilder, filter, predicates, taskJoinPredicates);
-        addTagsPredicates(criteriaBuilder, filter, taskRoot, predicates, joinPredicates);
-        return predicates;
-    }
-
-    private void addProjectPredicates(CriteriaBuilder criteriaBuilder,
+  private void addDateRangePredicates(CriteriaBuilder criteriaBuilder,
                                       TaskFilter filter,
-                                      List<Predicate> predicates,
-                                      TaskJoinPredicates taskJoinPredicates) {
-        if (!CollectionUtils.isEmpty(filter.getProjectIds())) {
-            filter.getProjectIds().forEach(projectId -> predicates.add(criteriaBuilder.or(
-                    criteriaBuilder.equal(taskJoinPredicates.getProjectJoin().get(Project_.id), projectId))));
-        }
+                                      Root<Task> taskRoot,
+                                      List<Predicate> predicates) {
+    DateRangeFilter startDateRangeFilter = filter.getDeadline();
+    if (startDateRangeFilter != null && startDateRangeFilter.getDateFrom() != null) {
+      predicates.add(criteriaBuilder.greaterThanOrEqualTo(
+              taskRoot.get(Task_.deadline),
+              startDateRangeFilter.getDateFrom()));
     }
-
-    private void addSimplePredicates(TaskFilter filter, Root<Task> taskRoot, List<Predicate> predicates) {
-        if (!CollectionUtils.isEmpty(filter.getStatus())) {
-            Expression<TaskStatus> statusExpression = taskRoot.get(Task_.status);
-            Predicate statusPredicate = statusExpression.in(filter.getStatus());
-            predicates.add(statusPredicate);
-        }
+    if (startDateRangeFilter != null && startDateRangeFilter.getDateTo() != null) {
+      predicates.add(criteriaBuilder.lessThanOrEqualTo(
+              taskRoot.get(Task_.deadline),
+              startDateRangeFilter.getDateTo()));
     }
+  }
 
-    private void addTagsPredicates(CriteriaBuilder criteriaBuilder, TaskFilter filter, Root<Task> taskRoot,
-                                   List<Predicate> predicates, Map<String, Join<?, ?>> joinPredicates) {
-        if (!CollectionUtils.isEmpty(filter.getTags())) {
-            ListJoin<Task, Tag> tagJoin = (ListJoin<Task, Tag>) joinPredicates.computeIfAbsent(
-                    "tags",
-                    k -> taskRoot.join(Task_.tags, JoinType.LEFT)
-            );
+  private List<Task> createQueryAndGetResults(Session session,
+                                              CriteriaQuery<Task> criteriaQuery,
+                                              List<Predicate> predicateList,
+                                              PageRequest page) {
+    criteriaQuery.where(predicateList.toArray(new Predicate[0]));
+    TypedQuery<Task> query = session.createQuery(criteriaQuery);
+    query.setFirstResult(Math.toIntExact(page.getOffset()));
+    query.setMaxResults(page.getPageSize());
+    return query.getResultList();
+  }
 
-            List<Predicate> tagPredicates = filter.getTags().stream()
-                    .map(tagName -> criteriaBuilder.equal(tagJoin.get(Tag_.name), tagName))
-                    .toList();
+  private TaskJoinPredicates getJoinPredicates(Root<Task> taskRoot) {
+    TaskJoinPredicates taskJoinPredicates = new TaskJoinPredicates();
+    taskJoinPredicates.setProjectJoin(taskRoot.join(Task_.project, JoinType.LEFT));
+    return taskJoinPredicates;
+  }
 
-            predicates.add(criteriaBuilder.or(tagPredicates.toArray(new Predicate[0])));
-        }
-    }
-
-
-    private void addDateRangePredicates(CriteriaBuilder criteriaBuilder,
-                                        TaskFilter filter,
-                                        Root<Task> taskRoot,
-                                        List<Predicate> predicates) {
-        DateRangeFilter startDateRangeFilter = filter.getDeadline();
-        if (startDateRangeFilter != null && startDateRangeFilter.getDateFrom() != null) {
-            predicates.add(criteriaBuilder.greaterThanOrEqualTo(
-                    taskRoot.get(Task_.deadline),
-                    startDateRangeFilter.getDateFrom()));
-        }
-        if (startDateRangeFilter != null && startDateRangeFilter.getDateTo() != null) {
-            predicates.add(criteriaBuilder.lessThanOrEqualTo(
-                    taskRoot.get(Task_.deadline),
-                    startDateRangeFilter.getDateTo()));
-        }
-    }
-
-    private List<Task> createQueryAndGetResults(Session session,
-                                                CriteriaQuery<Task> criteriaQuery,
-                                                List<Predicate> predicateList,
-                                                PageRequest page) {
-        criteriaQuery.where(predicateList.toArray(new Predicate[0]));
-        TypedQuery<Task> query = session.createQuery(criteriaQuery);
-        query.setFirstResult(Math.toIntExact(page.getOffset()));
-        query.setMaxResults(page.getPageSize());
-        return query.getResultList();
-    }
-
-    private TaskJoinPredicates getJoinPredicates(Root<Task> taskRoot) {
-        TaskJoinPredicates taskJoinPredicates = new TaskJoinPredicates();
-        taskJoinPredicates.setProjectJoin(taskRoot.join(Task_.project, JoinType.LEFT));
-        return taskJoinPredicates;
-    }
-
-    @Setter
-    @Getter
-    @Accessors(chain = true)
-    private static class TaskJoinPredicates {
-        private Join<Task, Project> projectJoin;
-    }
+  @Setter
+  @Getter
+  @Accessors(chain = true)
+  private static class TaskJoinPredicates {
+    private Join<Task, Project> projectJoin;
+  }
 }

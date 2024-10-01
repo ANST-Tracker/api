@@ -15,15 +15,15 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class FilterTasksUseCase implements FilterTasksInBound {
-    private final TaskRepository taskRepository;
+  private final TaskRepository taskRepository;
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<Task> filter(Long userId, TaskFilter filter) {
-        log.info("Filtering task for user {} with filter {}", userId, filter);
-        if (filter.getPage() == null || filter.getPage() < 0) {
-            filter.setPage(0);
-        }
-        return taskRepository.findByFilter(userId, filter);
+  @Override
+  @Transactional(readOnly = true)
+  public List<Task> filter(Long userId, TaskFilter filter) {
+    log.info("Filtering task for user {} with filter {}", userId, filter);
+    if (filter.getPage() == null || filter.getPage() < 0) {
+      filter.setPage(0);
     }
+    return taskRepository.findByFilter(userId, filter);
+  }
 }

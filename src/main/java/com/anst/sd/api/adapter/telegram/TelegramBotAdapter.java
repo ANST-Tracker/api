@@ -14,19 +14,19 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j
 public class TelegramBotAdapter implements SendNotificationOutbound {
-    private final TelegramBotFeignClient telegramBotFeignClient;
-    private final NotificationDtoMapper notificationDtoMapper;
+  private final TelegramBotFeignClient telegramBotFeignClient;
+  private final NotificationDtoMapper notificationDtoMapper;
 
-    @Override
-    public void send(PendingNotification pendingNotification) {
-        log.info("Sending notification request to telegram bot service. Task {} Project {}",
+  @Override
+  public void send(PendingNotification pendingNotification) {
+    log.info("Sending notification request to telegram bot service. Task {} Project {}",
             pendingNotification.getTask().getId(), pendingNotification.getTask().getProject().getId());
-        try {
-            NotificationDto requestDto = notificationDtoMapper.mapToDto(pendingNotification);
-            telegramBotFeignClient.sendNotification(requestDto);
-        } catch (FeignException e) {
-            log.error("Error occurred while sending notification request", e);
-            throw new ServiceUnavailableException(e);
-        }
+    try {
+      NotificationDto requestDto = notificationDtoMapper.mapToDto(pendingNotification);
+      telegramBotFeignClient.sendNotification(requestDto);
+    } catch (FeignException e) {
+      log.error("Error occurred while sending notification request", e);
+      throw new ServiceUnavailableException(e);
     }
+  }
 }

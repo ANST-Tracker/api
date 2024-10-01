@@ -14,13 +14,13 @@ import java.util.Set;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserInfoDto {
-    String firstName;
-    String lastName;
-    @NotNull
-    String username;
-    @NotNull
-    String telegramId;
-    @NotNull
-    @NotEmpty
-    Set<Role> roles;
+  String firstName;
+  String lastName;
+  @NotNull
+  String username;
+  @NotNull
+  String telegramId;
+  @NotNull
+  @NotEmpty
+  Set<Role> roles;
 }

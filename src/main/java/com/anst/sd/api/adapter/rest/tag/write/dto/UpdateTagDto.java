@@ -10,8 +10,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UpdateTagDto {
-    @NotBlank
-    String name;
-    @NotBlank
-    String color;
+  @NotBlank
+  String name;
+  @NotBlank
+  String color;
 }

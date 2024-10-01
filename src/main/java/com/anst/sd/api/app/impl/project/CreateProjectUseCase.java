@@ -15,16 +15,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @AllArgsConstructor
 public class CreateProjectUseCase implements CreateProjectInbound {
-    private final ProjectRepository projectRepository;
-    private final UserRepository userRepository;
+  private final ProjectRepository projectRepository;
+  private final UserRepository userRepository;
 
-    @Override
-    @Transactional
-    public Project create(Project project, Long userId) {
-        log.info("Creating project for userId {}", userId);
-        User user = userRepository.getById(userId);
-        project.setUser(user);
-        project.setProjectType(ProjectType.BASE);
-        return projectRepository.save(project);
-    }
+  @Override
+  @Transactional
+  public Project create(Project project, Long userId) {
+    log.info("Creating project for userId {}", userId);
+    User user = userRepository.getById(userId);
+    project.setUser(user);
+    project.setProjectType(ProjectType.BASE);
+    return projectRepository.save(project);
+  }
 }

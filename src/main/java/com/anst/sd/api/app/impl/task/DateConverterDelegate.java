@@ -11,12 +11,12 @@ import java.time.ZoneOffset;
 @Component
 @RequiredArgsConstructor
 public class DateConverterDelegate {
-    public PendingNotification convertToInstant(LocalDateTime deadline, PendingNotification pendingNotification) {
-        Instant deadlineInstant = deadline.toInstant(ZoneOffset.UTC);
-        Instant executionInstant = deadlineInstant.minus(
-                pendingNotification.getAmount(),
-                pendingNotification.getTimeType().toChronoUnit());
-        pendingNotification.setExecutionDate(executionInstant);
-        return pendingNotification;
-    }
+  public PendingNotification convertToInstant(LocalDateTime deadline, PendingNotification pendingNotification) {
+    Instant deadlineInstant = deadline.toInstant(ZoneOffset.UTC);
+    Instant executionInstant = deadlineInstant.minus(
+            pendingNotification.getAmount(),
+            pendingNotification.getTimeType().toChronoUnit());
+    pendingNotification.setExecutionDate(executionInstant);
+    return pendingNotification;
+  }
 }

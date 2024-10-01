@@ -12,12 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class GetUserUseCase implements GetUserInBound {
-    private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-    @Override
-    @Transactional(readOnly = true)
-    public User get(Long userId) {
-        log.info("Getting user info for id {}", userId);
-        return userRepository.getById(userId);
-    }
+  @Override
+  @Transactional(readOnly = true)
+  public User get(Long userId) {
+    log.info("Getting user info for id {}", userId);
+    return userRepository.getById(userId);
+  }
 }

@@ -12,12 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class GetTaskUseCase implements GetTaskInBound {
-    private final TaskRepository taskRepository;
+  private final TaskRepository taskRepository;
 
-    @Override
-    @Transactional(readOnly = true)
-    public Task get(Long userId, Long id) {
-        log.info("Getting task by id {} and userId {}", id, userId);
-        return taskRepository.findByIdAndUser(id, userId);
-    }
+  @Override
+  @Transactional(readOnly = true)
+  public Task get(Long userId, Long id) {
+    log.info("Getting task by id {} and userId {}", id, userId);
+    return taskRepository.findByIdAndUser(id, userId);
+  }
 }

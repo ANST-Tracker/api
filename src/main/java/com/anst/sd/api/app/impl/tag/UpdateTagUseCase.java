@@ -13,18 +13,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class UpdateTagUseCase implements UpdateTagInBound {
-    private final TagRepository tagRepository;
+  private final TagRepository tagRepository;
 
-    @Override
-    @Transactional
-    public Tag update(Long userId, Long tagId, Tag updated) {
-        log.info("Updating tag with id {} and userId {}", tagId, userId);
-        if (tagRepository.existsByNameAndUserId(updated.getName(), userId)) {
-            throw new TagValidationException(tagId);
-        }
-        Tag tag = tagRepository.findByIdAndUserId(tagId, userId);
-        tag.setColor(updated.getColor());
-        tag.setName(updated.getName());
-        return tagRepository.save(tag);
+  @Override
+  @Transactional
+  public Tag update(Long userId, Long tagId, Tag updated) {
+    log.info("Updating tag with id {} and userId {}", tagId, userId);
+    if (tagRepository.existsByNameAndUserId(updated.getName(), userId)) {
+      throw new TagValidationException(tagId);
     }
+    Tag tag = tagRepository.findByIdAndUserId(tagId, userId);
+    tag.setColor(updated.getColor());
+    tag.setName(updated.getName());
+    return tagRepository.save(tag);
+  }
 }

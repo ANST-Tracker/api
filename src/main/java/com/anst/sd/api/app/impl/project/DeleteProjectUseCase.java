@@ -15,17 +15,17 @@ import static com.anst.sd.api.domain.project.ProjectType.BUCKET;
 @Service
 @AllArgsConstructor
 public class DeleteProjectUseCase implements DeleteProjectInbound {
-    private final ProjectRepository projectRepository;
+  private final ProjectRepository projectRepository;
 
-    @Override
-    @Transactional
-    public Project delete(Long id, Long userId) {
-        log.info("Deleting project with id {} and userId {}", id, userId);
-        Project project = projectRepository.getByIdAndUserId(id, userId);
-        if (BUCKET.equals(project.getProjectType())) {
-            throw new ProjectNotFoundException(id, userId);
-        }
-        projectRepository.deleteById(id);
-        return project;
+  @Override
+  @Transactional
+  public Project delete(Long id, Long userId) {
+    log.info("Deleting project with id {} and userId {}", id, userId);
+    Project project = projectRepository.getByIdAndUserId(id, userId);
+    if (BUCKET.equals(project.getProjectType())) {
+      throw new ProjectNotFoundException(id, userId);
     }
+    projectRepository.deleteById(id);
+    return project;
+  }
 }

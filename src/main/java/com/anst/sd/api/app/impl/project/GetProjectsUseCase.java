@@ -14,12 +14,12 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class GetProjectsUseCase implements GetProjectsInbound {
-    private ProjectRepository projectRepository;
+  private ProjectRepository projectRepository;
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<Project> get(Long userId) {
-        log.info("Getting projects by userId {}", userId);
-        return projectRepository.findByUserId(userId);
-    }
+  @Override
+  @Transactional(readOnly = true)
+  public List<Project> get(Long userId) {
+    log.info("Getting projects by userId {}", userId);
+    return projectRepository.findByUserId(userId);
+  }
 }

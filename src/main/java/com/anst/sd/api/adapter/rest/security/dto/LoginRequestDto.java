@@ -12,8 +12,8 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LoginRequestDto {
-    @NotBlank
-    String username;
-    @NotBlank
-    String password;
+  @NotBlank
+  String username;
+  @NotBlank
+  String password;
 }

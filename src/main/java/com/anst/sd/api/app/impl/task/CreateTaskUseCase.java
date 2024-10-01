@@ -20,43 +20,43 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CreateTaskUseCase implements CreateTaskInBound {
-    private final TaskRepository taskRepository;
-    private final ProjectRepository projectRepository;
-    private final DateConverterDelegate dateConverterDelegate;
-    private final TagRepository tagRepository;
+  private final TaskRepository taskRepository;
+  private final ProjectRepository projectRepository;
+  private final DateConverterDelegate dateConverterDelegate;
+  private final TagRepository tagRepository;
 
-    @Override
-    @Transactional
-    public Task create(Long userId, Long projectId, Task task) {
-        log.info("Creating task with userId {} in project {}", userId, projectId);
-        Project project = projectRepository.getByIdAndUserId(projectId, userId);
-        task.setProject(project)
-                .setStatus(TaskStatus.BACKLOG);
-        if (task.getTags() != null && !task.getTags().isEmpty()) {
-            List<Long> tags = task.getTags().stream()
-                    .map(Tag::getId)
-                    .toList();
-            List<Tag> fullTags = tagRepository.findAllByIds(tags);
-            task.setTags(fullTags);
-        }
-        if (task.getPendingNotifications() != null && task.getDeadline() != null) {
-            List<PendingNotification> convertedNotifications = task.getPendingNotifications().stream()
-                    .map(notification -> dateConverterDelegate.convertToInstant(task.getDeadline(), notification))
-                    .toList();
-            task.setPendingNotifications(convertedNotifications);
-        }
-        return taskRepository.save(task);
+  @Override
+  @Transactional
+  public Task create(Long userId, Long projectId, Task task) {
+    log.info("Creating task with userId {} in project {}", userId, projectId);
+    Project project = projectRepository.getByIdAndUserId(projectId, userId);
+    task.setProject(project)
+            .setStatus(TaskStatus.BACKLOG);
+    if (task.getTags() != null && !task.getTags().isEmpty()) {
+      List<Long> tags = task.getTags().stream()
+              .map(Tag::getId)
+              .toList();
+      List<Tag> fullTags = tagRepository.findAllByIds(tags);
+      task.setTags(fullTags);
     }
+    if (task.getPendingNotifications() != null && task.getDeadline() != null) {
+      List<PendingNotification> convertedNotifications = task.getPendingNotifications().stream()
+              .map(notification -> dateConverterDelegate.convertToInstant(task.getDeadline(), notification))
+              .toList();
+      task.setPendingNotifications(convertedNotifications);
+    }
+    return taskRepository.save(task);
+  }
 
-    @Override
-    @Transactional
-    public void create(String userTelegramId, String name) {
-        log.info("Internal: creating task for telegram user {} with name {}", userTelegramId, name);
-        Project bucketProject = projectRepository.getBucketProject(userTelegramId);
-        Task task = new Task()
-                .setData(name)
-                .setProject(bucketProject)
-                .setStatus(TaskStatus.BACKLOG);
-        taskRepository.save(task);
-    }
+  @Override
+  @Transactional
+  public void create(String userTelegramId, String name) {
+    log.info("Internal: creating task for telegram user {} with name {}", userTelegramId, name);
+    Project bucketProject = projectRepository.getBucketProject(userTelegramId);
+    Task task = new Task()
+            .setData(name)
+            .setProject(bucketProject)
+            .setStatus(TaskStatus.BACKLOG);
+    taskRepository.save(task);
+  }
 }

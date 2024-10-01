@@ -6,9 +6,9 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface NotificationDtoMapper {
-    @Mapping(target = "taskName", source = "task.data")
-    @Mapping(target = "deadline", source = "task.deadline")
-    @Mapping(target = "projectName", source = "task.project.name")
-    @Mapping(target = "telegramId", source = "task.project.user.telegramId")
-    NotificationDto mapToDto(PendingNotification pendingNotification);
+  @Mapping(target = "taskName", source = "task.data")
+  @Mapping(target = "deadline", source = "task.deadline")
+  @Mapping(target = "projectName", source = "task.project.name")
+  @Mapping(target = "telegramId", source = "task.project.user.telegramId")
+  NotificationDto mapToDto(PendingNotification pendingNotification);
 }

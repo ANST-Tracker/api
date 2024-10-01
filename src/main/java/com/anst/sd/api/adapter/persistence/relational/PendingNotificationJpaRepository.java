@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface PendingNotificationJpaRepository extends JpaRepository<PendingNotification, Long> {
-    @EntityGraph("pending-notification-full")
-    List<PendingNotification> findTop100ByExecutionDateBefore(Instant date);
+  @EntityGraph("pending-notification-full")
+  List<PendingNotification> findTop100ByExecutionDateBefore(Instant date);
 }

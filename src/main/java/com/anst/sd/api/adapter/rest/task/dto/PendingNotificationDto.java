@@ -11,6 +11,6 @@ import java.util.concurrent.TimeUnit;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PendingNotificationDto {
-    int amount;
-    TimeUnit timeType;
+  int amount;
+  TimeUnit timeType;
 }

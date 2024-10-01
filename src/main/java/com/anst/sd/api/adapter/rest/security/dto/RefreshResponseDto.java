@@ -12,8 +12,8 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RefreshResponseDto {
-    @NotBlank
-    String accessToken;
-    @NotBlank
-    String refreshToken;
+  @NotBlank
+  String accessToken;
+  @NotBlank
+  String refreshToken;
 }

@@ -13,7 +13,7 @@ import lombok.*;
 @Entity
 @Table(name = "role")
 public class Role extends DomainObject {
-    @Enumerated(EnumType.STRING)
-    @Column
-    private ERole name;
+  @Enumerated(EnumType.STRING)
+  @Column
+  private ERole name;
 }

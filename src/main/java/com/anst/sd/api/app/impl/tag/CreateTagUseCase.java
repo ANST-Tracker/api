@@ -15,18 +15,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class CreateTagUseCase implements CreateTagInBound {
-    private final UserRepository userRepository;
-    private final TagRepository tagRepository;
+  private final UserRepository userRepository;
+  private final TagRepository tagRepository;
 
-    @Override
-    @Transactional
-    public Tag create(Tag tag, Long userId) {
-        log.info("Creating tag name {} with userId {}", tag.getName(), userId);
-        if (tagRepository.existsByNameAndUserId(tag.getName(), userId)) {
-            throw new TagValidationException();
-        }
-        User user = userRepository.getById(userId);
-        tag.setUser(user);
-        return tagRepository.save(tag);
+  @Override
+  @Transactional
+  public Tag create(Tag tag, Long userId) {
+    log.info("Creating tag name {} with userId {}", tag.getName(), userId);
+    if (tagRepository.existsByNameAndUserId(tag.getName(), userId)) {
+      throw new TagValidationException();
     }
+    User user = userRepository.getById(userId);
+    tag.setUser(user);
+    return tagRepository.save(tag);
+  }
 }

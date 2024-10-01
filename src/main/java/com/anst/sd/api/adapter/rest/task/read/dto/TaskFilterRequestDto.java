@@ -15,9 +15,9 @@ import java.util.List;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TaskFilterRequestDto {
-    DateRangeFilter deadline;
-    List<TaskStatus> status;
-    Integer page;
-    List<Long> projectIds;
-    List<String> tags;
+  DateRangeFilter deadline;
+  List<TaskStatus> status;
+  Integer page;
+  List<Long> projectIds;
+  List<String> tags;
 }

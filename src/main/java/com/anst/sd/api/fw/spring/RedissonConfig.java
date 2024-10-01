@@ -11,16 +11,16 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RedissonConfig {
-    @Bean
-    RedissonClient redissonClient(ObjectMapper objectMapper, @Value("${spring.data.redis.url}") String url) {
-        Config config = getCommonConfig(objectMapper);
-        config.useSingleServer().setAddress((url));
-        return Redisson.create(config);
-    }
+  @Bean
+  RedissonClient redissonClient(ObjectMapper objectMapper, @Value("${spring.data.redis.url}") String url) {
+    Config config = getCommonConfig(objectMapper);
+    config.useSingleServer().setAddress((url));
+    return Redisson.create(config);
+  }
 
-    private Config getCommonConfig(ObjectMapper objectMapper) {
-        Config config = new Config();
-        config.setCodec(new JsonJacksonCodec(objectMapper));
-        return config;
-    }
+  private Config getCommonConfig(ObjectMapper objectMapper) {
+    Config config = new Config();
+    config.setCodec(new JsonJacksonCodec(objectMapper));
+    return config;
+  }
 }

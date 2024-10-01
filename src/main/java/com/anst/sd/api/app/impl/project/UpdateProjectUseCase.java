@@ -15,17 +15,17 @@ import static com.anst.sd.api.domain.project.ProjectType.BUCKET;
 @Service
 @AllArgsConstructor
 public class UpdateProjectUseCase implements UpdateProjectInbound {
-    private final ProjectRepository projectRepository;
+  private final ProjectRepository projectRepository;
 
-    @Override
-    @Transactional
-    public Project update(Long id, Project updated, Long userId) {
-        log.info("Updating project with id {} and userId {}", id, userId);
-        Project original = projectRepository.getByIdAndUserId(id, userId);
-        if (BUCKET.equals(original.getProjectType())) {
-            throw new ProjectNotFoundException(id, userId);
-        }
-        original.setName(updated.getName());
-        return projectRepository.save(original);
+  @Override
+  @Transactional
+  public Project update(Long id, Project updated, Long userId) {
+    log.info("Updating project with id {} and userId {}", id, userId);
+    Project original = projectRepository.getByIdAndUserId(id, userId);
+    if (BUCKET.equals(original.getProjectType())) {
+      throw new ProjectNotFoundException(id, userId);
     }
+    original.setName(updated.getName());
+    return projectRepository.save(original);
+  }
 }
