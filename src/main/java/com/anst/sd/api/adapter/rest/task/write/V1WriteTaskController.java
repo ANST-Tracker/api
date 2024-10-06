@@ -12,6 +12,8 @@ import com.anst.sd.api.app.api.task.TaskValidationException;
 import com.anst.sd.api.app.api.task.UpdateTaskInBound;
 import com.anst.sd.api.domain.task.Task;
 import com.anst.sd.api.security.app.impl.JwtService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -33,6 +35,7 @@ public class V1WriteTaskController {
     private final CreateTaskInBound createTaskInBound;
     private final TaskDtoMapper taskDtoMapper;
     private final TaskDomainMapper taskDomainMapper;
+    private final ObjectMapper objectMapper;
 
     @Operation(
             summary = "Create a new task",
@@ -46,11 +49,16 @@ public class V1WriteTaskController {
     public ResponseEntity<TaskInfoDto> createTask(
             @Valid @RequestBody CreateTaskDto request,
             @PathVariable Long projectId,
-            BindingResult bindingResult) {
+            BindingResult bindingResult) throws JsonProcessingException {
         if (bindingResult.hasErrors()) {
             throw new TaskValidationException();
         }
         Task task = taskDomainMapper.mapToDomain(request);
+
+        String taskJson = objectMapper.writeValueAsString(task);
+        System.out.println("Mapped Task object as JSON:");
+        System.out.println(taskJson);
+
         Task result = createTaskInBound.create(jwtService.getJwtAuth().getUserId(), projectId, task);
         return ResponseEntity.ok(taskDtoMapper.mapToDto(result));
     }

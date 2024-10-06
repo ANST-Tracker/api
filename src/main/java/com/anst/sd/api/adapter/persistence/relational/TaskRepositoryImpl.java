@@ -26,9 +26,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -82,11 +80,10 @@ public class TaskRepositoryImpl implements TaskRepository {
                                                    Root<Task> taskRoot,
                                                    TaskJoinPredicates taskJoinPredicates) {
         List<Predicate> predicates = new ArrayList<>();
-        Map<String, Join<?, ?>> joinPredicates = new HashMap<>();
         addSimplePredicates(filter, taskRoot, predicates);
         addDateRangePredicates(criteriaBuilder, filter, taskRoot, predicates);
         addProjectPredicates(criteriaBuilder, filter, predicates, taskJoinPredicates);
-        addTagsPredicates(criteriaBuilder, filter, taskRoot, predicates, joinPredicates);
+        addTagsPredicates(criteriaBuilder, filter, taskRoot, predicates, taskJoinPredicates);
         return predicates;
     }
 
@@ -108,22 +105,23 @@ public class TaskRepositoryImpl implements TaskRepository {
         }
     }
 
-    private void addTagsPredicates(CriteriaBuilder criteriaBuilder, TaskFilter filter, Root<Task> taskRoot,
-                                   List<Predicate> predicates, Map<String, Join<?, ?>> joinPredicates) {
+    private void addTagsPredicates(CriteriaBuilder criteriaBuilder, TaskFilter filter, Root<Task> taskRoot, List<Predicate> predicates,
+                                   TaskJoinPredicates taskJoinPredicates) {
         if (!CollectionUtils.isEmpty(filter.getTags())) {
-            ListJoin<Task, Tag> tagJoin = (ListJoin<Task, Tag>) joinPredicates.computeIfAbsent(
-                    "tags",
-                    k -> taskRoot.join(Task_.tags, JoinType.LEFT)
-            );
+            Join<Task, Tag> tagJoin = taskJoinPredicates.getTagJoin();
+            if (tagJoin == null) {
+                tagJoin = taskRoot.join(Task_.tags, JoinType.LEFT);
+                taskJoinPredicates.setTagJoin(tagJoin);
+            }
 
+            Join<Task, Tag> finalTagJoin = tagJoin;
             List<Predicate> tagPredicates = filter.getTags().stream()
-                    .map(tagName -> criteriaBuilder.equal(tagJoin.get(Tag_.name), tagName))
+                    .map(tagName -> criteriaBuilder.equal(finalTagJoin.get(Tag_.name), tagName))
                     .toList();
 
             predicates.add(criteriaBuilder.or(tagPredicates.toArray(new Predicate[0])));
         }
     }
-
 
     private void addDateRangePredicates(CriteriaBuilder criteriaBuilder,
                                         TaskFilter filter,
@@ -164,5 +162,6 @@ public class TaskRepositoryImpl implements TaskRepository {
     @Accessors(chain = true)
     private static class TaskJoinPredicates {
         private Join<Task, Project> projectJoin;
+        private Join<Task, Tag> tagJoin;
     }
 }
