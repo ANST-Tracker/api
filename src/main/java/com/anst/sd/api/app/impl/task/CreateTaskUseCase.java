@@ -27,8 +27,10 @@ public class CreateTaskUseCase implements CreateTaskInBound {
     public Task create(Long userId, Long projectId, Task task) {
         log.info("Creating task with userId {} in project {}", userId, projectId);
         Project project = projectRepository.getByIdAndUserId(projectId, userId);
+        double newNumberOrder = taskRepository.maxOrderNumberTasksByUserIdAndProjectId(userId, projectId)+1;
         task.setProject(project)
             .setStatus(TaskStatus.BACKLOG);
+        task.setOrderNumber(newNumberOrder);
         if (task.getPendingNotifications() != null && task.getDeadline() != null) {
             List<PendingNotification> convertedNotifications = task.getPendingNotifications().stream()
                 .map(notification -> dateConverterDelegate.convertToInstant(task.getDeadline(), notification))
@@ -43,6 +45,7 @@ public class CreateTaskUseCase implements CreateTaskInBound {
     public void create(String userTelegramId, String name) {
         log.info("Internal: creating task for telegram user {} with name {}", userTelegramId, name);
         Project bucketProject = projectRepository.getBucketProject(userTelegramId);
+        
         Task task = new Task()
             .setData(name)
             .setProject(bucketProject)

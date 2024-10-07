@@ -15,4 +15,6 @@ public interface TaskRepository {
     void deleteById(Long id);
 
     List<Task> findByFilter(Long userId, TaskFilter filter);
+
+    double maxOrderNumberTasksByUserIdAndProjectId(Long userId,Long projectId);
 }

@@ -23,5 +23,6 @@ public class TaskInfoDto {
     @NotNull
     TaskStatus status;
     String description;
+    double  orderNumber;
     List<PendingNotificationDto> pendingNotifications;
 }

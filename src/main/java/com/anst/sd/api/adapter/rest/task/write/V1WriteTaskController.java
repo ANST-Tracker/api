@@ -6,10 +6,8 @@ import com.anst.sd.api.adapter.rest.task.dto.TaskDtoMapper;
 import com.anst.sd.api.adapter.rest.task.dto.TaskInfoDto;
 import com.anst.sd.api.adapter.rest.task.write.dto.CreateTaskDto;
 import com.anst.sd.api.adapter.rest.task.write.dto.UpdateTaskDto;
-import com.anst.sd.api.app.api.task.CreateTaskInBound;
-import com.anst.sd.api.app.api.task.DeleteTaskInBound;
-import com.anst.sd.api.app.api.task.TaskValidationException;
-import com.anst.sd.api.app.api.task.UpdateTaskInBound;
+import com.anst.sd.api.adapter.rest.task.write.dto.UpdateTaskOrderNumberDto;
+import com.anst.sd.api.app.api.task.*;
 import com.anst.sd.api.domain.task.Task;
 import com.anst.sd.api.security.app.impl.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,6 +31,7 @@ public class V1WriteTaskController {
     private final CreateTaskInBound createTaskInBound;
     private final TaskDtoMapper taskDtoMapper;
     private final TaskDomainMapper taskDomainMapper;
+    private final UpdateOrderNumberTaskInBound updateOrderNumberTaskInBound;
 
     @Operation(
         summary = "Create a new task",
@@ -52,8 +51,34 @@ public class V1WriteTaskController {
         }
         Task task = taskDomainMapper.mapToDomain(request);
         Task result = createTaskInBound.create(jwtService.getJwtAuth().getUserId(), projectId, task);
+
         return ResponseEntity.ok(taskDtoMapper.mapToDto(result));
     }
+
+    @Operation(
+            summary = "Update number order task",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Task number order updated successfully",
+                            useReturnTypeSchema = true)
+            })
+
+    @PutMapping("/{id}/orderNumber")
+    public ResponseEntity<IdResponseDto> updateOrderNumberTask(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateTaskOrderNumberDto request,
+            BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new TaskValidationException(id);
+        }
+
+        double OrderNumber = request.getOrderNumber();
+        Task result = updateOrderNumberTaskInBound.updateOrderNumber(jwtService.getJwtAuth().getUserId(),id,OrderNumber);
+
+        return ResponseEntity.ok(new IdResponseDto(result.getId()));
+    }
+
 
     @Operation(
         summary = "Update task",
@@ -63,6 +88,8 @@ public class V1WriteTaskController {
                 description = "Task updated successfully",
                 useReturnTypeSchema = true)
         })
+
+
     @PutMapping("/{id}")
     public ResponseEntity<IdResponseDto> updateTask(
         @PathVariable Long id,
@@ -75,6 +102,8 @@ public class V1WriteTaskController {
         Task result = updateTaskInBound.update(jwtService.getJwtAuth().getUserId(), id, task);
         return ResponseEntity.ok(new IdResponseDto(result.getId()));
     }
+
+
 
     @Operation(
         summary = "Delete task by ID",
@@ -89,4 +118,8 @@ public class V1WriteTaskController {
         Task task = deleteTaskInBound.delete(jwtService.getJwtAuth().getUserId(), id);
         return ResponseEntity.ok(new IdResponseDto(task.getId()));
     }
+
+
+
+
 }

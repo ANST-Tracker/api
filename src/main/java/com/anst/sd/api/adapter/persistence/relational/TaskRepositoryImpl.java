@@ -48,7 +48,7 @@ public class TaskRepositoryImpl implements TaskRepository {
     @Override
     public Task findByIdAndUser(Long id, Long userId) {
         return taskJpaRepository.findTaskByIdAndUserId(id, userId)
-            .orElseThrow(() -> new TaskNotFoundException(id, userId));
+                .orElseThrow(() -> new TaskNotFoundException(id, userId));
     }
 
     @Override
@@ -68,15 +68,38 @@ public class TaskRepositoryImpl implements TaskRepository {
             TaskJoinPredicates taskJoinPredicates = getJoinPredicates(task);
 
             List<Predicate> predicateList = new ArrayList<>(generateTaskPredicates(
-                criteriaBuilder, filter, task, taskJoinPredicates));
+                    criteriaBuilder, filter, task, taskJoinPredicates));
             return createQueryAndGetResults(session, criteriaQuery, predicateList, pageRequest);
         }
     }
 
+    @Override
+    public double maxOrderNumberTasksByUserIdAndProjectId(Long userId, Long projectId) {
+        try (Session session = entityManager.unwrap(Session.class)) {
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+
+            CriteriaQuery<Double> criteriaQuery = criteriaBuilder.createQuery(Double.class);
+
+            Root<Task> task = criteriaQuery.from(Task.class);
+            
+            Predicate idProject = criteriaBuilder.equal(task.get("Project").get("id"), projectId);
+            
+
+            criteriaQuery.select(criteriaBuilder.max(task.get("orderNumber")))
+                    .where(criteriaBuilder.and(idProject));
+
+            TypedQuery<Double> query = entityManager.createQuery(criteriaQuery);
+            Double maxOrderNumber = query.getSingleResult();
+
+            
+            return (maxOrderNumber != null) ? maxOrderNumber : 0.0;
+        }
+    }
+
     private List<Predicate> generateTaskPredicates(CriteriaBuilder criteriaBuilder,
-        TaskFilter filter,
-        Root<Task> taskRoot,
-        TaskJoinPredicates taskJoinPredicates) {
+            TaskFilter filter,
+            Root<Task> taskRoot,
+            TaskJoinPredicates taskJoinPredicates) {
         List<Predicate> predicates = new ArrayList<>();
         addSimplePredicates(filter, taskRoot, predicates);
         addDateRangePredicates(criteriaBuilder, filter, taskRoot, predicates);
@@ -85,12 +108,12 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     private void addProjectPredicates(CriteriaBuilder criteriaBuilder,
-        TaskFilter filter,
-        List<Predicate> predicates,
-        TaskJoinPredicates taskJoinPredicates) {
+            TaskFilter filter,
+            List<Predicate> predicates,
+            TaskJoinPredicates taskJoinPredicates) {
         if (!CollectionUtils.isEmpty(filter.getProjectIds())) {
             filter.getProjectIds().forEach(projectId -> predicates.add(criteriaBuilder.or(
-                criteriaBuilder.equal(taskJoinPredicates.getProjectJoin().get(Project_.id), projectId))));
+                    criteriaBuilder.equal(taskJoinPredicates.getProjectJoin().get(Project_.id), projectId))));
         }
     }
 
@@ -103,26 +126,26 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     private void addDateRangePredicates(CriteriaBuilder criteriaBuilder,
-        TaskFilter filter,
-        Root<Task> taskRoot,
-        List<Predicate> predicates) {
+            TaskFilter filter,
+            Root<Task> taskRoot,
+            List<Predicate> predicates) {
         DateRangeFilter startDateRangeFilter = filter.getDeadline();
         if (startDateRangeFilter != null && startDateRangeFilter.getDateFrom() != null) {
             predicates.add(criteriaBuilder.greaterThanOrEqualTo(
-                taskRoot.get(Task_.deadline),
-                startDateRangeFilter.getDateFrom()));
+                    taskRoot.get(Task_.deadline),
+                    startDateRangeFilter.getDateFrom()));
         }
         if (startDateRangeFilter != null && startDateRangeFilter.getDateTo() != null) {
             predicates.add(criteriaBuilder.lessThanOrEqualTo(
-                taskRoot.get(Task_.deadline),
-                startDateRangeFilter.getDateTo()));
+                    taskRoot.get(Task_.deadline),
+                    startDateRangeFilter.getDateTo()));
         }
     }
 
     private List<Task> createQueryAndGetResults(Session session,
-        CriteriaQuery<Task> criteriaQuery,
-        List<Predicate> predicateList,
-        PageRequest page) {
+            CriteriaQuery<Task> criteriaQuery,
+            List<Predicate> predicateList,
+            PageRequest page) {
         criteriaQuery.where(predicateList.toArray(new Predicate[0]));
         TypedQuery<Task> query = session.createQuery(criteriaQuery);
         query.setFirstResult(Math.toIntExact(page.getOffset()));

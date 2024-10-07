@@ -29,6 +29,8 @@ public class Task extends DomainObject {
     @Column
     private String description;
     @Column
+    private double orderNumber;
+    @Column
     @Enumerated(value = EnumType.STRING)
     private TaskStatus status;
     @ManyToOne

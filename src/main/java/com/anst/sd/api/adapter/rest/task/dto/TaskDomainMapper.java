@@ -10,4 +10,5 @@ public interface TaskDomainMapper {
     Task mapToDomain(CreateTaskDto source);
 
     Task mapToDomain(UpdateTaskDto source);
+
 }
