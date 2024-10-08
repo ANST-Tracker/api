@@ -5,8 +5,10 @@ import com.anst.sd.api.adapter.rest.task.read.dto.TaskFilterRequestDto;
 import com.anst.sd.api.app.api.DateRangeFilter;
 import com.anst.sd.api.domain.notification.PendingNotification;
 import com.anst.sd.api.domain.project.Project;
+import com.anst.sd.api.domain.tag.Tag;
 import com.anst.sd.api.domain.task.Task;
 import com.anst.sd.api.domain.task.TaskStatus;
+import com.anst.sd.api.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -42,14 +44,15 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
         requestDto.setDeadline(dateRangeFilter);
         requestDto.setStatus(List.of(TaskStatus.BACKLOG));
         requestDto.setProjectIds(List.of(project.getId()));
+        requestDto.setTags(List.of("HOME", "STUDY", "GYM"));
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
-            .post(API_URL + "/find-by-filter")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(requestDto)))
-            .andDo(print())
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andReturn();
+                .post(API_URL + "/find-by-filter")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(requestDto)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
 
         List<TaskInfoDto> responseDto = getListFromResponse(response, TaskInfoDto.class);
         assertEquals(1, responseDto.size());
@@ -95,10 +98,10 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
     @Test
     void getTaskById_failed_notFound() throws Exception {
         performAuthenticated(user, MockMvcRequestBuilders
-            .get(API_URL + "/5235"))
-            .andDo(print())
+                .get(API_URL + "/5235"))
+                .andDo(print())
 
-            .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
@@ -106,17 +109,17 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
         createTasks(project, 49);
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
-            .get(API_URL + "/list")
-            .param("page", "2")
-            .param("projectId", project.getId().toString()))
-            .andDo(print())
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andReturn();
+                .get(API_URL + "/list")
+                .param("page", "2")
+                .param("projectId", project.getId().toString()))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
 
         List<TaskInfoDto> responseDto = getListFromResponse(response, TaskInfoDto.class);
         assertEquals(9, responseDto.size());
         assertThat(List.of(41L, 42L, 43L, 44L, 45L, 46L, 47L, 48L, 49L),
-            containsInAnyOrder(responseDto.stream().map(TaskInfoDto::getId).toArray()));
+                containsInAnyOrder(responseDto.stream().map(TaskInfoDto::getId).toArray()));
     }
 
     @Test
@@ -124,16 +127,16 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
         createTasks(project, 5);
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
-            .get(API_URL + "/list")
-            .param("projectId", project.getId().toString()))
-            .andDo(print())
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andReturn();
+                .get(API_URL + "/list")
+                .param("projectId", project.getId().toString()))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
 
         List<TaskInfoDto> responseDto = getListFromResponse(response, TaskInfoDto.class);
         assertEquals(5, responseDto.size());
         assertThat(List.of(1L, 2L, 3L, 4L, 5L),
-            containsInAnyOrder(responseDto.stream().map(TaskInfoDto::getId).toArray()));
+                containsInAnyOrder(responseDto.stream().map(TaskInfoDto::getId).toArray()));
     }
 
     @Test
@@ -141,12 +144,12 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
         createTasks(project, 20);
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
-            .get(API_URL + "/list")
-            .param("page", "1")
-            .param("projectId", "1"))
-            .andDo(print())
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andReturn();
+                .get(API_URL + "/list")
+                .param("page", "1")
+                .param("projectId", "1"))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
 
         List<TaskInfoDto> responseDto = getListFromResponse(response, TaskInfoDto.class);
         assertEquals(0, responseDto.size());
@@ -156,20 +159,37 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
     // = Implementation
     // ===================================================================================================================
 
-    private List<Task> createTasksForFilter(Project project) {
+    private void createTasksForFilter(Project project) {
+        Tag smartTag = createAndSaveTag("SMART", project.getUser());
+        Tag homeTag = createAndSaveTag("HOME", project.getUser());
+        Tag workTag = createAndSaveTag("WORK", project.getUser());
+        Tag studyTag = createAndSaveTag("STUDY", project.getUser());
+        Tag gymTag = createAndSaveTag("GYM", project.getUser());
+
         Task task1 = createBaseTaskForFilter(project);
         task1.setStatus(TaskStatus.IN_PROGRESS);
         task1.setDeadline(LocalDateTime.now().plusDays(10));
+        task1.setTags(List.of(smartTag, gymTag, workTag));
 
         Task task2 = createBaseTaskForFilter(project);
         task2.setStatus(TaskStatus.BACKLOG);
         task2.setDeadline(LocalDateTime.now().plusDays(8));
+        task2.setTags(List.of(homeTag, studyTag, gymTag));
 
         Task task3 = createBaseTaskForFilter(project);
         task3.setStatus(TaskStatus.DONE);
         task3.setDeadline(LocalDateTime.now().plusDays(6));
+        task3.setTags(List.of(workTag));
 
-        return taskJpaRepository.saveAll(List.of(task1, task2, task3));
+        taskJpaRepository.saveAll(List.of(task1, task2, task3));
+    }
+
+    private Tag createAndSaveTag(String name, User user) {
+        Tag tag = new Tag();
+        tag.setName(name);
+        tag.setUser(user);
+        tag.setColor("#FFFFF");
+        return tagJpaRepository.save(tag);
     }
 
     private Task createBaseTaskForFilter(Project project) {

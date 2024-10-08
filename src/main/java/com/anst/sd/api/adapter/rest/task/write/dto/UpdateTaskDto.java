@@ -26,4 +26,5 @@ public class UpdateTaskDto {
     TaskStatus status;
     Long updatedProjectId;
     List<PendingNotificationDto> pendingNotifications;
+    List<Long> tagIds;
 }

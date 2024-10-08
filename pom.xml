@@ -18,8 +18,8 @@
     <properties>
         <java.version>17</java.version>
         <product.version>${project.version}</product.version>
-        <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
-        <version.mapstruct-lombok>0.1.0</version.mapstruct-lombok>
+        <org.mapstruct.version>1.6.0</org.mapstruct.version>
+        <version.mapstruct-lombok>0.2.0</version.mapstruct-lombok>
     </properties>
 
     <dependencies>
@@ -62,12 +62,12 @@
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
-            <version>1.5.5.Final</version>
+            <version>${org.mapstruct.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok-mapstruct-binding</artifactId>
-            <version>0.1.0</version>
+            <version>${version.mapstruct-lombok}</version>
         </dependency>
 
         <!--WEB-->

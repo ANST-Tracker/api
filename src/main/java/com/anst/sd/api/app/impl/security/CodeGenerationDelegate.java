@@ -6,7 +6,8 @@ import java.security.SecureRandom;
 
 @Slf4j
 public class CodeGenerationDelegate {
-    private CodeGenerationDelegate() { }
+    private CodeGenerationDelegate() {
+    }
 
     public static String generate() {
         log.info("Generating a random five-digit code");

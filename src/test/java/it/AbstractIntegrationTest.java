@@ -69,6 +69,8 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     protected TaskJpaRepository taskJpaRepository;
     @Autowired
+    protected TagJpaRepository tagJpaRepository;
+    @Autowired
     protected UserCodeMongoRepository userCodeMongoRepository;
     @Autowired
     protected ProjectJpaRepository projectJpaRepository;
@@ -95,6 +97,7 @@ public abstract class AbstractIntegrationTest {
         notificationJpaRepository.deleteAll();
         pendingNotificationJpaRepository.deleteAll();
         userCodeMongoRepository.deleteAll();
+        tagJpaRepository.deleteAll();
         taskJpaRepository.deleteAll();
         projectJpaRepository.deleteAll();
         deviceJpaRepository.deleteAll();
@@ -104,6 +107,7 @@ public abstract class AbstractIntegrationTest {
         jdbcTemplate.execute("ALTER SEQUENCE users_id_seq RESTART WITH 1");
         jdbcTemplate.execute("ALTER SEQUENCE device_id_seq RESTART WITH 1");
         jdbcTemplate.execute("ALTER SEQUENCE pending_notification_id_seq RESTART WITH 1");
+        jdbcTemplate.execute("ALTER SEQUENCE tag_id_seq RESTART WITH 1");
     }
 
     protected User createTestUser() {

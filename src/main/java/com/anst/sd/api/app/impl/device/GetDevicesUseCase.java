@@ -31,8 +31,8 @@ public class GetDevicesUseCase implements GetDevicesInbound {
         log.info("Getting devices for user {}", userId);
         List<Device> devices = deviceRepository.findByUserId(userId);
         return devices.stream()
-            .map(this::getDeviceInfo)
-            .toList();
+                .map(this::getDeviceInfo)
+                .toList();
     }
 
     // ===================================================================================================================
@@ -51,11 +51,11 @@ public class GetDevicesUseCase implements GetDevicesInbound {
     private String getDeviceName(String userAgent) {
         Client client = PARSER.parse(userAgent);
         return client.userAgent.family + " " +
-            client.userAgent.major + "." +
-            client.userAgent.minor + " - " +
-            client.os.family + " " +
-            client.os.major + "." +
-            client.os.minor;
+                client.userAgent.major + "." +
+                client.userAgent.minor + " - " +
+                client.os.family + " " +
+                client.os.major + "." +
+                client.os.minor;
     }
 
     private String getDeviceLocation(Device device) {
@@ -64,10 +64,10 @@ public class GetDevicesUseCase implements GetDevicesInbound {
             CityResponse cityResponse = databaseReader.city(ipAddress);
 
             return String.format("%s, %s", cityResponse.getCountry().getName(),
-                cityResponse.getCity().getName());
+                    cityResponse.getCity().getName());
         } catch (Exception e) {
             log.warn("Error while getting device {} location by ip {}",
-                device.getId(), device.getIp());
+                    device.getId(), device.getIp());
             return null;
         }
     }

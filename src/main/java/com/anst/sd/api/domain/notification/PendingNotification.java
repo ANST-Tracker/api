@@ -18,17 +18,17 @@ import java.util.concurrent.TimeUnit;
 @Entity
 @Table(name = "pending_notification")
 @NamedEntityGraph(
-    name = "pending-notification-full",
-    attributeNodes = {
-        @NamedAttributeNode(value = "task", subgraph = "task-project"),
-    },
-    subgraphs = {
-        @NamedSubgraph(name = "task-project", attributeNodes = {
-            @NamedAttributeNode(value = "project", subgraph = "project-user")}),
-        @NamedSubgraph(name = "project-user", attributeNodes = {
-            @NamedAttributeNode(value = "user")
-        })
-    }
+        name = "pending-notification-full",
+        attributeNodes = {
+                @NamedAttributeNode(value = "task", subgraph = "task-project"),
+        },
+        subgraphs = {
+                @NamedSubgraph(name = "task-project", attributeNodes = {
+                        @NamedAttributeNode(value = "project", subgraph = "project-user")}),
+                @NamedSubgraph(name = "project-user", attributeNodes = {
+                        @NamedAttributeNode(value = "user")
+                })
+        }
 )
 public class PendingNotification extends DomainObject {
     @Column(name = "execution_date", nullable = false)

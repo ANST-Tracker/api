@@ -31,12 +31,12 @@ public class V1WriteProjectController {
     private final ProjectDomainMapper projectDomainMapper;
 
     @Operation(
-        summary = "Delete project by ID",
-        responses = {
-            @ApiResponse(
-                responseCode = "200",
-                useReturnTypeSchema = true)
-        })
+            summary = "Delete project by ID",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            useReturnTypeSchema = true)
+            })
     @DeleteMapping("/{id}")
     public ResponseEntity<IdResponseDto> deleteProject(@PathVariable Long id) {
         Project project = deleteProjectInbound.delete(id, jwtService.getJwtAuth().getUserId());
@@ -44,16 +44,16 @@ public class V1WriteProjectController {
     }
 
     @Operation(
-        summary = "Create project",
-        responses = {
-            @ApiResponse(
-                responseCode = "200",
-                useReturnTypeSchema = true)
-        })
+            summary = "Create project",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            useReturnTypeSchema = true)
+            })
     @PostMapping
     public ResponseEntity<IdResponseDto> createProject(
-        @Valid @RequestBody CreateProjectDto request,
-        BindingResult bindingResult) {
+            @Valid @RequestBody CreateProjectDto request,
+            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new ProjectValidationException();
         }
@@ -63,17 +63,17 @@ public class V1WriteProjectController {
     }
 
     @Operation(
-        summary = "Update project",
-        responses = {
-            @ApiResponse(
-                responseCode = "200",
-                useReturnTypeSchema = true)
-        })
+            summary = "Update project",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            useReturnTypeSchema = true)
+            })
     @PutMapping("/{id}")
     public ResponseEntity<IdResponseDto> updateProject(
-        @PathVariable Long id,
-        @Valid @RequestBody UpdateProjectDto request,
-        BindingResult bindingResult) {
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateProjectDto request,
+            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new ProjectValidationException(id);
         }

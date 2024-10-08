@@ -32,7 +32,7 @@ public class DeviceRepositoryImpl implements DeviceRepository {
     @Override
     public Device getByIdAndUserId(Long id, Long userId) {
         return deviceJpaRepository.findFirstByIdAndUserId(id, userId)
-            .orElseThrow(() -> new DeviceNotFoundException(id, userId));
+                .orElseThrow(() -> new DeviceNotFoundException(id, userId));
     }
 
     @Override

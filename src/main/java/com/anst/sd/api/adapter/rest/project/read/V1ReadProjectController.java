@@ -26,12 +26,12 @@ public class V1ReadProjectController {
     private final ProjectInfoDtoMapper projectInfoDtoMapper;
 
     @Operation(
-        summary = "Get list of projects",
-        responses = {
-            @ApiResponse(
-                responseCode = "200",
-                useReturnTypeSchema = true)
-        })
+            summary = "Get list of projects",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            useReturnTypeSchema = true)
+            })
     @GetMapping("/list")
     public ResponseEntity<List<ProjectInfoDto>> getProjects() {
         List<Project> projects = getProjectsInbound.get(jwtService.getJwtAuth().getUserId());

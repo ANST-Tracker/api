@@ -19,7 +19,7 @@ public class GenerateTokensDelegate {
     public JwtResponse generate(User user) {
         var curDevice = deviceRepository.save(Device.createDevice(user));
         var tokens = jwtService.generateAccessRefreshTokens(
-            user.getUsername(), user.getId(), curDevice.getId(), ERole.USER);
+                user.getUsername(), user.getId(), curDevice.getId(), ERole.USER);
         curDevice.setToken(tokens.getRefreshToken());
         fillDeviceInfo(curDevice);
         deviceRepository.save(curDevice);

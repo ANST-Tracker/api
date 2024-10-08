@@ -33,8 +33,8 @@ public class DeleteSessionDelegate {
 
     private void disableDevices(List<Device> devices) {
         List<Long> deviceIds = devices.stream()
-            .map(DomainObject::getId)
-            .toList();
+                .map(DomainObject::getId)
+                .toList();
         jwtService.disableAccessTokens(deviceIds);
         deviceRepository.deleteAll(devices);
     }

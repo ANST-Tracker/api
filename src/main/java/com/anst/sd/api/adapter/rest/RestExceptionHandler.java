@@ -6,6 +6,8 @@ import com.anst.sd.api.app.api.project.ProjectValidationException;
 import com.anst.sd.api.app.api.security.CodeAlreadySentException;
 import com.anst.sd.api.app.api.security.RoleNotFoundException;
 import com.anst.sd.api.app.api.security.UserCodeNotFoundException;
+import com.anst.sd.api.app.api.tag.TagNotFoundException;
+import com.anst.sd.api.app.api.tag.TagValidationException;
 import com.anst.sd.api.app.api.task.TaskNotFoundException;
 import com.anst.sd.api.app.api.task.TaskValidationException;
 import com.anst.sd.api.app.api.user.RegisterUserException;
@@ -49,7 +51,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorInfo, HttpStatus.UNAUTHORIZED);
     }
 
-    @ExceptionHandler({TaskValidationException.class, ProjectValidationException.class})
+    @ExceptionHandler({TaskValidationException.class, ProjectValidationException.class, TagValidationException.class})
     public ResponseEntity<Object> handleValidation(Exception ex) {
         logger.error(ex.getMessage(), ex);
         var errorInfo = createErrorInfo(CLIENT);
@@ -88,6 +90,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             DeviceNotFoundException.class,
             RoleNotFoundException.class,
             TaskNotFoundException.class,
+            TagNotFoundException.class,
             UserNotFoundException.class,
             ProjectNotFoundException.class,
             UserCodeNotFoundException.class})

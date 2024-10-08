@@ -17,9 +17,9 @@ public class ErrorInfoDto {
 
     public static ErrorInfoDto createErrorInfo(ErrorType errorType) {
         return ErrorInfoDto.builder()
-            .timestamp(Instant.now().toEpochMilli())
-            .type(errorType)
-            .build();
+                .timestamp(Instant.now().toEpochMilli())
+                .type(errorType)
+                .build();
     }
 
     public enum ErrorType {

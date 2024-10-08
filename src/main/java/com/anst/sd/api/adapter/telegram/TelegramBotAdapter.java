@@ -20,7 +20,7 @@ public class TelegramBotAdapter implements SendNotificationOutbound {
     @Override
     public void send(PendingNotification pendingNotification) {
         log.info("Sending notification request to telegram bot service. Task {} Project {}",
-            pendingNotification.getTask().getId(), pendingNotification.getTask().getProject().getId());
+                pendingNotification.getTask().getId(), pendingNotification.getTask().getProject().getId());
         try {
             NotificationDto requestDto = notificationDtoMapper.mapToDto(pendingNotification);
             telegramBotFeignClient.sendNotification(requestDto);

@@ -32,8 +32,8 @@ public class NotificationSendingScheduler {
     @Transactional
     @Scheduled(fixedDelayString = "${shedlock.notification-sending.execution-delay}")
     @SchedulerLock(name = "notificationSendingTask",
-        lockAtLeastFor = "${shedlock.notification-sending.lock-at-least-for}",
-        lockAtMostFor = "${shedlock.notification-sending.lock-at-most-for}")
+            lockAtLeastFor = "${shedlock.notification-sending.lock-at-least-for}",
+            lockAtMostFor = "${shedlock.notification-sending.lock-at-most-for}")
     public void execute() {
         LockAssert.assertLocked();
         List<PendingNotification> pendingNotifications = pendingNotificationRepository.findReadyToExecution();

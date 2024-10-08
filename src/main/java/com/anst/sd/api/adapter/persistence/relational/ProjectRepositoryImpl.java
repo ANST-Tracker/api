@@ -23,13 +23,13 @@ public class ProjectRepositoryImpl implements ProjectRepository {
     @Override
     public Project getByIdAndUserId(Long id, Long userId) {
         return projectJpaRepository.findByIdAndUserId(id, userId)
-            .orElseThrow(() -> new ProjectNotFoundException(id, userId));
+                .orElseThrow(() -> new ProjectNotFoundException(id, userId));
     }
 
     @Override
     public Project getBucketProject(String telegramUserId) {
         return projectJpaRepository.findFirstByProjectTypeAndUserTelegramId(BUCKET, telegramUserId)
-            .orElseThrow(() -> new ProjectNotFoundException(BUCKET, telegramUserId));
+                .orElseThrow(() -> new ProjectNotFoundException(BUCKET, telegramUserId));
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.anst.sd.api.app.impl.task;
 
 import com.anst.sd.api.AbstractUnitTest;
 import com.anst.sd.api.app.api.project.ProjectRepository;
+import com.anst.sd.api.app.api.tag.TagRepository;
 import com.anst.sd.api.app.api.task.TaskRepository;
 import com.anst.sd.api.domain.notification.PendingNotification;
 import com.anst.sd.api.domain.project.Project;
@@ -31,10 +32,12 @@ class CreateTaskUseCaseTest extends AbstractUnitTest {
     private ProjectRepository projectRepository;
     @Mock
     private DateConverterDelegate dateConverterDelegate;
+    @Mock
+    private TagRepository tagRepository;
 
     @BeforeEach
     void setUp() {
-        useCase = new CreateTaskUseCase(taskRepository, projectRepository, dateConverterDelegate);
+        useCase = new CreateTaskUseCase(taskRepository, projectRepository, dateConverterDelegate, tagRepository);
         when(taskRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
     }
 

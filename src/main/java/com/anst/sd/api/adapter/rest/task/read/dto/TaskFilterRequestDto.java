@@ -19,4 +19,5 @@ public class TaskFilterRequestDto {
     List<TaskStatus> status;
     Integer page;
     List<Long> projectIds;
+    List<String> tags;
 }

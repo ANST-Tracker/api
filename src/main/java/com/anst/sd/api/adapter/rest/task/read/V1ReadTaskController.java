@@ -33,13 +33,13 @@ public class V1ReadTaskController {
     private final FilterRequestDomainMapper filterRequestDomainMapper;
 
     @Operation(
-        summary = "Get task by ID",
-        responses = {
-            @ApiResponse(
-                responseCode = "200",
-                description = "Task received successfully",
-                useReturnTypeSchema = true)
-        })
+            summary = "Get task by ID",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Task received successfully",
+                            useReturnTypeSchema = true)
+            })
     @GetMapping("/{id}")
     public ResponseEntity<TaskInfoDto> getTask(@Parameter(description = "Task ID") @PathVariable Long id) {
         Task task = getTaskInBound.get(jwtService.getJwtAuth().getUserId(), id);
@@ -47,29 +47,29 @@ public class V1ReadTaskController {
     }
 
     @Operation(
-        summary = "Get list of tasks",
-        responses = {
-            @ApiResponse(
-                responseCode = "200",
-                description = "Tasks retrieved successfully",
-                useReturnTypeSchema = true)
-        })
+            summary = "Get list of tasks",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Tasks retrieved successfully",
+                            useReturnTypeSchema = true)
+            })
     @GetMapping("/list")
     public ResponseEntity<List<TaskInfoDto>> getTasks(
-        @RequestParam(required = false) Integer page,
-        @RequestParam Long projectId) {
+            @RequestParam(required = false) Integer page,
+            @RequestParam Long projectId) {
         List<Task> tasks = getTasksInBound.get(jwtService.getJwtAuth().getUserId(), projectId, page);
         return ResponseEntity.ok(taskDtoMapper.mapToDto(tasks));
     }
 
     @Operation(
-        summary = "Filter tasks by criteria",
-        responses = {
-            @ApiResponse(
-                responseCode = "200",
-                description = "Tasks filtered successfully",
-                useReturnTypeSchema = true)
-        })
+            summary = "Filter tasks by criteria",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Tasks filtered successfully",
+                            useReturnTypeSchema = true)
+            })
     @PostMapping("/find-by-filter")
     public ResponseEntity<List<TaskInfoDto>> searchTasks(@RequestBody TaskFilterRequestDto taskFilterRequestDto) {
         TaskFilter filterRequest = filterRequestDomainMapper.mapToDomain(taskFilterRequestDto);
