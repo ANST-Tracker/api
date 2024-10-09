@@ -24,7 +24,7 @@ services:
       - 6379:6379
 
   mongodb:
-    image: mongo:latest
+    image: mongo:8.0.0-rc13
     container_name: mongodb
     ports:
       - "27017:27017"
