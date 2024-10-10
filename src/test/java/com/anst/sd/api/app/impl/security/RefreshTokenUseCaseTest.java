@@ -3,7 +3,6 @@ package com.anst.sd.api.app.impl.security;
 import com.anst.sd.api.AbstractUnitTest;
 import com.anst.sd.api.app.api.device.DeviceRepository;
 import com.anst.sd.api.app.api.user.UserRepository;
-import com.anst.sd.api.app.impl.task.security.RefreshTokenUseCase;
 import com.anst.sd.api.domain.security.Device;
 import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.security.app.api.AuthErrorMessages;

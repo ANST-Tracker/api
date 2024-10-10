@@ -1,4 +1,4 @@
-package com.anst.sd.api.app.impl.task.security;
+package com.anst.sd.api.app.impl.security;
 
 import com.anst.sd.api.app.api.security.CodeAlreadySentException;
 import com.anst.sd.api.app.api.security.SendCodeInbound;

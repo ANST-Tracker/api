@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 
 
 @Slf4j
@@ -19,7 +20,7 @@ public class UpdateOrderNumberTaskUseCase implements UpdateOrderNumberTaskInBoun
 
     @Override
     @Transactional
-    public Task updateOrderNumber(Long userId, Long taskId, double updatedOrderNumber) {
+    public Task updateOrderNumber(Long userId, Long taskId, BigDecimal updatedOrderNumber) {
         log.info("Updating number order task with id {} and userId {}", taskId, userId);
         Task task = taskRepository.findByIdAndUser(taskId, userId);
         task.setOrderNumber(updatedOrderNumber);

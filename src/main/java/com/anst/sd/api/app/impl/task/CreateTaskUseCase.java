@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Slf4j
@@ -27,10 +28,10 @@ public class CreateTaskUseCase implements CreateTaskInBound {
     public Task create(Long userId, Long projectId, Task task) {
         log.info("Creating task with userId {} in project {}", userId, projectId);
         Project project = projectRepository.getByIdAndUserId(projectId, userId);
-        double newNumberOrder = taskRepository.maxOrderNumberTasksByUserIdAndProjectId(userId, projectId)+1;
+        BigDecimal newOrderNumber = taskRepository.newOrderNumberTask();
         task.setProject(project)
-            .setStatus(TaskStatus.BACKLOG);
-        task.setOrderNumber(newNumberOrder);
+            .setStatus(TaskStatus.BACKLOG)
+            .setOrderNumber(newOrderNumber);
         if (task.getPendingNotifications() != null && task.getDeadline() != null) {
             List<PendingNotification> convertedNotifications = task.getPendingNotifications().stream()
                 .map(notification -> dateConverterDelegate.convertToInstant(task.getDeadline(), notification))
@@ -45,11 +46,13 @@ public class CreateTaskUseCase implements CreateTaskInBound {
     public void create(String userTelegramId, String name) {
         log.info("Internal: creating task for telegram user {} with name {}", userTelegramId, name);
         Project bucketProject = projectRepository.getBucketProject(userTelegramId);
-        
+        BigDecimal newOrderNumber = taskRepository.newOrderNumberTask();
         Task task = new Task()
             .setData(name)
             .setProject(bucketProject)
-            .setStatus(TaskStatus.BACKLOG);
+            .setStatus(TaskStatus.BACKLOG)
+            .setOrderNumber(newOrderNumber);
+
         taskRepository.save(task);
     }
 }

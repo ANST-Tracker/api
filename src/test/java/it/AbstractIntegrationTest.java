@@ -35,6 +35,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -139,6 +140,7 @@ public abstract class AbstractIntegrationTest {
         task.setStatus(TaskStatus.IN_PROGRESS);
         task.setDescription("testData");
         task.setProject(project);
+        task.setOrderNumber(new BigDecimal("1"));
         if (pendingNotification != null) {
             pendingNotification.setTask(task);
             task.setPendingNotifications(List.of(pendingNotification));

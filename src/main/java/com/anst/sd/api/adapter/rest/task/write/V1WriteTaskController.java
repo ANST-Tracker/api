@@ -20,6 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 @Slf4j
 @RequestMapping("/task")
 @RestController
@@ -56,14 +58,13 @@ public class V1WriteTaskController {
     }
 
     @Operation(
-            summary = "Update number order task",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Task number order updated successfully",
-                            useReturnTypeSchema = true)
-            })
-
+        summary = "Update number order task",
+        responses = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Task number order updated successfully",
+                useReturnTypeSchema = true)
+        })
     @PutMapping("/{id}/orderNumber")
     public ResponseEntity<IdResponseDto> updateOrderNumberTask(
             @PathVariable Long id,
@@ -72,13 +73,10 @@ public class V1WriteTaskController {
         if (bindingResult.hasErrors()) {
             throw new TaskValidationException(id);
         }
-
-        double OrderNumber = request.getOrderNumber();
-        Task result = updateOrderNumberTaskInBound.updateOrderNumber(jwtService.getJwtAuth().getUserId(),id,OrderNumber);
-
+        BigDecimal orderNumber = request.getOrderNumber();
+        Task result = updateOrderNumberTaskInBound.updateOrderNumber(jwtService.getJwtAuth().getUserId(),id,orderNumber);
         return ResponseEntity.ok(new IdResponseDto(result.getId()));
     }
-
 
     @Operation(
         summary = "Update task",
@@ -88,8 +86,6 @@ public class V1WriteTaskController {
                 description = "Task updated successfully",
                 useReturnTypeSchema = true)
         })
-
-
     @PutMapping("/{id}")
     public ResponseEntity<IdResponseDto> updateTask(
         @PathVariable Long id,
@@ -102,8 +98,6 @@ public class V1WriteTaskController {
         Task result = updateTaskInBound.update(jwtService.getJwtAuth().getUserId(), id, task);
         return ResponseEntity.ok(new IdResponseDto(result.getId()));
     }
-
-
 
     @Operation(
         summary = "Delete task by ID",
@@ -118,8 +112,5 @@ public class V1WriteTaskController {
         Task task = deleteTaskInBound.delete(jwtService.getJwtAuth().getUserId(), id);
         return ResponseEntity.ok(new IdResponseDto(task.getId()));
     }
-
-
-
 
 }

@@ -23,6 +23,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,32 +75,16 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
-    public double maxOrderNumberTasksByUserIdAndProjectId(Long userId, Long projectId) {
-        try (Session session = entityManager.unwrap(Session.class)) {
-            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-
-            CriteriaQuery<Double> criteriaQuery = criteriaBuilder.createQuery(Double.class);
-
-            Root<Task> task = criteriaQuery.from(Task.class);
-            
-            Predicate idProject = criteriaBuilder.equal(task.get("Project").get("id"), projectId);
-            
-
-            criteriaQuery.select(criteriaBuilder.max(task.get("orderNumber")))
-                    .where(criteriaBuilder.and(idProject));
-
-            TypedQuery<Double> query = entityManager.createQuery(criteriaQuery);
-            Double maxOrderNumber = query.getSingleResult();
-
-            
-            return (maxOrderNumber != null) ? maxOrderNumber : 0.0;
-        }
+    public BigDecimal newOrderNumberTask() {
+        return new BigDecimal(taskJpaRepository.getNextOrderNumber());
     }
 
     private List<Predicate> generateTaskPredicates(CriteriaBuilder criteriaBuilder,
             TaskFilter filter,
             Root<Task> taskRoot,
             TaskJoinPredicates taskJoinPredicates) {
+
+
         List<Predicate> predicates = new ArrayList<>();
         addSimplePredicates(filter, taskRoot, predicates);
         addDateRangePredicates(criteriaBuilder, filter, taskRoot, predicates);

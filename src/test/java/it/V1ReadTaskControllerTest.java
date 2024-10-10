@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -90,6 +91,7 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
         assertEquals(task.getId(), responseDto.getId());
         assertEquals(task.getPendingNotifications().size(), responseDto.getPendingNotifications().size());
         assertEquals(notification.getTask().getProject().getName(), projectJpaRepository.findAll().get(0).getName());
+
     }
 
     @Test
@@ -160,14 +162,17 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
         Task task1 = createBaseTaskForFilter(project);
         task1.setStatus(TaskStatus.IN_PROGRESS);
         task1.setDeadline(LocalDateTime.now().plusDays(10));
+        task1.setOrderNumber(new BigDecimal("1"));
 
         Task task2 = createBaseTaskForFilter(project);
         task2.setStatus(TaskStatus.BACKLOG);
         task2.setDeadline(LocalDateTime.now().plusDays(8));
+        task2.setOrderNumber(new BigDecimal("2"));
 
         Task task3 = createBaseTaskForFilter(project);
         task3.setStatus(TaskStatus.DONE);
         task3.setDeadline(LocalDateTime.now().plusDays(6));
+        task3.setOrderNumber(new BigDecimal("3"));
 
         return taskJpaRepository.saveAll(List.of(task1, task2, task3));
     }
@@ -188,6 +193,7 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
             task.setStatus(TaskStatus.IN_PROGRESS);
             task.setDescription("testDesc" + i);
             task.setProject(project);
+            task.setOrderNumber(new BigDecimal(i+1));
             tasks.add(task);
         }
         return taskJpaRepository.saveAll(tasks);

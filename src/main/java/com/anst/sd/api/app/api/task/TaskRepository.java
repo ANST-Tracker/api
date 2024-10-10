@@ -3,6 +3,7 @@ package com.anst.sd.api.app.api.task;
 import com.anst.sd.api.domain.task.Task;
 import org.springframework.data.domain.Page;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface TaskRepository {
@@ -16,5 +17,7 @@ public interface TaskRepository {
 
     List<Task> findByFilter(Long userId, TaskFilter filter);
 
-    double maxOrderNumberTasksByUserIdAndProjectId(Long userId,Long projectId);
+    BigDecimal newOrderNumberTask();
+
+
 }

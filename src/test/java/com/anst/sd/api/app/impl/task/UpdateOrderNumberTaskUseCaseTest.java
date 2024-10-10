@@ -1,13 +1,9 @@
 package com.anst.sd.api.app.impl.task;
 
 import com.anst.sd.api.AbstractUnitTest;
-import com.anst.sd.api.app.api.project.ProjectRepository;
 import com.anst.sd.api.app.api.task.TaskRepository;
 import com.anst.sd.api.domain.notification.PendingNotification;
-import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.task.Task;
-import com.anst.sd.api.domain.task.TaskStatus;
-import com.anst.sd.api.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -19,48 +15,34 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-class CreateTaskUseCaseTest extends AbstractUnitTest {
+public class UpdateOrderNumberTaskUseCaseTest extends AbstractUnitTest {
     private static final LocalDateTime DEADLINE = LocalDateTime.now().plusDays(5);
 
-    private CreateTaskUseCase useCase;
+    private UpdateOrderNumberTaskUseCase useCase;
+
     @Mock
     private TaskRepository taskRepository;
-    @Mock
-    private ProjectRepository projectRepository;
-    @Mock
-    private DateConverterDelegate dateConverterDelegate;
 
     @BeforeEach
     void setUp() {
-        useCase = new CreateTaskUseCase(taskRepository, projectRepository, dateConverterDelegate);
-        when(taskRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
-        when(taskRepository.newOrderNumberTask()).thenReturn(new BigDecimal("1"));
+        useCase = new UpdateOrderNumberTaskUseCase(taskRepository);
     }
 
     @Test
-    void create_successfully() {
-        User user = createTestUser();
-        Project project = createTestProject(user);
-        when(projectRepository.getByIdAndUserId(1L, 1L)).thenReturn(project);
+    void updateOrderNumber_successfully() {
+        Long userId = 1L;
+        Long taskId = 1L;
+        BigDecimal newOrderNumber = new BigDecimal("5");
         Task task = createTask();
-        when(dateConverterDelegate.convertToInstant(any(LocalDateTime.class), any(PendingNotification.class)))
-                .thenReturn(task.getPendingNotifications().get(0));
+        when(taskRepository.findByIdAndUser(taskId, userId)).thenReturn(task);
+        when(taskRepository.save(task)).thenReturn(task);
 
-        Task result = useCase.create(1L, 1L, task);
+        Task result = useCase.updateOrderNumber(userId, taskId, newOrderNumber);
 
-        assertEquals(TaskStatus.BACKLOG, result.getStatus());
-        assertEquals(project.getId(), result.getProject().getId());
-        assertEquals(user.getId(), result.getProject().getUser().getId());
-        assertEquals(DEADLINE, result.getDeadline());
-        assertEquals(task.getOrderNumber(), result.getOrderNumber());
-        assertEquals("testData", result.getData());
-        assertEquals("testDescription", result.getDescription());
+        assertEquals(newOrderNumber, result.getOrderNumber());
     }
-
-
 
     private Task createTask() {
         Task task = new Task();
