@@ -83,8 +83,6 @@ public class TaskRepositoryImpl implements TaskRepository {
             TaskFilter filter,
             Root<Task> taskRoot,
             TaskJoinPredicates taskJoinPredicates) {
-
-
         List<Predicate> predicates = new ArrayList<>();
         addSimplePredicates(filter, taskRoot, predicates);
         addDateRangePredicates(criteriaBuilder, filter, taskRoot, predicates);
