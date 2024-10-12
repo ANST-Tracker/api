@@ -91,7 +91,6 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
         assertEquals(task.getId(), responseDto.getId());
         assertEquals(task.getPendingNotifications().size(), responseDto.getPendingNotifications().size());
         assertEquals(notification.getTask().getProject().getName(), projectJpaRepository.findAll().get(0).getName());
-
     }
 
     @Test

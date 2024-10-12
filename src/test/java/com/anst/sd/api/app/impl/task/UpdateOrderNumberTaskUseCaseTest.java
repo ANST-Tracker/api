@@ -44,6 +44,10 @@ public class UpdateOrderNumberTaskUseCaseTest extends AbstractUnitTest {
         assertEquals(newOrderNumber, result.getOrderNumber());
     }
 
+    // ===================================================================================================================
+    // = Implementation
+    // ===================================================================================================================
+
     private Task createTask() {
         Task task = new Task();
         PendingNotification pendingNotification = createPendingNotification();

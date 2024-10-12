@@ -33,6 +33,4 @@ class TaskDomainMapperTest extends AbstractUnitTest {
 
         assertEqualsToFile("/TaskDomainMapperTest/taskDomain.json", domain);
     }
-
-    
 }

@@ -140,7 +140,7 @@ public abstract class AbstractIntegrationTest {
         task.setStatus(TaskStatus.IN_PROGRESS);
         task.setDescription("testData");
         task.setProject(project);
-        task.setOrderNumber(new BigDecimal("1"));
+        task.setOrderNumber(BigDecimal.ONE);
         if (pendingNotification != null) {
             pendingNotification.setTask(task);
             task.setPendingNotifications(List.of(pendingNotification));

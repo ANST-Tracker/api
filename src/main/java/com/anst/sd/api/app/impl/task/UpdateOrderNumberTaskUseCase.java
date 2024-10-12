@@ -1,4 +1,4 @@
-package com.anst.sd.api.app.  impl.task;
+package com.anst.sd.api.app.impl.task;
 
 import com.anst.sd.api.app.api.task.TaskRepository;
 import com.anst.sd.api.app.api.task.UpdateOrderNumberTaskInBound;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-
 
 @Slf4j
 @Service
@@ -26,6 +25,4 @@ public class UpdateOrderNumberTaskUseCase implements UpdateOrderNumberTaskInBoun
         task.setOrderNumber(updatedOrderNumber);
         return taskRepository.save(task);
     }
-
-
 }

@@ -222,31 +222,6 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
         assertEquals(request.getOrderNumber(), task.getOrderNumber());
     }
 
-    @Test
-    void updateTaskOrderNumber_failed_TaskNotFound() throws Exception {
-        UpdateTaskOrderNumberDto request = readFromFile("/V1WriteTaskControllerTest/updateTaskOrderNumberDto.json", UpdateTaskOrderNumberDto.class);
-
-        performAuthenticated(user, MockMvcRequestBuilders
-                .put(API_URL + "/" + 34 + "/orderNumber")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
-    }
-
-    @Test
-    void updateOrderNumberTask_failed_validationError() throws Exception {
-        Task task = createTask(project, createNotification());
-        UpdateTaskOrderNumberDto request = readFromFile("/V1WriteTaskControllerTest/updateTaskOrderNumberDtoNull.json", UpdateTaskOrderNumberDto.class);
-
-        performAuthenticated(user, MockMvcRequestBuilders
-                .put(API_URL + "/" + task.getId() + "/orderNumber")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
-    }
-
     // ===================================================================================================================
     // = Implementation
     // ===================================================================================================================

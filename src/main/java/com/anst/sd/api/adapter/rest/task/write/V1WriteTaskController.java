@@ -53,7 +53,6 @@ public class V1WriteTaskController {
         }
         Task task = taskDomainMapper.mapToDomain(request);
         Task result = createTaskInBound.create(jwtService.getJwtAuth().getUserId(), projectId, task);
-
         return ResponseEntity.ok(taskDtoMapper.mapToDto(result));
     }
 
@@ -74,7 +73,7 @@ public class V1WriteTaskController {
             throw new TaskValidationException(id);
         }
         BigDecimal orderNumber = request.getOrderNumber();
-        Task result = updateOrderNumberTaskInBound.updateOrderNumber(jwtService.getJwtAuth().getUserId(),id,orderNumber);
+        Task result = updateOrderNumberTaskInBound.updateOrderNumber(jwtService.getJwtAuth().getUserId(), id, orderNumber);
         return ResponseEntity.ok(new IdResponseDto(result.getId()));
     }
 
@@ -112,5 +111,4 @@ public class V1WriteTaskController {
         Task task = deleteTaskInBound.delete(jwtService.getJwtAuth().getUserId(), id);
         return ResponseEntity.ok(new IdResponseDto(task.getId()));
     }
-
 }

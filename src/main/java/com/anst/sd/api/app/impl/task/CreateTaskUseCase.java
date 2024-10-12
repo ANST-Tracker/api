@@ -46,13 +46,11 @@ public class CreateTaskUseCase implements CreateTaskInBound {
     public void create(String userTelegramId, String name) {
         log.info("Internal: creating task for telegram user {} with name {}", userTelegramId, name);
         Project bucketProject = projectRepository.getBucketProject(userTelegramId);
-        BigDecimal newOrderNumber = taskRepository.newOrderNumberTask();
         Task task = new Task()
             .setData(name)
             .setProject(bucketProject)
             .setStatus(TaskStatus.BACKLOG)
-            .setOrderNumber(newOrderNumber);
-
+            .setOrderNumber(taskRepository.newOrderNumberTask());
         taskRepository.save(task);
     }
 }
