@@ -25,6 +25,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,6 +74,11 @@ public class TaskRepositoryImpl implements TaskRepository {
                     criteriaBuilder, filter, task, taskJoinPredicates));
             return createQueryAndGetResults(session, criteriaQuery, predicateList, pageRequest);
         }
+    }
+
+    @Override
+    public BigDecimal generateTaskOrderNumber() {
+        return new BigDecimal(taskJpaRepository.getNextOrderNumber());
     }
 
     private List<Predicate> generateTaskPredicates(CriteriaBuilder criteriaBuilder,

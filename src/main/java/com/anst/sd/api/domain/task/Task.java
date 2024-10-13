@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.Accessors;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,6 +30,8 @@ public class Task extends DomainObject {
     private LocalDateTime deadline;
     @Column
     private String description;
+    @Column(name = "order_number")
+    private BigDecimal orderNumber;
     @Column
     @Enumerated(value = EnumType.STRING)
     private TaskStatus status;

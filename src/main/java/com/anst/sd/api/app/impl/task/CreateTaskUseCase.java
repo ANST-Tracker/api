@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Slf4j
@@ -30,8 +31,10 @@ public class CreateTaskUseCase implements CreateTaskInBound {
     public Task create(Long userId, Long projectId, Task task) {
         log.info("Creating task with userId {} in project {}", userId, projectId);
         Project project = projectRepository.getByIdAndUserId(projectId, userId);
+        BigDecimal newOrderNumber = taskRepository.generateTaskOrderNumber();
         task.setProject(project)
-                .setStatus(TaskStatus.BACKLOG);
+                .setStatus(TaskStatus.BACKLOG)
+                .setOrderNumber(newOrderNumber);
         if (task.getTags() != null && !task.getTags().isEmpty()) {
             List<Long> tags = task.getTags().stream()
                     .map(Tag::getId)
@@ -56,7 +59,8 @@ public class CreateTaskUseCase implements CreateTaskInBound {
         Task task = new Task()
                 .setData(name)
                 .setProject(bucketProject)
-                .setStatus(TaskStatus.BACKLOG);
+                .setStatus(TaskStatus.BACKLOG)
+                .setOrderNumber(taskRepository.generateTaskOrderNumber());
         taskRepository.save(task);
     }
 }

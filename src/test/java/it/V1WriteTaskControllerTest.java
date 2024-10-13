@@ -3,6 +3,7 @@ package it;
 import com.anst.sd.api.adapter.rest.task.dto.PendingNotificationDto;
 import com.anst.sd.api.adapter.rest.task.write.dto.CreateTaskDto;
 import com.anst.sd.api.adapter.rest.task.write.dto.UpdateTaskDto;
+import com.anst.sd.api.adapter.rest.task.write.dto.UpdateTaskOrderNumberDto;
 import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.task.Task;
 import org.junit.jupiter.api.BeforeEach;
@@ -203,6 +204,22 @@ class V1WriteTaskControllerTest extends AbstractIntegrationTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
         assertEquals(1, pendingNotificationJpaRepository.findAll().size());
+    }
+
+    @Test
+    void updateTaskOrderNumber_successfully() throws Exception {
+        Task task = createTask(project, createNotification());
+        UpdateTaskOrderNumberDto request = readFromFile("/V1WriteTaskControllerTest/updateTaskOrderNumberDto.json", UpdateTaskOrderNumberDto.class);
+
+        performAuthenticated(user, MockMvcRequestBuilders
+                .put(API_URL + "/" + task.getId() + "/orderNumber")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        task = taskJpaRepository.findAll().get(0);
+        assertEquals(request.getOrderNumber(), task.getOrderNumber());
     }
 
     // ===================================================================================================================

@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -39,6 +40,7 @@ class CreateTaskUseCaseTest extends AbstractUnitTest {
     void setUp() {
         useCase = new CreateTaskUseCase(taskRepository, projectRepository, dateConverterDelegate, tagRepository);
         when(taskRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        when(taskRepository.generateTaskOrderNumber()).thenReturn(BigDecimal.ONE);
     }
 
     @Test
@@ -56,6 +58,7 @@ class CreateTaskUseCaseTest extends AbstractUnitTest {
         assertEquals(project.getId(), result.getProject().getId());
         assertEquals(user.getId(), result.getProject().getUser().getId());
         assertEquals(DEADLINE, result.getDeadline());
+        assertEquals(task.getOrderNumber(), result.getOrderNumber());
         assertEquals("testData", result.getData());
         assertEquals("testDescription", result.getDescription());
     }
@@ -66,6 +69,7 @@ class CreateTaskUseCaseTest extends AbstractUnitTest {
         task.setData("testData");
         task.setDescription("testDescription");
         task.setDeadline(DEADLINE);
+        task.setOrderNumber(BigDecimal.ONE);
         pendingNotification.setTask(task);
         pendingNotification.setExecutionDate(DEADLINE.toInstant(ZoneOffset.UTC));
         task.setPendingNotifications(List.of(pendingNotification));
