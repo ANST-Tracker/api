@@ -161,17 +161,17 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
         Task task1 = createBaseTaskForFilter(project);
         task1.setStatus(TaskStatus.IN_PROGRESS);
         task1.setDeadline(LocalDateTime.now().plusDays(10));
-        task1.setOrderNumber(new BigDecimal("1"));
+        task1.setOrderNumber(BigDecimal.ONE);
 
         Task task2 = createBaseTaskForFilter(project);
         task2.setStatus(TaskStatus.BACKLOG);
         task2.setDeadline(LocalDateTime.now().plusDays(8));
-        task2.setOrderNumber(new BigDecimal("2"));
+        task2.setOrderNumber(BigDecimal.valueOf(2));
 
         Task task3 = createBaseTaskForFilter(project);
         task3.setStatus(TaskStatus.DONE);
         task3.setDeadline(LocalDateTime.now().plusDays(6));
-        task3.setOrderNumber(new BigDecimal("3"));
+        task3.setOrderNumber(BigDecimal.valueOf(3));
 
         return taskJpaRepository.saveAll(List.of(task1, task2, task3));
     }

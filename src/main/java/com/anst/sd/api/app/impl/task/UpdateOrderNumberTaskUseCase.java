@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 @Service
 @RequiredArgsConstructor
 public class UpdateOrderNumberTaskUseCase implements UpdateOrderNumberTaskInBound {
-
     private final TaskRepository taskRepository;
 
     @Override

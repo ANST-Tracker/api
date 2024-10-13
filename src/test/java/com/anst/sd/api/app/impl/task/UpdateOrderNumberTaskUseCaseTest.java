@@ -34,7 +34,7 @@ public class UpdateOrderNumberTaskUseCaseTest extends AbstractUnitTest {
     void updateOrderNumber_successfully() {
         Long userId = 1L;
         Long taskId = 1L;
-        BigDecimal newOrderNumber = new BigDecimal("5");
+        BigDecimal newOrderNumber = BigDecimal.valueOf(5);
         Task task = createTask();
         when(taskRepository.findByIdAndUser(taskId, userId)).thenReturn(task);
         when(taskRepository.save(task)).thenReturn(task);
@@ -54,7 +54,7 @@ public class UpdateOrderNumberTaskUseCaseTest extends AbstractUnitTest {
         task.setData("testData");
         task.setDescription("testDescription");
         task.setDeadline(DEADLINE);
-        task.setOrderNumber(new BigDecimal("1"));
+        task.setOrderNumber(BigDecimal.ONE);
         pendingNotification.setTask(task);
         pendingNotification.setExecutionDate(DEADLINE.toInstant(ZoneOffset.UTC));
         task.setPendingNotifications(List.of(pendingNotification));

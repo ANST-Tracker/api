@@ -37,7 +37,7 @@ class CreateTaskUseCaseTest extends AbstractUnitTest {
     void setUp() {
         useCase = new CreateTaskUseCase(taskRepository, projectRepository, dateConverterDelegate);
         when(taskRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
-        when(taskRepository.newOrderNumberTask()).thenReturn(new BigDecimal("1"));
+        when(taskRepository.newOrderNumberTask()).thenReturn(BigDecimal.ONE);
     }
 
     @Test
@@ -68,7 +68,7 @@ class CreateTaskUseCaseTest extends AbstractUnitTest {
         task.setData("testData");
         task.setDescription("testDescription");
         task.setDeadline(DEADLINE);
-        task.setOrderNumber(new BigDecimal("1"));
+        task.setOrderNumber(BigDecimal.ONE);
         pendingNotification.setTask(task);
         pendingNotification.setExecutionDate(DEADLINE.toInstant(ZoneOffset.UTC));
         task.setPendingNotifications(List.of(pendingNotification));
