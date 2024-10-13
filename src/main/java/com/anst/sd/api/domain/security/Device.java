@@ -28,6 +28,12 @@ public class Device extends DomainObject {
     @Column(nullable = false)
     private Instant created;
 
+    public static Device createDevice(User user) {
+        Device device = new Device();
+        device.user = user;
+        return device;
+    }
+
     @PrePersist
     public void prePersist() {
         created = Instant.now();
@@ -37,11 +43,5 @@ public class Device extends DomainObject {
     @PreUpdate
     public void preUpdate() {
         lastLogin = Instant.now();
-    }
-
-    public static Device createDevice(User user) {
-        Device device = new Device();
-        device.user = user;
-        return device;
     }
 }

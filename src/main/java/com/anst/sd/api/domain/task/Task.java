@@ -24,6 +24,8 @@ import java.util.List;
 @Entity
 @Accessors(chain = true)
 public class Task extends DomainObject {
+    @Transient
+    Long updatedProjectId;
     @Column
     private String data;
     @Column
@@ -61,9 +63,6 @@ public class Task extends DomainObject {
     public void preUpdate() {
         updated = Instant.now();
     }
-
-    @Transient
-    Long updatedProjectId;
 
     public void setPendingNotifications(List<PendingNotification> pendingNotifications) {
         this.pendingNotifications.clear();
