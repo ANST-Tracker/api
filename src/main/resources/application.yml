@@ -34,7 +34,7 @@ spring:
     redis:
       url: redis://localhost:6379
     mongodb:
-      uri: mongodb://user:trckr652652365@localhost:27017/user?authSource=admin
+      uri: ${MONGO_URL_USER}
   kafka:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
