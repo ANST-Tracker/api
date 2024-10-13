@@ -34,7 +34,7 @@ public class CreateTaskUseCase implements CreateTaskInBound {
         BigDecimal newOrderNumber = taskRepository.generateTaskOrderNumber();
         task.setProject(project)
                 .setStatus(TaskStatus.BACKLOG)
-            .setOrderNumber(newOrderNumber);
+                .setOrderNumber(newOrderNumber);
         if (task.getTags() != null && !task.getTags().isEmpty()) {
             List<Long> tags = task.getTags().stream()
                     .map(Tag::getId)
@@ -60,7 +60,7 @@ public class CreateTaskUseCase implements CreateTaskInBound {
                 .setData(name)
                 .setProject(bucketProject)
                 .setStatus(TaskStatus.BACKLOG)
-            .setOrderNumber(taskRepository.generateTaskOrderNumber());
+                .setOrderNumber(taskRepository.generateTaskOrderNumber());
         taskRepository.save(task);
     }
 }

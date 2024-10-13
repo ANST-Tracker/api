@@ -20,11 +20,11 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 public class SendCodeUseCase implements SendCodeInbound {
-    @Value("${security.code.expiration-time}")
-    private Long codeTimeToLive;
     private final UserCodeRepository userCodeRepository;
     private final SendCodeOutbound sendCodeOutbound;
     private final UserRepository userRepository;
+    @Value("${security.code.expiration-time}")
+    private Long codeTimeToLive;
 
     @Override
     @Transactional(isolation = Isolation.SERIALIZABLE)

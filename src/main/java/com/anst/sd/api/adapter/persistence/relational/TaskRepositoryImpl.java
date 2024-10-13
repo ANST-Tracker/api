@@ -82,9 +82,9 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     private List<Predicate> generateTaskPredicates(CriteriaBuilder criteriaBuilder,
-            TaskFilter filter,
-            Root<Task> taskRoot,
-            TaskJoinPredicates taskJoinPredicates) {
+                                                   TaskFilter filter,
+                                                   Root<Task> taskRoot,
+                                                   TaskJoinPredicates taskJoinPredicates) {
         List<Predicate> predicates = new ArrayList<>();
         addSimplePredicates(filter, taskRoot, predicates);
         addDateRangePredicates(criteriaBuilder, filter, taskRoot, predicates);
@@ -94,9 +94,9 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     private void addProjectPredicates(CriteriaBuilder criteriaBuilder,
-            TaskFilter filter,
-            List<Predicate> predicates,
-            TaskJoinPredicates taskJoinPredicates) {
+                                      TaskFilter filter,
+                                      List<Predicate> predicates,
+                                      TaskJoinPredicates taskJoinPredicates) {
         if (!CollectionUtils.isEmpty(filter.getProjectIds())) {
             filter.getProjectIds().forEach(projectId -> predicates.add(criteriaBuilder.or(
                     criteriaBuilder.equal(taskJoinPredicates.getProjectJoin().get(Project_.id), projectId))));
@@ -130,9 +130,9 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     private void addDateRangePredicates(CriteriaBuilder criteriaBuilder,
-            TaskFilter filter,
-            Root<Task> taskRoot,
-            List<Predicate> predicates) {
+                                        TaskFilter filter,
+                                        Root<Task> taskRoot,
+                                        List<Predicate> predicates) {
         DateRangeFilter startDateRangeFilter = filter.getDeadline();
         if (startDateRangeFilter != null && startDateRangeFilter.getDateFrom() != null) {
             predicates.add(criteriaBuilder.greaterThanOrEqualTo(
@@ -147,9 +147,9 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     private List<Task> createQueryAndGetResults(Session session,
-            CriteriaQuery<Task> criteriaQuery,
-            List<Predicate> predicateList,
-            PageRequest page) {
+                                                CriteriaQuery<Task> criteriaQuery,
+                                                List<Predicate> predicateList,
+                                                PageRequest page) {
         criteriaQuery.where(predicateList.toArray(new Predicate[0]));
         TypedQuery<Task> query = session.createQuery(criteriaQuery);
         query.setFirstResult(Math.toIntExact(page.getOffset()));

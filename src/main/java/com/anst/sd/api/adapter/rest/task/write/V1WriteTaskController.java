@@ -65,13 +65,13 @@ public class V1WriteTaskController {
     }
 
     @Operation(
-        summary = "Update number order task",
-        responses = {
-            @ApiResponse(
-                responseCode = "200",
-                description = "Task number order updated successfully",
-                useReturnTypeSchema = true)
-        })
+            summary = "Update number order task",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Task number order updated successfully",
+                            useReturnTypeSchema = true)
+            })
     @PutMapping("/{id}/orderNumber")
     public ResponseEntity<IdResponseDto> updateOrderNumberTask(
             @PathVariable Long id,

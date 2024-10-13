@@ -27,8 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    @Value("${security.code.return}")
-    private Boolean returnCode;
     private final RefreshTokenInBound refreshTokenInBound;
     private final LoginUserInBound loginUserInBound;
     private final RegisterUserInBound registerUserInBound;
@@ -36,6 +34,8 @@ public class AuthController {
     private final SignupRequestDomainMapper signUpRequestDomainMapper;
     private final JwtResponseDtoMapper jwtResponseDtoMapper;
     private final SendCodeInbound sendCodeInbound;
+    @Value("${security.code.return}")
+    private Boolean returnCode;
 
     @Operation(
             summary = "Refresh an access token",
