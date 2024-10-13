@@ -75,7 +75,7 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
-    public BigDecimal newOrderNumberTask() {
+    public BigDecimal generateTaskOrderNumber() {
         return new BigDecimal(taskJpaRepository.getNextOrderNumber());
     }
 

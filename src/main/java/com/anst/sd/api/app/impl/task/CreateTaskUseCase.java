@@ -28,7 +28,7 @@ public class CreateTaskUseCase implements CreateTaskInBound {
     public Task create(Long userId, Long projectId, Task task) {
         log.info("Creating task with userId {} in project {}", userId, projectId);
         Project project = projectRepository.getByIdAndUserId(projectId, userId);
-        BigDecimal newOrderNumber = taskRepository.newOrderNumberTask();
+        BigDecimal newOrderNumber = taskRepository.generateTaskOrderNumber();
         task.setProject(project)
             .setStatus(TaskStatus.BACKLOG)
             .setOrderNumber(newOrderNumber);
@@ -50,7 +50,7 @@ public class CreateTaskUseCase implements CreateTaskInBound {
             .setData(name)
             .setProject(bucketProject)
             .setStatus(TaskStatus.BACKLOG)
-            .setOrderNumber(taskRepository.newOrderNumberTask());
+            .setOrderNumber(taskRepository.generateTaskOrderNumber());
         taskRepository.save(task);
     }
 }

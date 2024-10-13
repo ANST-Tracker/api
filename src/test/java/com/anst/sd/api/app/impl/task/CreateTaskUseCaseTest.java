@@ -37,7 +37,7 @@ class CreateTaskUseCaseTest extends AbstractUnitTest {
     void setUp() {
         useCase = new CreateTaskUseCase(taskRepository, projectRepository, dateConverterDelegate);
         when(taskRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
-        when(taskRepository.newOrderNumberTask()).thenReturn(BigDecimal.ONE);
+        when(taskRepository.generateTaskOrderNumber()).thenReturn(BigDecimal.ONE);
     }
 
     @Test

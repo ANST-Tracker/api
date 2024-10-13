@@ -17,5 +17,5 @@ public interface TaskRepository {
 
     List<Task> findByFilter(Long userId, TaskFilter filter);
 
-    BigDecimal newOrderNumberTask();
+    BigDecimal generateTaskOrderNumber();
 }
