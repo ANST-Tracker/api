@@ -63,8 +63,6 @@ class CreateTaskUseCaseTest extends AbstractUnitTest {
         assertEquals("testDescription", result.getDescription());
     }
 
-
-
     private Task createTask() {
         Task task = new Task();
         PendingNotification pendingNotification = createPendingNotification();
