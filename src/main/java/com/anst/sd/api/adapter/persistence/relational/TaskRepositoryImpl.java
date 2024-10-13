@@ -6,6 +6,8 @@ import com.anst.sd.api.app.api.task.TaskNotFoundException;
 import com.anst.sd.api.app.api.task.TaskRepository;
 import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.project.Project_;
+import com.anst.sd.api.domain.tag.Tag;
+import com.anst.sd.api.domain.tag.Tag_;
 import com.anst.sd.api.domain.task.Task;
 import com.anst.sd.api.domain.task.TaskStatus;
 import com.anst.sd.api.domain.task.Task_;
@@ -87,6 +89,7 @@ public class TaskRepositoryImpl implements TaskRepository {
         addSimplePredicates(filter, taskRoot, predicates);
         addDateRangePredicates(criteriaBuilder, filter, taskRoot, predicates);
         addProjectPredicates(criteriaBuilder, filter, predicates, taskJoinPredicates);
+        addTagsPredicates(criteriaBuilder, filter, taskRoot, predicates, taskJoinPredicates);
         return predicates;
     }
 
@@ -105,6 +108,24 @@ public class TaskRepositoryImpl implements TaskRepository {
             Expression<TaskStatus> statusExpression = taskRoot.get(Task_.status);
             Predicate statusPredicate = statusExpression.in(filter.getStatus());
             predicates.add(statusPredicate);
+        }
+    }
+
+    private void addTagsPredicates(CriteriaBuilder criteriaBuilder, TaskFilter filter, Root<Task> taskRoot, List<Predicate> predicates,
+                                   TaskJoinPredicates taskJoinPredicates) {
+        if (!CollectionUtils.isEmpty(filter.getTags())) {
+            Join<Task, Tag> tagJoin = taskJoinPredicates.getTagJoin();
+            if (tagJoin == null) {
+                tagJoin = taskRoot.join(Task_.tags, JoinType.LEFT);
+                taskJoinPredicates.setTagJoin(tagJoin);
+            }
+
+            Join<Task, Tag> finalTagJoin = tagJoin;
+            List<Predicate> tagPredicates = filter.getTags().stream()
+                    .map(tagName -> criteriaBuilder.equal(finalTagJoin.get(Tag_.name), tagName))
+                    .toList();
+
+            predicates.add(criteriaBuilder.or(tagPredicates.toArray(new Predicate[0])));
         }
     }
 
@@ -147,5 +168,6 @@ public class TaskRepositoryImpl implements TaskRepository {
     @Accessors(chain = true)
     private static class TaskJoinPredicates {
         private Join<Task, Project> projectJoin;
+        private Join<Task, Tag> tagJoin;
     }
 }

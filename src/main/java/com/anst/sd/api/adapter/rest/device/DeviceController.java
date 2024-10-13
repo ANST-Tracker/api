@@ -28,32 +28,32 @@ public class DeviceController {
     private final DeviceDtoMapper deviceDtoMapper;
 
     @Operation(
-        summary = "Get list of devices",
-        responses = {
-            @ApiResponse(
-                responseCode = "200",
-                description = "Devices retrieved successfully",
-                useReturnTypeSchema = true)
-        })
+            summary = "Get list of devices",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Devices retrieved successfully",
+                            useReturnTypeSchema = true)
+            })
     @GetMapping("/list")
     public ResponseEntity<List<DeviceDto>> getDevices() {
         List<DeviceInfo> devices = getDevicesInbound.get(jwtService.getJwtAuth().getUserId());
         return ResponseEntity.ok(devices.stream()
-            .map(deviceDtoMapper::mapToDto)
-            .toList());
+                .map(deviceDtoMapper::mapToDto)
+                .toList());
     }
 
     @Operation(
-        summary = "Delete device by ID",
-        responses = {
-            @ApiResponse(
-                responseCode = "200",
-                description = "Device deleted successfully",
-                useReturnTypeSchema = true)
-        })
+            summary = "Delete device by ID",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Device deleted successfully",
+                            useReturnTypeSchema = true)
+            })
     @DeleteMapping("/{id}")
     public ResponseEntity<IdResponseDto> deleteDevice(
-        @Parameter(description = "Device ID") @PathVariable Long id) {
+            @Parameter(description = "Device ID") @PathVariable Long id) {
         Long deviceId = deleteDeviceInbound.delete(jwtService.getJwtAuth().getUserId(), id);
         return ResponseEntity.ok(new IdResponseDto(deviceId));
     }

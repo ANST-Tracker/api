@@ -3,6 +3,7 @@ package com.anst.sd.api.domain.task;
 import com.anst.sd.api.domain.DomainObject;
 import com.anst.sd.api.domain.notification.PendingNotification;
 import com.anst.sd.api.domain.project.Project;
+import com.anst.sd.api.domain.tag.Tag;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
@@ -37,6 +38,12 @@ public class Task extends DomainObject {
     @ManyToOne
     @JoinColumn(name = "project_id")
     private Project project;
+    @ManyToMany
+    @JoinTable(
+            name = "task_tags", joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private List<Tag> tags = new ArrayList<>();
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "task", fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<PendingNotification> pendingNotifications = new ArrayList<>();

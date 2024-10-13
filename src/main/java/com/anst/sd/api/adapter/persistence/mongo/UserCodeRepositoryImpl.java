@@ -26,7 +26,7 @@ public class UserCodeRepositoryImpl implements UserCodeRepository {
     @Override
     public UserCode getByTelegramId(String telegramId) {
         return userCodeMongoRepository.findUserCodeByTelegramId(telegramId)
-            .orElseThrow(() -> new UserCodeNotFoundException(telegramId));
+                .orElseThrow(() -> new UserCodeNotFoundException(telegramId));
     }
 
     @Override

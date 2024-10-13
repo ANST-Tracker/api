@@ -15,4 +15,5 @@ public class TaskFilter {
     List<TaskStatus> status;
     Integer page;
     List<Long> projectIds;
+    List<String> tags;
 }

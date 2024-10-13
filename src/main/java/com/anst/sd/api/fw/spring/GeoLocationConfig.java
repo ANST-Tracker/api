@@ -26,9 +26,9 @@ public class GeoLocationConfig {
             Resource resource = resourceLoader.getResource("classpath:maxmind/GeoLite2-City.mmdb");
             InputStream dbAsStream = resource.getInputStream();
             return new DatabaseReader
-                .Builder(dbAsStream)
-                .fileMode(Reader.FileMode.MEMORY)
-                .build();
+                    .Builder(dbAsStream)
+                    .fileMode(Reader.FileMode.MEMORY)
+                    .build();
         } catch (IOException | NullPointerException e) {
             log.error("Database reader could not be initialized.", e);
             return null;

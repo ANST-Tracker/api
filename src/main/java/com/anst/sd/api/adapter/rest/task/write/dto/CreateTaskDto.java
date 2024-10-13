@@ -23,4 +23,5 @@ public class CreateTaskDto {
     String description;
     TaskStatus status;
     List<PendingNotificationDto> pendingNotifications;
+    List<Long> tagIds;
 }

@@ -10,5 +10,16 @@
       "amount": 1,
       "timeType": "HOURS"
     }
+  ],
+  "tags": [
+    {
+      "id": 1
+    },
+    {
+      "id": 2
+    },
+    {
+      "id": 3
+    }
   ]
 }

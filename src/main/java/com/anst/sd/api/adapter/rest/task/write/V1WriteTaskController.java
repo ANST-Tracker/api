@@ -10,6 +10,8 @@ import com.anst.sd.api.adapter.rest.task.write.dto.UpdateTaskOrderNumberDto;
 import com.anst.sd.api.app.api.task.*;
 import com.anst.sd.api.domain.task.Task;
 import com.anst.sd.api.security.app.impl.JwtService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -34,24 +36,30 @@ public class V1WriteTaskController {
     private final TaskDtoMapper taskDtoMapper;
     private final TaskDomainMapper taskDomainMapper;
     private final UpdateOrderNumberTaskInBound updateOrderNumberTaskInBound;
+    private final ObjectMapper objectMapper;
 
     @Operation(
-        summary = "Create a new task",
-        responses = {
-            @ApiResponse(
-                responseCode = "200",
-                description = "Task created successfully",
-                useReturnTypeSchema = true)
-        })
+            summary = "Create a new task",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Task created successfully",
+                            useReturnTypeSchema = true)
+            })
     @PostMapping("/{projectId}")
     public ResponseEntity<TaskInfoDto> createTask(
-        @Valid @RequestBody CreateTaskDto request,
-        @PathVariable Long projectId,
-        BindingResult bindingResult) {
+            @Valid @RequestBody CreateTaskDto request,
+            @PathVariable Long projectId,
+            BindingResult bindingResult) throws JsonProcessingException {
         if (bindingResult.hasErrors()) {
             throw new TaskValidationException();
         }
         Task task = taskDomainMapper.mapToDomain(request);
+
+        String taskJson = objectMapper.writeValueAsString(task);
+        System.out.println("Mapped Task object as JSON:");
+        System.out.println(taskJson);
+
         Task result = createTaskInBound.create(jwtService.getJwtAuth().getUserId(), projectId, task);
         return ResponseEntity.ok(taskDtoMapper.mapToDto(result));
     }
@@ -78,18 +86,18 @@ public class V1WriteTaskController {
     }
 
     @Operation(
-        summary = "Update task",
-        responses = {
-            @ApiResponse(
-                responseCode = "200",
-                description = "Task updated successfully",
-                useReturnTypeSchema = true)
-        })
+            summary = "Update task",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Task updated successfully",
+                            useReturnTypeSchema = true)
+            })
     @PutMapping("/{id}")
     public ResponseEntity<IdResponseDto> updateTask(
-        @PathVariable Long id,
-        @Valid @RequestBody UpdateTaskDto request,
-        BindingResult bindingResult) {
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateTaskDto request,
+            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new TaskValidationException(id);
         }
@@ -99,13 +107,13 @@ public class V1WriteTaskController {
     }
 
     @Operation(
-        summary = "Delete task by ID",
-        responses = {
-            @ApiResponse(
-                responseCode = "200",
-                description = "Task deleted successfully",
-                useReturnTypeSchema = true)
-        })
+            summary = "Delete task by ID",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Task deleted successfully",
+                            useReturnTypeSchema = true)
+            })
     @DeleteMapping("/{id}")
     public ResponseEntity<IdResponseDto> deleteTask(@Parameter(description = "Task ID") @PathVariable Long id) {
         Task task = deleteTaskInBound.delete(jwtService.getJwtAuth().getUserId(), id);

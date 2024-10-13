@@ -1,5 +1,6 @@
 package com.anst.sd.api.adapter.rest.task.dto;
 
+import com.anst.sd.api.adapter.rest.tag.dto.TagInfoDto;
 import com.anst.sd.api.domain.task.TaskStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -26,4 +27,5 @@ public class TaskInfoDto {
     String description;
     BigDecimal orderNumber;
     List<PendingNotificationDto> pendingNotifications;
+    List<TagInfoDto> tags;
 }
