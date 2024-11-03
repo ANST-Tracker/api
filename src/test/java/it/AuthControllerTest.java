@@ -30,6 +30,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 class AuthControllerTest extends AbstractIntegrationTest {
     private static final String API_URL = "/auth";
+    private static final String CHANGE_PASSWORD_URL = "/change-password";
+    private static final String CHANGE_TELEGRAM_ID_URL = "/change-telegram-id";
 
     @Test
     void registerUser_failed_emptyFields() throws Exception {
@@ -229,6 +231,13 @@ class AuthControllerTest extends AbstractIntegrationTest {
         return mockMvc.perform(content.header("Authorization-Telegram", "Bearer " + token));
     }
 
+    private ResultActions performDoubleAuthentication(String telegramId, MockHttpServletRequestBuilder content) throws Exception {
+        return mockMvc.perform(content
+                .header("Authorization", "Bearer " + createAuthData(user))
+                .header("Authorization-Telegram", "Bearer " + createToken(telegramId))
+        );
+    }
+
     private String createToken(String telegramId) throws Exception {
         String code = sendGetCodeRequest(telegramId, null);
         MvcResult mvcResult = sendVerifyCodeRequest(telegramId, code, null,
@@ -279,5 +288,78 @@ class AuthControllerTest extends AbstractIntegrationTest {
             .andDo(print())
             .andExpect(resultMatcher)
             .andReturn();
+    }
+
+    @Test
+    void changePassword_successfully() throws Exception {
+        user = createTestUser();
+        String telegramId = user.getTelegramId();
+        String newPassword = encoder.encode("newPassword");
+        UpdatedPasswordDto updatedPasswordDto = new UpdatedPasswordDto(user.getPassword(), newPassword);
+
+        performDoubleAuthentication(telegramId, MockMvcRequestBuilders
+                .put(API_URL + CHANGE_PASSWORD_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedPasswordDto)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        assertNotEquals(user.getPassword(), userJpaRepository.findAll().get(0).getPassword());
+    }
+
+    @Test
+    void changePassword_failed_invalidOldPassword() throws Exception {
+        user = createTestUser();
+        String telegramId = user.getTelegramId();
+        String newPassword = encoder.encode("newPassword");
+        UpdatedPasswordDto updatedPasswordDto = new UpdatedPasswordDto("incorrectPassword", newPassword);
+
+        MvcResult result = performDoubleAuthentication(telegramId, MockMvcRequestBuilders
+                .put(API_URL + CHANGE_PASSWORD_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedPasswordDto)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andReturn();
+
+        ErrorInfoDto response = getFromResponse(result, ErrorInfoDto.class);
+        assertEquals(AUTH, response.getType());
+    }
+
+    @Test
+    void changeTelegramId_successfully() throws Exception {
+        user = createTestUser();
+        String oldTelegramId = user.getTelegramId();
+        UpdatedTelegramDto updatedTelegramDto = new UpdatedTelegramDto("newTelegramId");
+
+        performDoubleAuthentication(oldTelegramId, MockMvcRequestBuilders
+                .put(API_URL + CHANGE_TELEGRAM_ID_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedTelegramDto)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        assertNotEquals(user.getTelegramId(), userJpaRepository.findAll().get(0).getTelegramId());
+    }
+
+    @Test
+    void changeTelegramId_failed_telegramIdExists() throws Exception {
+        user = createTestUser();
+
+        String oldTelegramId = user.getTelegramId();
+        UpdatedTelegramDto updatedTelegramDto = new UpdatedTelegramDto("eridiium");
+
+        MvcResult result = performDoubleAuthentication(oldTelegramId, MockMvcRequestBuilders
+                .put(API_URL + CHANGE_TELEGRAM_ID_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updatedTelegramDto)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andReturn();
+
+        ErrorInfoDto response = getFromResponse(result, ErrorInfoDto.class);
+        assertEquals(AUTH, response.getType());
     }
 }

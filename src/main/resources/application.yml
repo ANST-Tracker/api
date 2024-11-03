@@ -34,7 +34,7 @@ spring:
     redis:
       url: redis://localhost:6379
     mongodb:
-      uri: ${MONGO_URL_USER}
+      uri: mongodb://mongo:mongo@localhost:27017/user?authSource=admin
   kafka:
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -47,7 +47,7 @@ spring:
 
 security:
   code:
-    expiration-time: 180
+    expiration-time: 20
     return: true
   jwt:
     block-valid-access: true
@@ -72,7 +72,7 @@ shedlock:
 service:
   telegram-bot:
     api:
-      url: https://localhost:8889 #url сервиса telegram-bot или заглушки. Нужно указать
+      url: https://localhost:8889
 
 pageable:
   size: 20

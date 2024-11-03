@@ -49,7 +49,7 @@ spring:
 
 security:
   code:
-    expiration-time: 180
+    expiration-time: 20
     return: true
   jwt:
     block-valid-access: true

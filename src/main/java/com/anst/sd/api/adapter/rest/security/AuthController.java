@@ -1,14 +1,13 @@
 package com.anst.sd.api.adapter.rest.security;
 
 import com.anst.sd.api.adapter.rest.security.dto.*;
-import com.anst.sd.api.app.api.security.CheckCodeInbound;
-import com.anst.sd.api.app.api.security.RefreshTokenInBound;
-import com.anst.sd.api.app.api.security.SendCodeInbound;
+import com.anst.sd.api.app.api.security.*;
 import com.anst.sd.api.app.api.user.LoginUserInBound;
 import com.anst.sd.api.app.api.user.RegisterUserException;
 import com.anst.sd.api.app.api.user.RegisterUserInBound;
 import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.security.app.api.JwtResponse;
+import com.anst.sd.api.security.app.impl.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
@@ -17,10 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -34,6 +30,9 @@ public class AuthController {
     private final SignupRequestDomainMapper signUpRequestDomainMapper;
     private final JwtResponseDtoMapper jwtResponseDtoMapper;
     private final SendCodeInbound sendCodeInbound;
+    private final JwtService jwtService;
+    private final ChangePasswordInBound changePasswordInBound;
+    private final ChangeTelegramIdInBound changeTelegramIdInBound;
     @Value("${security.code.return}")
     private Boolean returnCode;
 
@@ -99,5 +98,15 @@ public class AuthController {
         String token = checkCodeInbound.check(verifyCodeRequestDto.getTelegramId(), verifyCodeRequestDto.getCode(),
                 verifyCodeRequestDto.getUsername());
         return ResponseEntity.ok(new JwtResponseDto(token, null));
+    }
+
+    @PutMapping("/change-password")
+    public void changePassword(@Valid @RequestBody UpdatedPasswordDto updatedPasswordDto) {
+        changePasswordInBound.changePassword(jwtService.getJwtAuth().getUserId(), updatedPasswordDto);
+    }
+
+    @PutMapping("/change-telegram-id")
+    public void changeTelegramId(@Valid @RequestBody UpdatedTelegramDto updatedTelegramDto) {
+        changeTelegramIdInBound.changeTelegramId(jwtService.getJwtAuth().getUserId(), updatedTelegramDto);
     }
 }
