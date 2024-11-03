@@ -26,6 +26,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,6 +80,11 @@ public class TaskRepositoryImpl implements TaskRepository {
     @Override
     public BigDecimal generateTaskOrderNumber() {
         return new BigDecimal(taskJpaRepository.getNextOrderNumber());
+    }
+
+    @Override
+    public List<Task> findTasksByUserIdAndDateRange(Long userId, LocalDateTime startDate, LocalDateTime endDate) {
+        return taskJpaRepository.findTasksByUserIdAndDateRange(userId, startDate, endDate);
     }
 
     private List<Predicate> generateTaskPredicates(CriteriaBuilder criteriaBuilder,

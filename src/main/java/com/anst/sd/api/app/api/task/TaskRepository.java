@@ -4,6 +4,7 @@ import com.anst.sd.api.domain.task.Task;
 import org.springframework.data.domain.Page;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface TaskRepository {
@@ -18,4 +19,6 @@ public interface TaskRepository {
     List<Task> findByFilter(Long userId, TaskFilter filter);
 
     BigDecimal generateTaskOrderNumber();
+
+    List<Task> findTasksByUserIdAndDateRange(Long userId, LocalDateTime startDate, LocalDateTime endDate);
 }

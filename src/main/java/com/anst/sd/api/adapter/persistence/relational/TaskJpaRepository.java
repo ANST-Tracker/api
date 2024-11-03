@@ -9,6 +9,8 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -29,4 +31,13 @@ public interface TaskJpaRepository extends JpaRepository<Task, Long>, PagingAndS
              select nextval('device_id_seq')
             """)
     BigInteger getNextOrderNumber();
+
+    @Query("""
+            select task from Task task
+            left join fetch task.project p
+            left join fetch p.user u
+            where  u.id = :userId
+            and task.deadline between :startDate and :endDate
+            """)
+    List<Task> findTasksByUserIdAndDateRange(Long userId, LocalDateTime  startDate, LocalDateTime endDate);
 }

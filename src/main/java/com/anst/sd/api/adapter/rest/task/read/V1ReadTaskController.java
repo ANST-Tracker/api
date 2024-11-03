@@ -1,13 +1,9 @@
 package com.anst.sd.api.adapter.rest.task.read;
 
+import com.anst.sd.api.adapter.rest.task.read.dto.*;
 import com.anst.sd.api.adapter.rest.task.dto.TaskDtoMapper;
 import com.anst.sd.api.adapter.rest.task.dto.TaskInfoDto;
-import com.anst.sd.api.adapter.rest.task.read.dto.FilterRequestDomainMapper;
-import com.anst.sd.api.adapter.rest.task.read.dto.TaskFilterRequestDto;
-import com.anst.sd.api.app.api.task.FilterTasksInBound;
-import com.anst.sd.api.app.api.task.GetTaskInBound;
-import com.anst.sd.api.app.api.task.GetTasksInBound;
-import com.anst.sd.api.app.api.task.TaskFilter;
+import com.anst.sd.api.app.api.task.*;
 import com.anst.sd.api.domain.task.Task;
 import com.anst.sd.api.security.app.impl.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,7 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RequestMapping("/task")
@@ -31,6 +29,8 @@ public class V1ReadTaskController {
     private final JwtService jwtService;
     private final TaskDtoMapper taskDtoMapper;
     private final FilterRequestDomainMapper filterRequestDomainMapper;
+    private final GetTasksByMonthAndYearInBound getTasksByMonthAndYearInBound;
+    private final TasksByDateDtoMapper tasksByDateDtoMapper;
 
     @Operation(
             summary = "Get task by ID",
@@ -75,5 +75,26 @@ public class V1ReadTaskController {
         TaskFilter filterRequest = filterRequestDomainMapper.mapToDomain(taskFilterRequestDto);
         List<Task> result = filterTasksInBound.filter(jwtService.getJwtAuth().getUserId(), filterRequest);
         return ResponseEntity.ok(taskDtoMapper.mapToDto(result));
+    }
+
+    @Operation(
+            summary = "Get list of tasks by month and year",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Tasks retrieved successfully",
+                            useReturnTypeSchema = true)
+            })
+    @GetMapping("/by-month-year")
+    public ResponseEntity<List<TasksByDateDto>> getTasksByMonthAndYear(
+            @RequestParam Integer month,
+            @RequestParam Integer year) {
+        Map<LocalDate, List<Task>> tasksByDate = getTasksByMonthAndYearInBound.getTasksByMonthAndYear(
+                jwtService.getJwtAuth().getUserId(),
+                month,
+                year);
+        List<TasksByDateDto> taskByDateDto = tasksByDateDtoMapper.mapToDto(tasksByDate);
+
+        return ResponseEntity.ok(taskByDateDto);
     }
 }

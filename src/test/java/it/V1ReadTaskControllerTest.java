@@ -1,7 +1,9 @@
 package it;
 
 import com.anst.sd.api.adapter.rest.task.dto.TaskInfoDto;
+import com.anst.sd.api.adapter.rest.task.read.dto.TaskCalendarInfoDto;
 import com.anst.sd.api.adapter.rest.task.read.dto.TaskFilterRequestDto;
+import com.anst.sd.api.adapter.rest.task.read.dto.TasksByDateDto;
 import com.anst.sd.api.app.api.DateRangeFilter;
 import com.anst.sd.api.domain.notification.PendingNotification;
 import com.anst.sd.api.domain.project.Project;
@@ -17,9 +19,11 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -156,6 +160,38 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
         assertEquals(0, responseDto.size());
     }
 
+    @Test
+    void getTasksByMonthAndYear_successfully() throws Exception{
+        Integer month = 10;
+        Integer year = 10;
+        LocalDate date = LocalDate.of(year, month, 15);
+        Task task1 = createTaskWithDate(project, date);
+        Task task2 = createTaskWithDate(project, date.plusDays(1));
+
+        MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
+                .get(API_URL + "/by-month-year")
+                .param("month", String.valueOf(month))
+                .param("year", String.valueOf(year)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+        List<TasksByDateDto> responseDto = getListFromResponse(response, TasksByDateDto.class);
+
+        assertEquals(2, responseDto.size());
+        List<LocalDate> expectedDates = List.of(date, date.plusDays(1));
+        List<LocalDate> actualDates = responseDto.stream()
+                .map(TasksByDateDto::getDate)
+                .collect(Collectors.toList());
+        assertThat(actualDates, containsInAnyOrder(expectedDates.toArray()));
+
+        List<Long> expectedTaskIds = List.of(task1.getId(), task2.getId());
+        List<Long> actualTaskIds = responseDto.stream()
+                .flatMap(dto -> dto.getTasks().stream())
+                .map(TaskCalendarInfoDto::getId)
+                .collect(Collectors.toList());
+        assertThat(actualTaskIds, containsInAnyOrder(expectedTaskIds.toArray()));
+    }
+
     // ===================================================================================================================
     // = Implementation
     // ===================================================================================================================
@@ -216,5 +252,16 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
             tasks.add(task);
         }
         return taskJpaRepository.saveAll(tasks);
+    }
+
+    private Task createTaskWithDate(Project project,LocalDate date){
+        Task task = new Task();
+        task.setData("testData");
+        task.setDescription("testData");
+        task.setStatus(TaskStatus.IN_PROGRESS);
+        task.setProject(project);
+        task.setDeadline(date.atTime(10,0));
+        task.setOrderNumber(new BigDecimal(1));
+        return taskJpaRepository.save(task);
     }
 }
