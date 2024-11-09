@@ -24,6 +24,7 @@ public class GetTasksByMonthAndYearUseCase implements GetTasksByMonthAndYearInBo
     @Override
     @Transactional(readOnly = true)
     public Map<LocalDate, List<Task>> getTasksByMonthAndYear(Long userId, Integer month, Integer year) {
+        log.info("Getting tasks with date number month {} and year {}, for user with id{} ", month, year,userId);
         LocalDateTime  startDate = LocalDateTime.of(year, month, 1,0,0);
         LocalDateTime endDate = startDate.with(TemporalAdjusters.lastDayOfMonth());
         List<Task> tasks = taskRepository.findTasksByUserIdAndDateRange(userId, startDate, endDate);

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = TaskCalendarInfoDtoMapper.class)
 public interface TasksByDateDtoMapper {
     @Mapping(target = "date", source = "entry.key")
     @Mapping(target = "tasks", source = "entry.value")

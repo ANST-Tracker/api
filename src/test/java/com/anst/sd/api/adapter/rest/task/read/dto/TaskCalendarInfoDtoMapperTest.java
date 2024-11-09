@@ -13,6 +13,7 @@ public class TaskCalendarInfoDtoMapperTest  extends AbstractUnitTest {
     void setUp() {
         mapper = Mappers.getMapper(TaskCalendarInfoDtoMapper.class);
     }
+
     @Test
     void mapToDto() {
         Task source = readFromFile("/TaskCalendarInfoDtoMapperTest/task.json", Task.class);

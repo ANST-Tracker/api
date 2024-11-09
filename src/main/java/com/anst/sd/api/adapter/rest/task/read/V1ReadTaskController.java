@@ -90,11 +90,8 @@ public class V1ReadTaskController {
             @RequestParam Integer month,
             @RequestParam Integer year) {
         Map<LocalDate, List<Task>> tasksByDate = getTasksByMonthAndYearInBound.getTasksByMonthAndYear(
-                jwtService.getJwtAuth().getUserId(),
-                month,
-                year);
+                jwtService.getJwtAuth().getUserId(), month, year);
         List<TasksByDateDto> taskByDateDto = tasksByDateDtoMapper.mapToDto(tasksByDate);
-
         return ResponseEntity.ok(taskByDateDto);
     }
 }

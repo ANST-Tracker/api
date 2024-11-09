@@ -177,19 +177,8 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
                 .andReturn();
         List<TasksByDateDto> responseDto = getListFromResponse(response, TasksByDateDto.class);
 
-        assertEquals(2, responseDto.size());
-        List<LocalDate> expectedDates = List.of(date, date.plusDays(1));
-        List<LocalDate> actualDates = responseDto.stream()
-                .map(TasksByDateDto::getDate)
-                .collect(Collectors.toList());
-        assertThat(actualDates, containsInAnyOrder(expectedDates.toArray()));
-
-        List<Long> expectedTaskIds = List.of(task1.getId(), task2.getId());
-        List<Long> actualTaskIds = responseDto.stream()
-                .flatMap(dto -> dto.getTasks().stream())
-                .map(TaskCalendarInfoDto::getId)
-                .collect(Collectors.toList());
-        assertThat(actualTaskIds, containsInAnyOrder(expectedTaskIds.toArray()));
+        assertDates(responseDto, List.of(date, date.plusDays(1)));
+        assertTaskIds(responseDto, List.of(task1.getId(), task2.getId()));
     }
 
     // ===================================================================================================================
@@ -263,5 +252,20 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
         task.setDeadline(date.atTime(10,0));
         task.setOrderNumber(new BigDecimal(1));
         return taskJpaRepository.save(task);
+    }
+
+    private void assertDates(List<TasksByDateDto> responseDto, List<LocalDate> expectedDates) {
+        List<LocalDate> actualDates = responseDto.stream()
+                .map(TasksByDateDto::getDate)
+                .collect(Collectors.toList());
+        assertThat(actualDates, containsInAnyOrder(expectedDates.toArray()));
+    }
+
+    private void assertTaskIds(List<TasksByDateDto> responseDto, List<Long> expectedTaskIds) {
+        List<Long> actualTaskIds = responseDto.stream()
+                .flatMap(dto -> dto.getTasks().stream())
+                .map(TaskCalendarInfoDto::getId)
+                .collect(Collectors.toList());
+        assertThat(actualTaskIds, containsInAnyOrder(expectedTaskIds.toArray()));
     }
 }
