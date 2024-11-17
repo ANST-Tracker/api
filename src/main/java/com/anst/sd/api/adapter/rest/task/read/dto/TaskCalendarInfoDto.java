@@ -12,6 +12,5 @@ import lombok.experimental.FieldDefaults;
 public class TaskCalendarInfoDto {
     @NotNull
     Long id;
-
     String name;
 }
