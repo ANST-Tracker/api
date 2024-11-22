@@ -263,7 +263,7 @@ public abstract class AbstractIntegrationTest {
     // = Implementation
     // ===================================================================================================================
 
-    String createAuthData(User user) {
+    protected String createAuthData(User user) {
         JwtResponse result = jwtService.generateAccessRefreshTokens(user.getUsername(), user.getId(), DEVICE_ID, ERole.USER);
         return result.getAccessToken();
     }

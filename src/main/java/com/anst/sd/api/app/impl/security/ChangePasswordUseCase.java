@@ -6,6 +6,7 @@ import com.anst.sd.api.app.api.user.UserRepository;
 import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.security.app.api.AuthErrorMessages;
 import com.anst.sd.api.security.app.api.AuthException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,7 @@ public class ChangePasswordUseCase implements ChangePasswordInBound {
     private final PasswordEncoder encoder;
 
     @Override
+    @Transactional
     public void changePassword(Long userId, UpdatedPasswordDto updatedPasswordDto) {
         User user = userRepository.getById(userId);
         validateOldPassword(user, updatedPasswordDto);
@@ -31,7 +33,7 @@ public class ChangePasswordUseCase implements ChangePasswordInBound {
     // ===================================================================================================================
 
     private void validateOldPassword(User user, UpdatedPasswordDto updatedPasswordDto) {
-        if (!user.getPassword().equals(updatedPasswordDto.getOldPassword())) {
+        if (!user.getPassword().equals(encoder.encode(updatedPasswordDto.getOldPassword()))) {
             throw new AuthException(AuthErrorMessages.INVALID_PASSWORD);
         }
     }
