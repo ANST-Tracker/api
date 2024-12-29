@@ -10,9 +10,9 @@ public class OpenApiConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-                .info(new Info()
-                        .title("Tinkoff Coursework TO-DO-List API")
-                        .version("1.0")
-                        .description("Documentation"));
+            .info(new Info()
+                .title("Tinkoff Coursework TO-DO-List API")
+                .version("1.0")
+                .description("Documentation"));
     }
 }

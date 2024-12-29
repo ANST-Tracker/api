@@ -53,7 +53,7 @@ public class JacksonConfig {
 
         @Override
         public void serialize(LocalDateTime value, JsonGenerator gen, SerializerProvider serializers)
-                throws IOException {
+            throws IOException {
             gen.writeString(value.format(fmt));
         }
     }
