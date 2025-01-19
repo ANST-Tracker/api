@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableFeignClients(basePackages = {
-        "com.anst.sd.api.adapter.*"
+    "com.anst.sd.api.adapter.*"
 })
 public class FeignConfiguration {
 }

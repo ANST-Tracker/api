@@ -1,37 +1,24 @@
 package com.anst.sd.api.domain.tag;
 
 import com.anst.sd.api.domain.DomainObject;
-import com.anst.sd.api.domain.task.Task;
-import com.anst.sd.api.domain.user.User;
+import com.anst.sd.api.domain.project.Project;
+import com.anst.sd.api.domain.task.AbstractTask;
 import jakarta.persistence.*;
-import lombok.*;
-import lombok.experimental.Accessors;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
+@Entity
+@Table(name = "tag")
 @Getter
 @Setter
-@Table(name = "tag")
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
-@Accessors(chain = true)
 public class Tag extends DomainObject {
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
-    @Column
-    private String color;
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "project_id")
+    private Project project;
     @ManyToMany(mappedBy = "tags")
-    private List<Task> tasks;
-
-    @PreRemove
-    private void removeTagFromTasks() {
-        for (Task task : tasks) {
-            task.getTags().remove(this);
-        }
-    }
+    private List<AbstractTask> tasks;
 }

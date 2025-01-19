@@ -1,8 +1,5 @@
 package com.anst.sd.api;
 
-import com.anst.sd.api.domain.project.Project;
-import com.anst.sd.api.domain.project.ProjectType;
-import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.fw.spring.JacksonConfig;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -74,23 +71,5 @@ public abstract class AbstractUnitTest {
         public void writeObjectFieldValueSeparator(JsonGenerator jg) throws IOException {
             jg.writeRaw(": ");
         }
-    }
-
-    protected User createTestUser() {
-        User user = new User();
-        user.setId(1L);
-        user.setTelegramId("telegramId");
-        user.setPassword("password");
-        user.setUsername("username");
-        return user;
-    }
-
-    protected Project createTestProject(User user) {
-        Project project = new Project();
-        project.setId(1L);
-        project.setUser(user);
-        project.setName("test");
-        project.setProjectType(ProjectType.BASE);
-        return project;
     }
 }

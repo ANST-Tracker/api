@@ -11,9 +11,9 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableMongoRepositories(basePackages = {"com.anst.sd.api.adapter.persistence.mongo"})
 @EnableJpaRepositories(basePackages = {"com.anst.sd.api.adapter.persistence.relational"})
 @SpringBootApplication(exclude = {
-        SecurityAutoConfiguration.class,
-        ManagementWebSecurityAutoConfiguration.class,
-        UserDetailsServiceAutoConfiguration.class}
+    SecurityAutoConfiguration.class,
+    ManagementWebSecurityAutoConfiguration.class,
+    UserDetailsServiceAutoConfiguration.class}
 )
 public class AnstApiTodoApplication {
     public static void main(String[] args) {
