@@ -1,4 +1,4 @@
-package com.anst.sd.api.adapter;
+package com.anst.sd.api.adapter.telegram;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
