@@ -1,7 +1,10 @@
 package it;
 
 import com.anst.sd.api.AnstApiTodoApplication;
+import com.anst.sd.api.adapter.persistence.mongo.UserCodeMongoRepository;
+import com.anst.sd.api.adapter.persistence.relational.DeviceJpaRepository;
 import com.anst.sd.api.adapter.persistence.relational.UserJpaRepository;
+import com.anst.sd.api.adapter.telegram.CreateUserCodeMessageSupplier;
 import com.anst.sd.api.domain.user.Position;
 import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.security.app.api.JwtResponse;
@@ -17,7 +20,8 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -30,8 +34,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Instant;
-import java.util.List;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -40,7 +44,10 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @ActiveProfiles({"test"})
 @AutoConfigureMockMvc
 public abstract class AbstractIntegrationTest {
-    protected static final UUID DEVICE_UUID = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
+    protected static final UUID DEVICE_ID = UUID.randomUUID();
+    protected static final String USER_PASSWORD = UUID.randomUUID().toString();
+
+    protected User user;
 
     @Autowired
     protected MockMvc mockMvc;
@@ -51,29 +58,21 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     protected RedissonClient redissonClient;
     @Autowired
-    protected UserJpaRepository userJpaRepository;
+    private UserJpaRepository userJpaRepository;
     @Autowired
-    protected JdbcTemplate jdbcTemplate;
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    protected DeviceJpaRepository deviceJpaRepository;
+    @Autowired
+    protected UserCodeMongoRepository userCodeMongoRepository;
+    @MockBean
+    protected CreateUserCodeMessageSupplier createUserCodeMessageSupplier;
 
     @BeforeEach
     void clearDataBase() {
+        userCodeMongoRepository.deleteAll();
+        deviceJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
-    }
-
-    protected User createTestUser() {
-        User user = new User();
-        user.setUsername("username");
-        user.setPassword("testPassword");
-        user.setTelegramId("eridiium");
-        user.setFirstName("firstName");
-        user.setLastName("lastName");
-        user.setEmail("test@com");
-        user.setPosition(Position.DEVOPS);
-        user.setDepartmentName("HSE");
-        user.setRegistrationDate(LocalDate.now());
-        user.setTimeZone(1);
-        user.setCreated(Instant.now());
-        return userJpaRepository.save(user);
     }
 
     // ===================================================================================================================
@@ -180,7 +179,23 @@ public abstract class AbstractIntegrationTest {
     // ===================================================================================================================
 
     private String createAuthData(User user) {
-        JwtResponse result = jwtService.generateAccessRefreshTokens(user.getUsername(), user.getId(), DEVICE_UUID);
+        JwtResponse result = jwtService.generateAccessRefreshTokens(user.getUsername(), user.getId(), DEVICE_ID);
         return result.getAccessToken();
+    }
+
+    protected User createTestUser() {
+        User user = new User();
+        user.setUsername("username");
+        user.setPassword(passwordEncoder.encode(USER_PASSWORD));
+        user.setFirstName("firstName");
+        user.setLastName("lastName");
+        user.setTelegramId("telegramId");
+        user.setDepartmentName("departmentName");
+        user.setEmail("email");
+        user.setPosition(Position.PM);
+        user.setRegistrationDate(LocalDate.now());
+        user.setTimeZone(5);
+        user.setCreated(Instant.now());
+        return userJpaRepository.save(user);
     }
 }

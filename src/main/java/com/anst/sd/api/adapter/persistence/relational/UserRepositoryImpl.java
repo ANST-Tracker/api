@@ -23,4 +23,9 @@ public class UserRepositoryImpl implements UserRepository {
     public User getById(UUID id) {
         return userJpaRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
     }
+
+    @Override
+    public User save(User user) {
+        return userJpaRepository.save(user);
+    }
 }
