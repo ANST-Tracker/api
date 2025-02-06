@@ -40,7 +40,6 @@ class UserControllerTest extends AbstractIntegrationTest {
         performAuthenticated(user, MockMvcRequestBuilders
                 .get(API_URL + "/current"))
                 .andDo(print())
-
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 }
