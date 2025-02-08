@@ -1,7 +1,9 @@
 package it;
 
 import com.anst.sd.api.AnstApiTodoApplication;
+import com.anst.sd.api.adapter.persistence.relational.AbstractTaskJpaRepository;
 import com.anst.sd.api.adapter.persistence.relational.UserJpaRepository;
+import com.anst.sd.api.domain.task.*;
 import com.anst.sd.api.domain.user.Position;
 import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.security.app.api.JwtResponse;
@@ -10,6 +12,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,7 +21,6 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -25,6 +28,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -53,16 +57,22 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     protected UserJpaRepository userJpaRepository;
     @Autowired
-    protected JdbcTemplate jdbcTemplate;
+    protected AbstractTaskJpaRepository abstractTaskJpaRepository;
+
+    protected User user;
 
     @BeforeEach
     void clearDataBase() {
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        abstractTaskJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
     }
 
     protected User createTestUser() {
         User user = new User();
         user.setUsername("username");
+        user.setId(UUID.randomUUID());
         user.setPassword("testPassword");
         user.setTelegramId("eridiium");
         user.setFirstName("firstName");
@@ -74,6 +84,26 @@ public abstract class AbstractIntegrationTest {
         user.setTimeZone(1);
         user.setCreated(Instant.now());
         return userJpaRepository.save(user);
+    }
+
+    protected AbstractTask createAbstractTask() {
+        user = createTestUser();
+        Subtask task = new Subtask();
+        task.setSimpleId(1);
+        task.setName("Test Task");
+        task.setDescription("This is a test task");
+        task.setType(TaskType.SUBTASK);
+        task.setPriority(TaskPriority.MAJOR);
+        task.setStoryPoints(3);
+        task.setAssignee(user);
+        task.setReviewer(user);
+        task.setCreator(user);
+        task.setProject(null);
+        task.setDueDate(LocalDate.now().plusDays(7));
+        task.setOrderNumber(BigDecimal.ONE);
+        task.setTimeEstimation(null);
+        task.setTags(List.of());
+        return abstractTaskJpaRepository.save(task);
     }
 
     // ===================================================================================================================
@@ -116,11 +146,10 @@ public abstract class AbstractIntegrationTest {
         }
     }
 
-    protected <T> T readFromFile(String fileName) {
+    protected <T> T readFromFile(String fileName, Class<T> clazz) {
         String content = readFile(fileName);
         try {
-            return objectMapper.readValue(content, new TypeReference<>() {
-            });
+            return objectMapper.readValue(content, clazz);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

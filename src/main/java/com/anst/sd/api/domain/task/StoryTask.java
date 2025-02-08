@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "story_task")
@@ -27,4 +28,19 @@ public class StoryTask extends AbstractTask {
     private EpicTask epicTask;
     @OneToMany(mappedBy = "storyTask")
     private List<DefectTask> defects;
+
+    public StoryTask() {
+        this.status = FullCycleStatus.OPEN;
+    }
+
+    @Override
+    public void updateFrom(AbstractTask source, UUID userId) {
+        super.updateFrom(source, userId);
+        if (source instanceof StoryTask storySource) {
+            this.status = storySource.getStatus();
+            this.tester = storySource.getTester();
+            this.sprint = storySource.getSprint();
+            this.epicTask = storySource.getEpicTask();
+        }
+    }
 }

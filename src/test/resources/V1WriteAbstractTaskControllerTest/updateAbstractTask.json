@@ -1,0 +1,11 @@
+{
+  "name": "name_10ac42aaf466",
+  "description": "description_4a77092f0b96",
+  "type": "SUBTASK",
+  "priority": "MINOR",
+  "storyPoints": 0,
+  "timeEstimation": {
+    "timeUnit": "SECONDS",
+    "amount": 100
+  }
+}

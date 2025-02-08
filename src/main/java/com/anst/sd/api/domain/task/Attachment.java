@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 public class Attachment extends BusinessEntity {
     @Column(name = "file_id", nullable = false)
-    private String fileId;
+    private Integer fileId;
     @Column(name = "file_name", nullable = false)
     private String fileName;
     @ManyToOne(optional = false)

@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.UUID;
+
 @Entity
 @Table(name = "defect_task")
 @Getter
@@ -23,4 +25,19 @@ public class DefectTask extends AbstractTask {
     @ManyToOne
     @JoinColumn(name = "story_task_id")
     private StoryTask storyTask;
+
+    public DefectTask() {
+        this.status = FullCycleStatus.OPEN;
+    }
+
+    @Override
+    public void updateFrom(AbstractTask source, UUID userId) {
+        super.updateFrom(source, userId);
+        if (source instanceof DefectTask defectSource) {
+            this.status = defectSource.getStatus();
+            this.tester = defectSource.getTester();
+            this.sprint = defectSource.getSprint();
+            this.storyTask = defectSource.getStoryTask();
+        }
+    }
 }

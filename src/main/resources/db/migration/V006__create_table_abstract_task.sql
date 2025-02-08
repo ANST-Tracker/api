@@ -10,7 +10,7 @@ create table public.abstract_task
     assignee_id     uuid,
     reviewer_id     uuid,
     creator_id      uuid    not null,
-    project_id      uuid    not null,
+    project_id      uuid,
     due_date        varchar,
     order_number    numeric(13, 10),
     time_estimation jsonb
