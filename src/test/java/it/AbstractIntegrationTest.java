@@ -58,7 +58,7 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     protected RedissonClient redissonClient;
     @Autowired
-    private UserJpaRepository userJpaRepository;
+    protected UserJpaRepository userJpaRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
