@@ -3,6 +3,7 @@ package com.anst.sd.api.app.impl.task;
 import com.anst.sd.api.app.api.task.AbstractTaskRepository;
 import com.anst.sd.api.app.api.task.GetAvailableStatusesInBound;
 import com.anst.sd.api.domain.task.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +13,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Service
+@Slf4j
 public class GetAvailableStatusesUseCase implements GetAvailableStatusesInBound {
     private final AbstractTaskRepository abstractTaskRepository;
     private final Map<FullCycleStatus, List<FullCycleStatus>> fullCycleTransitions = new EnumMap<>(FullCycleStatus.class);
@@ -36,7 +38,7 @@ public class GetAvailableStatusesUseCase implements GetAvailableStatusesInBound 
     @Transactional
     public List<SimpleDictionary> getAppropriateStatuses(UUID taskId) {
         AbstractTask task = abstractTaskRepository.findById(taskId);
-
+        log.info("Getting appropriate statuses for taskId {}", task.getId());
         if (task instanceof StoryTask story) {
             FullCycleStatus current = story.getStatus();
             List<FullCycleStatus> next = fullCycleTransitions.getOrDefault(current, List.of());

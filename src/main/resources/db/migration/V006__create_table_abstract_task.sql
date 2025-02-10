@@ -9,7 +9,7 @@ create table public.abstract_task
     story_points    bigint,
     assignee_id     uuid,
     reviewer_id     uuid,
-    creator_id      uuid    not null,
+    creator_id uuid,
     project_id      uuid,
     due_date        varchar,
     order_number    numeric(13, 10),

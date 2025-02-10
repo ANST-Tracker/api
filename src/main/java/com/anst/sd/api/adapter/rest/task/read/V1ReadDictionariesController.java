@@ -4,6 +4,10 @@ import com.anst.sd.api.adapter.rest.task.dto.SimpleDictionaryDto;
 import com.anst.sd.api.adapter.rest.task.dto.SimpleDictionaryDtoMapper;
 import com.anst.sd.api.app.api.task.GetAvailableStatusesInBound;
 import com.anst.sd.api.domain.task.SimpleDictionary;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +26,19 @@ public class V1ReadDictionariesController {
     private final GetAvailableStatusesInBound getAvailableStatusesInBound;
     private final SimpleDictionaryDtoMapper simpleDictionaryDtoMapper;
 
+    @Operation(
+            summary = "Get possible next statuses for a task",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Next statuses retrieved successfully",
+                            content = @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = SimpleDictionaryDto[].class)
+                            )
+                    )
+            }
+    )
     @GetMapping("/{taskId}/appropriate-statuses")
     public List<SimpleDictionaryDto> getAppropriateStatuses(@PathVariable UUID taskId) {
         List<SimpleDictionary> listOfDictionaries = getAvailableStatusesInBound.getAppropriateStatuses(taskId);

@@ -23,10 +23,10 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
     @Override
     @Transactional
     public AbstractTask create(UUID userId, AbstractTask task) {
+        log.info("Creating task with userId {}", userId);
         User creator = userRepository.getById(userId);
-
         BigDecimal orderNumber = abstractTaskRepository.findNextOrderNumber(task.getId());
-        //after project realization need to uncomment it
+        //after project realization (AT-103) need to uncomment it
         //task.setSimpleId(SimpleIdGenerationDelegate.idGenerator(task));
         task.setSimpleId("GD-1");
         task.setOrderNumber(orderNumber.add(BigDecimal.ONE));

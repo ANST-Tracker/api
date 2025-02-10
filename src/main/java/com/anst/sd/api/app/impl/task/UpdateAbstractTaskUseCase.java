@@ -19,10 +19,10 @@ import java.util.UUID;
 public class UpdateAbstractTaskUseCase implements UpdateAbstractTaskInBound {
     private final AbstractTaskRepository abstractTaskRepository;
 
-
     @Override
     @Transactional
     public AbstractTask update(UUID userId, UUID taskId, AbstractTask updated) {
+        log.info("Updating task with id {} and userId {}", taskId, userId);
         AbstractTask original = abstractTaskRepository.findById(taskId);
         mergeTask(original, updated);
         mergeSpecificFields(original, updated);
@@ -30,28 +30,13 @@ public class UpdateAbstractTaskUseCase implements UpdateAbstractTaskInBound {
     }
 
     private void mergeTask(AbstractTask original, AbstractTask updated) {
-        if (!updated.getName().isEmpty()) {
-            original.setName(updated.getName());
-        }
+        original.setName(updated.getName());
         original.setDescription(updated.getDescription());
-        if (updated.getType() != null) {
-            original.setType(updated.getType());
-        }
-        if (updated.getPriority() != null) {
-            original.setPriority(updated.getPriority());
-        }
-        if (updated.getStoryPoints() != null) {
-            original.setStoryPoints(updated.getStoryPoints());
-        }
-        if (updated.getAssignee() != null) {
-            original.setAssignee(updated.getAssignee());
-        }
-        if (updated.getReviewer() != null) {
-            original.setReviewer(updated.getReviewer());
-        }
-        if (updated.getCreator() != null) {
-            original.setCreator(updated.getCreator());
-        }
+        original.setType(updated.getType());
+        original.setPriority(updated.getPriority());
+        original.setStoryPoints(updated.getStoryPoints());
+        original.setAssignee(updated.getAssignee());
+        original.setReviewer(updated.getReviewer());
         original.setProject(updated.getProject());
         original.setDueDate(updated.getDueDate());
         original.setTimeEstimation(updated.getTimeEstimation());
