@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -24,6 +25,12 @@ public class UpdateAbstractTaskDto {
     Integer storyPoints;
     UUID assigneeId;
     UUID reviewerId;
+    UUID testerId;
+    UUID projectId;
+    UUID storyTaskId;
+    UUID sprintId;
     LocalDate dueDate;
     TimeEstimation timeEstimation;
+    List<UUID> tagIds;
+
 }

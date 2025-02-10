@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Slf4j
@@ -18,13 +19,17 @@ import java.util.UUID;
 public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
     private final AbstractTaskRepository abstractTaskRepository;
     private final UserRepository userRepository;
-    private final SimpleIdGenerationDelegate simpleIdGenerationDelegate;
 
     @Override
     @Transactional
     public AbstractTask create(UUID userId, AbstractTask task) {
         User creator = userRepository.getById(userId);
-        task.setSimpleId(simpleIdGenerationDelegate.idGenerator(task));
+
+        BigDecimal orderNumber = abstractTaskRepository.findNextOrderNumber(task.getId());
+        //after project realization need to uncomment it
+        //task.setSimpleId(SimpleIdGenerationDelegate.idGenerator(task));
+        task.setSimpleId("GD-1");
+        task.setOrderNumber(orderNumber.add(BigDecimal.ONE));
         task.setCreator(creator);
         return abstractTaskRepository.save(task);
     }

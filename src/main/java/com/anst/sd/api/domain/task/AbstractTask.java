@@ -15,7 +15,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -25,7 +24,7 @@ import java.util.UUID;
 public abstract class AbstractTask extends DomainObject {
 
     @Column(name = "simple_id", nullable = false)
-    private Integer simpleId;
+    private String simpleId;
 
     @Column(nullable = false)
     private String name;
@@ -77,21 +76,4 @@ public abstract class AbstractTask extends DomainObject {
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     private List<Tag> tags = new ArrayList<>();
-
-    public void updateFrom(AbstractTask source, UUID userId) {
-        this.simpleId = source.getSimpleId();
-        this.name = source.getName();
-        this.description = source.getDescription();
-        this.type = source.getType();
-        this.priority = source.getPriority();
-        this.storyPoints = source.getStoryPoints();
-        this.assignee = source.getAssignee();
-        this.reviewer = source.getReviewer();
-        this.creator = source.getCreator();
-        this.project = source.getProject();
-        this.dueDate = source.getDueDate();
-        this.orderNumber = source.getOrderNumber();
-        this.timeEstimation = source.getTimeEstimation();
-        this.tags = source.getTags();
-    }
 }

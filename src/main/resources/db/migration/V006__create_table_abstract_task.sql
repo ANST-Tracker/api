@@ -1,7 +1,7 @@
 create table public.abstract_task
 (
     id              uuid primary key,
-    simple_id       bigint  not null,
+    simple_id varchar not null,
     name            varchar not null,
     description     varchar,
     type            varchar not null,

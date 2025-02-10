@@ -1,9 +1,10 @@
 package com.anst.sd.api.app.api.task;
 
+import com.anst.sd.api.domain.task.SimpleDictionary;
+
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
 public interface GetAvailableStatusesInBound {
-    Map<String, List<String>> getAvailableStatusesForFullCycle();
-    Map<String, List<String>> getAvailableStatusesForShortCycle();
+    List<SimpleDictionary> getAppropriateStatuses(UUID taskId);
 }

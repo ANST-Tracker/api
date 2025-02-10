@@ -2,14 +2,15 @@ package it;
 
 import com.anst.sd.api.AnstApiTodoApplication;
 import com.anst.sd.api.adapter.persistence.relational.AbstractTaskJpaRepository;
+import com.anst.sd.api.adapter.persistence.relational.SubtaskJpaRepository;
 import com.anst.sd.api.adapter.persistence.relational.UserJpaRepository;
+import com.anst.sd.api.domain.sprint.Sprint;
 import com.anst.sd.api.domain.task.*;
 import com.anst.sd.api.domain.user.Position;
 import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.security.app.api.JwtResponse;
 import com.anst.sd.api.security.app.impl.JwtService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -34,8 +35,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Instant;
-import java.util.List;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -58,8 +59,10 @@ public abstract class AbstractIntegrationTest {
     protected UserJpaRepository userJpaRepository;
     @Autowired
     protected AbstractTaskJpaRepository abstractTaskJpaRepository;
-
+    @Autowired
+    protected SubtaskJpaRepository subtaskJpaRepository;
     protected User user;
+    protected Sprint sprint;
 
     @BeforeEach
     void clearDataBase() {
@@ -86,17 +89,42 @@ public abstract class AbstractIntegrationTest {
         return userJpaRepository.save(user);
     }
 
-    protected AbstractTask createAbstractTask() {
-        user = createTestUser();
+    protected AbstractTask createSubtask() {
         Subtask task = new Subtask();
-        task.setSimpleId(1);
-        task.setName("Test Task");
-        task.setDescription("This is a test task");
+        user = createTestUser();
+        task.setName("Test Subtask");
+        task.setDescription("This is a test subtask");
+        task.setSimpleId("GD-1");
         task.setType(TaskType.SUBTASK);
+        task.setStatus(ShortCycleStatus.OPEN);
         task.setPriority(TaskPriority.MAJOR);
-        task.setStoryPoints(3);
+        task.setStoryPoints(5);
         task.setAssignee(user);
         task.setReviewer(user);
+        task.setCreator(user);
+        task.setProject(null);
+        task.setDueDate(LocalDate.now().plusDays(7));
+        task.setOrderNumber(BigDecimal.ONE);
+        task.setTimeEstimation(null);
+        task.setTags(List.of());
+        return abstractTaskJpaRepository.save(task);
+    }
+
+    protected AbstractTask createStoryTask() {
+        StoryTask task = new StoryTask();
+        user = createTestUser();
+        task.setName("Test StoryTask");
+        task.setDescription("This is a test storytask");
+        task.setSimpleId("GD-2");
+        task.setType(TaskType.STORY);
+        task.setStatus(FullCycleStatus.IN_PROGRESS);
+        task.setPriority(TaskPriority.MAJOR);
+        task.setStoryPoints(5);
+        task.setAssignee(user);
+        task.setReviewer(user);
+        task.setSprint(null);
+        task.setEpicTask(null);
+        task.setTester(user);
         task.setCreator(user);
         task.setProject(null);
         task.setDueDate(LocalDate.now().plusDays(7));

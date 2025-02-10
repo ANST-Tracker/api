@@ -2,7 +2,9 @@ package it;
 
 import com.anst.sd.api.adapter.rest.task.write.dto.CreateAbstractTaskDto;
 import com.anst.sd.api.adapter.rest.task.write.dto.UpdateAbstractTaskDto;
+import com.anst.sd.api.adapter.rest.task.write.dto.UpdateAbstractTaskStatusDto;
 import com.anst.sd.api.domain.task.AbstractTask;
+import com.anst.sd.api.domain.task.Subtask;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -10,9 +12,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class V1WriteAbstractTaskControllerTest extends AbstractIntegrationTest {
     private static final String API_URL = "/task";
@@ -20,7 +22,8 @@ class V1WriteAbstractTaskControllerTest extends AbstractIntegrationTest {
     @Test
     void createAbstractTask_successfully() throws Exception {
         user = createTestUser();
-        CreateAbstractTaskDto request = readFromFile("/V1WriteAbstractTaskControllerTest/createAbstractTask.json", CreateAbstractTaskDto.class);
+        CreateAbstractTaskDto request = readFromFile("/V1WriteAbstractTaskControllerTest/createAbstractTask.json",
+                CreateAbstractTaskDto.class);
 
         performAuthenticated(user, MockMvcRequestBuilders
                 .post(API_URL)
@@ -38,11 +41,10 @@ class V1WriteAbstractTaskControllerTest extends AbstractIntegrationTest {
 
     @Test
     void updateAbstractTask_successfully() throws Exception {
-        AbstractTask originalTask = createAbstractTask();
-        System.out.println("After saving, real ID = " + originalTask.getId());
-        abstractTaskJpaRepository.flush();
+        AbstractTask originalTask = createSubtask();
         UUID taskId = originalTask.getId();
-        UpdateAbstractTaskDto request = readFromFile("/V1WriteAbstractTaskControllerTest/updateAbstractTask.json", UpdateAbstractTaskDto.class);
+        UpdateAbstractTaskDto request = readFromFile("/V1WriteAbstractTaskControllerTest/updateAbstractTask.json",
+                UpdateAbstractTaskDto.class);
 
         performAuthenticated(user, MockMvcRequestBuilders
                 .put(API_URL + "/" + taskId.toString())
@@ -50,9 +52,31 @@ class V1WriteAbstractTaskControllerTest extends AbstractIntegrationTest {
                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
-//        AbstractTask updateResponse = abstractTaskJpaRepository.findAll().get(0);
+        AbstractTask updateResponse = abstractTaskJpaRepository.findAll().get(0);
 
-//        assertNotEquals(originalTask.getName(), updateResponse.getName());
+        assertNotEquals(originalTask.getName(), updateResponse.getName());
+        assertNotEquals(originalTask.getDescription(), updateResponse.getDescription());
+        assertNotEquals(originalTask.getPriority(), updateResponse.getPriority());
+        assertNotEquals(originalTask.getTimeEstimation(), updateResponse.getTimeEstimation());
+    }
+
+    @Test
+    void updateStatus_successfully() throws Exception {
+        AbstractTask original = createSubtask();
+        Subtask originalSubtask = subtaskJpaRepository.findAll().get(0);
+        UUID taskId = original.getId();
+        UpdateAbstractTaskStatusDto request = readFromFile("/V1WriteAbstractTaskControllerTest/updateAbstractTaskStatus.json",
+                UpdateAbstractTaskStatusDto.class);
+
+        performAuthenticated(user, MockMvcRequestBuilders
+                .put(API_URL + "/" + taskId.toString() + "/status")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+        Subtask updateResponse = subtaskJpaRepository.findAll().get(0);
+
+        assertNotEquals(originalSubtask.getStatus(), updateResponse.getStatus());
     }
 
 }

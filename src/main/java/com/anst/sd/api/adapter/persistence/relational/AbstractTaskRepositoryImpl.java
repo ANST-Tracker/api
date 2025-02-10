@@ -6,6 +6,7 @@ import com.anst.sd.api.domain.task.AbstractTask;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Component
@@ -25,7 +26,7 @@ public class AbstractTaskRepositoryImpl implements AbstractTaskRepository {
     }
 
     @Override
-    public Integer findNextSimpleIdByProject(UUID taskId) {
-        return abstractTaskJpaRepository.findNextSimpleIdByTask(taskId);
+    public BigDecimal findNextOrderNumber(UUID taskId) {
+        return abstractTaskJpaRepository.findNextOrderNumber(taskId);
     }
 }
