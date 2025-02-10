@@ -9,6 +9,7 @@ import com.anst.sd.api.domain.task.Subtask;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -20,6 +21,7 @@ public class UpdateAbstractTaskUseCase implements UpdateAbstractTaskInBound {
 
 
     @Override
+    @Transactional
     public AbstractTask update(UUID userId, UUID taskId, AbstractTask updated) {
         AbstractTask original = abstractTaskRepository.findById(taskId);
         mergeTask(original, updated);

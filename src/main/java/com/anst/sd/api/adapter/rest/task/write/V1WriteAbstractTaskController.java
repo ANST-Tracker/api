@@ -49,7 +49,7 @@ public class V1WriteAbstractTaskController {
     public ResponseEntity<IdResponseDto> updateStatus(@PathVariable UUID taskId,
                                                       @RequestBody @Valid UpdateAbstractTaskStatusDto request) {
         AbstractTask updated = updateAbstractTaskStatusInBound.updateStatus(jwtService.getJwtAuth().getUserId(),
-                taskId, request);
+                taskId, request.getStatus());
         return ResponseEntity.ok(abstractTaskDtoMapper.mapToDto(updated));
     }
 }

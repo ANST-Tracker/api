@@ -4,6 +4,7 @@ import com.anst.sd.api.app.api.task.AbstractTaskRepository;
 import com.anst.sd.api.app.api.task.GetAvailableStatusesInBound;
 import com.anst.sd.api.domain.task.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -32,6 +33,7 @@ public class GetAvailableStatusesUseCase implements GetAvailableStatusesInBound 
     }
 
     @Override
+    @Transactional
     public List<SimpleDictionary> getAppropriateStatuses(UUID taskId) {
         AbstractTask task = abstractTaskRepository.findById(taskId);
 
