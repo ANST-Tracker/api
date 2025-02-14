@@ -1,7 +1,9 @@
 package it;
 
 import com.anst.sd.api.AnstApiTodoApplication;
+import com.anst.sd.api.adapter.persistence.relational.ProjectJpaRepository;
 import com.anst.sd.api.adapter.persistence.relational.UserJpaRepository;
+import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.user.Position;
 import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.security.app.api.JwtResponse;
@@ -54,9 +56,15 @@ public abstract class AbstractIntegrationTest {
     protected UserJpaRepository userJpaRepository;
     @Autowired
     protected JdbcTemplate jdbcTemplate;
+    @Autowired
+    protected ProjectJpaRepository projectJpaRepository;
+
+    protected User user;
+    protected Project project;
 
     @BeforeEach
     void clearDataBase() {
+        projectJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
     }
 
@@ -74,6 +82,16 @@ public abstract class AbstractIntegrationTest {
         user.setTimeZone(1);
         user.setCreated(Instant.now());
         return userJpaRepository.save(user);
+    }
+
+    protected Project createTestProject(User headUser) {
+        Project project = new Project();
+        project.setName("Project1");
+        project.setDescription("New test project");
+        project.setHead(headUser);
+        project.setNextTaskId(1);
+        project.setKey("P1");
+        return projectJpaRepository.save(project);
     }
 
     // ===================================================================================================================
