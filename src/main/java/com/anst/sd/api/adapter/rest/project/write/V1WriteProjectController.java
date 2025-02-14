@@ -79,7 +79,8 @@ public class V1WriteProjectController {
                             useReturnTypeSchema = true)
             })
     @PutMapping("/{id}/next-task-id")
-    public ResponseEntity<Void> updateProjectNextTaskId(@PathVariable UUID id) {
+    public ResponseEntity<Void> updateProjectNextTaskId(
+        @PathVariable UUID id) {
         updateProjectNextTaskIdInbound.updateNextTaskId(id);
         return ResponseEntity.ok().build();
     }

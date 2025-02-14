@@ -1,9 +1,11 @@
 package it;
 
 import com.anst.sd.api.AnstApiTodoApplication;
+import com.anst.sd.api.adapter.persistence.relational.ProjectJpaRepository;
 import com.anst.sd.api.adapter.persistence.mongo.UserCodeMongoRepository;
 import com.anst.sd.api.adapter.persistence.relational.DeviceJpaRepository;
 import com.anst.sd.api.adapter.persistence.relational.UserJpaRepository;
+import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.adapter.telegram.CreateUserCodeMessageSupplier;
 import com.anst.sd.api.domain.user.Position;
 import com.anst.sd.api.domain.user.User;
@@ -34,8 +36,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -48,6 +50,7 @@ public abstract class AbstractIntegrationTest {
     protected static final String USER_PASSWORD = UUID.randomUUID().toString();
 
     protected User user;
+    protected Project project;
 
     @Autowired
     protected MockMvc mockMvc;
@@ -67,9 +70,12 @@ public abstract class AbstractIntegrationTest {
     protected UserCodeMongoRepository userCodeMongoRepository;
     @MockBean
     protected CreateUserCodeMessageSupplier createUserCodeMessageSupplier;
+    @Autowired
+    protected ProjectJpaRepository projectJpaRepository;
 
     @BeforeEach
     void clearDataBase() {
+        projectJpaRepository.deleteAll();
         userCodeMongoRepository.deleteAll();
         deviceJpaRepository.deleteAll();
         userJpaRepository.deleteAll();

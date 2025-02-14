@@ -4,5 +4,6 @@
   "description": "New test project",
   "head": {
     "username": "username"
-  }
+  },
+  "key": "P1"
 }
