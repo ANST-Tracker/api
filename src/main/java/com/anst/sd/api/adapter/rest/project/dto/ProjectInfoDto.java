@@ -21,6 +21,4 @@ public class ProjectInfoDto {
     String description;
     @NotNull
     User head;
-    @NotBlank
-    String key;
 }
