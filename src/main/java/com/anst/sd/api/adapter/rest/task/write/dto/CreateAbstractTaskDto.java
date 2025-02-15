@@ -11,7 +11,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
@@ -23,7 +22,6 @@ import java.util.UUID;
 public class CreateAbstractTaskDto {
     @NotBlank
     String name;
-    @NotBlank
     String description;
     @NotNull
     TaskType type;
@@ -33,11 +31,8 @@ public class CreateAbstractTaskDto {
     Integer storyPoints;
     UUID assigneeId;
     UUID reviewerId;
-    @NotNull
-    UUID creatorId;
     UUID projectId;
     LocalDate dueDate;
-    BigDecimal orderNumber;
     TimeEstimation timeEstimation;
     List<UUID> tagIds;
 }

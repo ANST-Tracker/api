@@ -19,14 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.UUID;
-
 @Slf4j
 @RequestMapping("/task")
 @RestController
 @RequiredArgsConstructor
 public class V1WriteAbstractTaskController {
-
     private final CreateAbstractTaskInBound createAbstractTaskInBound;
     private final UpdateAbstractTaskInBound updateAbstractTaskInBound;
     private final UpdateAbstractTaskStatusInBound updateAbstractTaskStatusInBound;
@@ -35,7 +32,7 @@ public class V1WriteAbstractTaskController {
     private final AbstractTaskDtoMapper abstractTaskDtoMapper;
 
     @Operation(
-            summary = "Create a new abstract task",
+            summary = "Create a new task",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
@@ -52,42 +49,42 @@ public class V1WriteAbstractTaskController {
     }
 
     @Operation(
-            summary = "Update an existing abstract task",
+            summary = "Update an existing task",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Abstract task updated successfully",
+                            description = "Task updated successfully",
                             useReturnTypeSchema = true
                     )
             }
     )
-    @PutMapping("/{taskId}")
-    public ResponseEntity<IdResponseDto> update(@PathVariable UUID taskId,
+    @PutMapping("/{simpleId}")
+    public ResponseEntity<IdResponseDto> update(@PathVariable String simpleId,
                                                 @Valid @RequestBody UpdateAbstractTaskDto request
     ) {
         AbstractTask task = abstractTaskDomainMapper.mapToDomain(request);
-        AbstractTask result = updateAbstractTaskInBound.update(jwtService.getJwtAuth().getUserId(), taskId, task);
+        AbstractTask result = updateAbstractTaskInBound.update(jwtService.getJwtAuth().getUserId(), simpleId, task);
         return ResponseEntity.ok(abstractTaskDtoMapper.mapToDto(result));
     }
 
     @Operation(
-            summary = "Update the status of an abstract task",
+            summary = "Update the status of task",
             responses = {
                     @ApiResponse(
                             responseCode = "200",
-                            description = "Abstract task status updated successfully",
+                            description = "Task status updated successfully",
                             useReturnTypeSchema = true
                     )
             }
     )
-    @PutMapping("/{taskId}/status")
+    @PutMapping("/{simpleId}/status")
     public ResponseEntity<IdResponseDto> updateStatus(
-            @PathVariable UUID taskId, @RequestBody @Valid UpdateAbstractTaskStatusDto request
+            @PathVariable String simpleId, @RequestBody @Valid UpdateAbstractTaskStatusDto request
     ) {
         AbstractTask updated = updateAbstractTaskStatusInBound.updateStatus(
                 jwtService.getJwtAuth().getUserId(),
-                taskId,
-                request.getStatus()
+                simpleId,
+                request.getStatus().toString()
         );
         return ResponseEntity.ok(abstractTaskDtoMapper.mapToDto(updated));
     }

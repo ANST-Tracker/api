@@ -1,19 +1,15 @@
 package it;
 
 import com.anst.sd.api.AnstApiTodoApplication;
-import com.anst.sd.api.adapter.persistence.relational.AbstractTaskJpaRepository;
-import com.anst.sd.api.adapter.persistence.relational.SubtaskJpaRepository;
-import com.anst.sd.api.adapter.persistence.relational.ProjectJpaRepository;
-import com.anst.sd.api.adapter.persistence.relational.UserJpaRepository;
+import com.anst.sd.api.adapter.persistence.relational.*;
+import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.sprint.Sprint;
 import com.anst.sd.api.domain.task.*;
-import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.user.Position;
 import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.security.app.api.JwtResponse;
 import com.anst.sd.api.security.app.impl.JwtService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -61,16 +57,19 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     protected UserJpaRepository userJpaRepository;
     @Autowired
-    protected JdbcTemplate jdbcTemplate;
-    @Autowired
     protected ProjectJpaRepository projectJpaRepository;
-
-    protected User user;
-    protected Project project;
+    @Autowired
     protected AbstractTaskJpaRepository abstractTaskJpaRepository;
     @Autowired
     protected SubtaskJpaRepository subtaskJpaRepository;
+    @Autowired
+    protected EpicTaskJpaRepository epicTaskJpaRepository;
+    @Autowired
+    protected SprintJpaRepository sprintJpaRepository;
+
     protected User user;
+    protected Project project;
+    protected EpicTask epicTask;
     protected Sprint sprint;
 
     @BeforeEach
@@ -78,6 +77,8 @@ public abstract class AbstractIntegrationTest {
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         abstractTaskJpaRepository.deleteAll();
+        epicTaskJpaRepository.deleteAll();
+        sprintJpaRepository.deleteAll();
         projectJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
     }
@@ -105,16 +106,15 @@ public abstract class AbstractIntegrationTest {
         project.setDescription("New test project");
         project.setHead(headUser);
         project.setNextTaskId(1);
-        project.setKey("P1");
+        project.setKey("GD");
         return projectJpaRepository.save(project);
     }
 
-    protected AbstractTask createSubtask() {
+    protected AbstractTask createSubtask(User user, Project project) {
         Subtask task = new Subtask();
-        user = createTestUser();
         task.setName("Test Subtask");
         task.setDescription("This is a test subtask");
-        task.setSimpleId("GD-1");
+        task.setSimpleId("GD-2");
         task.setType(TaskType.SUBTASK);
         task.setStatus(ShortCycleStatus.OPEN);
         task.setPriority(TaskPriority.MAJOR);
@@ -122,7 +122,7 @@ public abstract class AbstractIntegrationTest {
         task.setAssignee(user);
         task.setReviewer(user);
         task.setCreator(user);
-        task.setProject(null);
+        task.setProject(project);
         task.setDueDate(LocalDate.now().plusDays(7));
         task.setOrderNumber(BigDecimal.ONE);
         task.setTimeEstimation(null);
@@ -130,28 +130,56 @@ public abstract class AbstractIntegrationTest {
         return abstractTaskJpaRepository.save(task);
     }
 
-    protected AbstractTask createStoryTask() {
+    protected AbstractTask createStoryTask(User user, Project project, Sprint sprint, EpicTask epicTask) {
         StoryTask task = new StoryTask();
-        user = createTestUser();
         task.setName("Test StoryTask");
         task.setDescription("This is a test storytask");
-        task.setSimpleId("GD-2");
         task.setType(TaskType.STORY);
+        task.setSimpleId("GD-2");
         task.setStatus(FullCycleStatus.IN_PROGRESS);
         task.setPriority(TaskPriority.MAJOR);
         task.setStoryPoints(5);
         task.setAssignee(user);
+        task.setSprint(sprint);
+        task.setEpicTask(epicTask);
         task.setReviewer(user);
-        task.setSprint(null);
-        task.setEpicTask(null);
+        task.setSprint(sprint);
+        task.setEpicTask(epicTask);
         task.setTester(user);
         task.setCreator(user);
-        task.setProject(null);
+        task.setProject(project);
         task.setDueDate(LocalDate.now().plusDays(7));
         task.setOrderNumber(BigDecimal.ONE);
         task.setTimeEstimation(null);
         task.setTags(List.of());
         return abstractTaskJpaRepository.save(task);
+    }
+
+    protected Sprint createSprint(Project project) {
+        Sprint sprint = new Sprint();
+        sprint.setProject(project);
+        sprint.setCreated(Instant.now());
+        sprint.setName("sprint");
+        sprint.setStartDate(LocalDate.now().minusDays(1));
+        sprint.setEndDate(LocalDate.now().plusDays(14));
+        sprint.setIsActive(true);
+        return sprintJpaRepository.save(sprint);
+    }
+
+    protected EpicTask createEpic(User user, Project project) {
+        EpicTask epicTask = new EpicTask();
+        epicTask.setSimpleId("GD-3");
+        sprint.setStartDate(LocalDate.now().minusDays(1));
+        sprint.setEndDate(LocalDate.now().plusDays(14));
+        epicTask.setCreator(user);
+        epicTask.setStatus(ShortCycleStatus.OPEN);
+        epicTask.setName("Epic");
+        epicTask.setType(TaskType.EPIC);
+        epicTask.setDescription("description");
+        epicTask.setAssignee(user);
+        epicTask.setProject(project);
+        epicTask.setPriority(TaskPriority.MAJOR);
+        return epicTaskJpaRepository.save(epicTask);
     }
 
     // ===================================================================================================================

@@ -20,13 +20,13 @@ public class AbstractTaskRepositoryImpl implements AbstractTaskRepository {
     }
 
     @Override
-    public AbstractTask findById(UUID taskId) {
-        return abstractTaskJpaRepository.findById(taskId)
-                .orElseThrow(() -> new AbstractTaskNotFound(taskId));
+    public BigDecimal findNextOrderNumber(UUID taskId) {
+        return abstractTaskJpaRepository.findNextOrderNumber(taskId);
     }
 
     @Override
-    public BigDecimal findNextOrderNumber(UUID taskId) {
-        return abstractTaskJpaRepository.findNextOrderNumber(taskId);
+    public AbstractTask findBySimpleId(String simpleId) {
+        return abstractTaskJpaRepository.findBySimpleId(simpleId)
+                .orElseThrow(() -> new AbstractTaskNotFound(simpleId));
     }
 }

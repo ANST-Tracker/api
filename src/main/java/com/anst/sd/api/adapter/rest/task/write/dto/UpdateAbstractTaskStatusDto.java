@@ -1,10 +1,11 @@
 package com.anst.sd.api.adapter.rest.task.write.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import com.anst.sd.api.domain.task.FullCycleStatus;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class UpdateAbstractTaskStatusDto {
-    @NotBlank
-    private String status;
+    @NotNull
+    private FullCycleStatus status;
 }

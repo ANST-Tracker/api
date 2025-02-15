@@ -15,8 +15,4 @@ public class Subtask extends AbstractTask {
     @ManyToOne
     @JoinColumn(name = "story_task_id")
     private StoryTask storyTask;
-
-    public Subtask() {
-        this.status = ShortCycleStatus.OPEN;
-    }
 }

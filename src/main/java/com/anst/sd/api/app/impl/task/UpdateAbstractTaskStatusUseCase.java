@@ -18,9 +18,9 @@ public class UpdateAbstractTaskStatusUseCase implements UpdateAbstractTaskStatus
 
     @Override
     @Transactional
-    public AbstractTask updateStatus(UUID userId, UUID taskId, String status) {
-        AbstractTask task = abstractTaskRepository.findById(taskId);
-        log.info("Updating task status for taskId {} to new status: {}", task, status);
+    public AbstractTask updateStatus(UUID userId, String simpleId, String status) {
+        log.info("Updating task status for taskId {} to new status: {}", simpleId, status);
+        AbstractTask task = abstractTaskRepository.findBySimpleId(simpleId);
         if (task instanceof StoryTask storyTask) {
             FullCycleStatus statusEnum = FullCycleStatus.valueOf(status);
             storyTask.setStatus(statusEnum);

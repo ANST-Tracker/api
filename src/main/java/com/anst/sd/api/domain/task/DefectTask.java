@@ -23,8 +23,4 @@ public class DefectTask extends AbstractTask {
     @ManyToOne
     @JoinColumn(name = "story_task_id")
     private StoryTask storyTask;
-
-    public DefectTask() {
-        this.status = FullCycleStatus.OPEN;
-    }
 }

@@ -1,7 +1,7 @@
 create table public.abstract_task
 (
     id              uuid primary key,
-    simple_id varchar not null,
+    simple_id  varchar not null,
     name            varchar not null,
     description     varchar,
     type            varchar not null,
@@ -9,7 +9,7 @@ create table public.abstract_task
     story_points    bigint,
     assignee_id     uuid,
     reviewer_id     uuid,
-    creator_id uuid,
+    creator_id uuid    not null,
     project_id      uuid,
     due_date        varchar,
     order_number    numeric(13, 10),

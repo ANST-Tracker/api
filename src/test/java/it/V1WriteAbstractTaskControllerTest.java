@@ -10,8 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -21,9 +19,12 @@ class V1WriteAbstractTaskControllerTest extends AbstractIntegrationTest {
 
     @Test
     void createAbstractTask_successfully() throws Exception {
-        user = createTestUser();
         CreateAbstractTaskDto request = readFromFile("/V1WriteAbstractTaskControllerTest/createAbstractTask.json",
                 CreateAbstractTaskDto.class);
+        user = createTestUser();
+        project = createTestProject(user);
+        createSubtask(user, project);
+        request.setProjectId(project.getId());
 
         performAuthenticated(user, MockMvcRequestBuilders
                 .post(API_URL)
@@ -32,22 +33,24 @@ class V1WriteAbstractTaskControllerTest extends AbstractIntegrationTest {
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
-        AbstractTask task = abstractTaskJpaRepository.findAll().get(0);
-        assertEquals(request.getPriority(), task.getPriority());
-        assertEquals(request.getDescription(), task.getDescription());
-        assertEquals(request.getStoryPoints(), task.getStoryPoints());
-        assertEquals(request.getType(), task.getType());
+        AbstractTask response = abstractTaskJpaRepository.findAll().get(0);
+        assertEquals(request.getPriority(), response.getPriority());
+        assertEquals(request.getDescription(), response.getDescription());
+        assertEquals(request.getStoryPoints(), response.getStoryPoints());
+        assertEquals(request.getType(), response.getType());
     }
 
     @Test
     void updateAbstractTask_successfully() throws Exception {
-        AbstractTask originalTask = createSubtask();
-        UUID taskId = originalTask.getId();
+        user = createTestUser();
+        project = createTestProject(user);
+        AbstractTask originalTask = createSubtask(user, project);
+        String simpleId = originalTask.getSimpleId();
         UpdateAbstractTaskDto request = readFromFile("/V1WriteAbstractTaskControllerTest/updateAbstractTask.json",
                 UpdateAbstractTaskDto.class);
 
         performAuthenticated(user, MockMvcRequestBuilders
-                .put(API_URL + "/" + taskId.toString())
+                .put(API_URL + "/" + simpleId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
@@ -62,14 +65,16 @@ class V1WriteAbstractTaskControllerTest extends AbstractIntegrationTest {
 
     @Test
     void updateStatus_successfully() throws Exception {
-        AbstractTask original = createSubtask();
+        user = createTestUser();
+        project = createTestProject(user);
+        AbstractTask original = createSubtask(user, project);
         Subtask originalSubtask = subtaskJpaRepository.findAll().get(0);
-        UUID taskId = original.getId();
+        String simpleId = original.getSimpleId();
         UpdateAbstractTaskStatusDto request = readFromFile("/V1WriteAbstractTaskControllerTest/updateAbstractTaskStatus.json",
                 UpdateAbstractTaskStatusDto.class);
 
         performAuthenticated(user, MockMvcRequestBuilders
-                .put(API_URL + "/" + taskId.toString() + "/status")
+                .put(API_URL + "/" + simpleId + "/status")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())

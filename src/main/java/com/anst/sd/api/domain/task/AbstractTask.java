@@ -22,53 +22,39 @@ import java.util.List;
 @Getter
 @Setter
 public abstract class AbstractTask extends DomainObject {
-
     @Column(name = "simple_id", nullable = false)
     private String simpleId;
-
     @Column(nullable = false)
     private String name;
-
     @Column
     private String description;
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TaskType type;
-
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TaskPriority priority;
-
     @Column(name = "story_points")
     private Integer storyPoints;
-
     @ManyToOne
     @JoinColumn(name = "assignee_id")
     private User assignee;
-
     @ManyToOne
     @JoinColumn(name = "reviewer_id")
     private User reviewer;
-
     @ManyToOne(optional = false)
     @JoinColumn(name = "creator_id")
     private User creator;
-
     @ManyToOne(optional = false)
     @JoinColumn(name = "project_id")
     private Project project;
-
     @Column(name = "due_date")
     private LocalDate dueDate;
-
     @Column(name = "order_number", nullable = false)
     private BigDecimal orderNumber;
-
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "time_estimation")
     private TimeEstimation timeEstimation;
-
     @ManyToMany
     @JoinTable(
             name = "tasks_tags",

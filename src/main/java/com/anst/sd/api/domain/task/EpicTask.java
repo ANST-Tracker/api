@@ -16,8 +16,4 @@ public class EpicTask extends AbstractTask {
     private ShortCycleStatus status;
     @OneToMany(mappedBy = "epicTask")
     private List<StoryTask> stories;
-
-    public EpicTask() {
-        this.status = ShortCycleStatus.OPEN;
-    }
 }

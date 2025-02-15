@@ -21,9 +21,9 @@ public class UpdateAbstractTaskUseCase implements UpdateAbstractTaskInBound {
 
     @Override
     @Transactional
-    public AbstractTask update(UUID userId, UUID taskId, AbstractTask updated) {
-        log.info("Updating task with id {} and userId {}", taskId, userId);
-        AbstractTask original = abstractTaskRepository.findById(taskId);
+    public AbstractTask update(UUID userId, String simpleId, AbstractTask updated) {
+        log.info("Updating task with id {} and userId {}", simpleId, userId);
+        AbstractTask original = abstractTaskRepository.findBySimpleId(simpleId);
         mergeTask(original, updated);
         mergeSpecificFields(original, updated);
         return abstractTaskRepository.save(original);
@@ -44,18 +44,18 @@ public class UpdateAbstractTaskUseCase implements UpdateAbstractTaskInBound {
     }
 
     private void mergeSpecificFields(AbstractTask original, AbstractTask updated) {
-        if (updated instanceof Subtask subtask) {
-            ((Subtask) original).setStoryTask(subtask.getStoryTask());
+        if (original instanceof Subtask originalSubtask && updated instanceof Subtask subtask) {
+            originalSubtask.setStoryTask(subtask.getStoryTask());
         }
-        if (updated instanceof StoryTask story) {
-            ((StoryTask) original).setEpicTask(story.getEpicTask());
-            ((StoryTask) original).setTester(story.getTester());
-            ((StoryTask) original).setSprint(story.getSprint());
+        if (original instanceof StoryTask originalStory && updated instanceof StoryTask story) {
+            originalStory.setEpicTask(story.getEpicTask());
+            originalStory.setTester(story.getTester());
+            originalStory.setSprint(story.getSprint());
         }
-        if (updated instanceof DefectTask defect) {
-            ((DefectTask) original).setStoryTask(defect.getStoryTask());
-            ((DefectTask) original).setTester(defect.getTester());
-            ((DefectTask) original).setSprint(defect.getSprint());
+        if (original instanceof DefectTask originalDefect && updated instanceof DefectTask defect) {
+            originalDefect.setStoryTask(defect.getStoryTask());
+            originalDefect.setTester(defect.getTester());
+            originalDefect.setSprint(defect.getSprint());
         }
     }
 }

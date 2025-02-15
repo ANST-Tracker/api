@@ -9,7 +9,8 @@ import java.util.UUID;
 @Repository
 public interface AbstractTaskRepository {
     AbstractTask save(AbstractTask abstractTask);
-    AbstractTask findById(UUID taskId);
 
     BigDecimal findNextOrderNumber(UUID taskId);
+
+    AbstractTask findBySimpleId(String simpleId);
 }

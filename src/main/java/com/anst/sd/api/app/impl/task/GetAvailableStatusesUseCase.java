@@ -10,53 +10,52 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 @Slf4j
 public class GetAvailableStatusesUseCase implements GetAvailableStatusesInBound {
     private final AbstractTaskRepository abstractTaskRepository;
-    private final Map<FullCycleStatus, List<FullCycleStatus>> fullCycleTransitions = new EnumMap<>(FullCycleStatus.class);
-    private final Map<ShortCycleStatus, List<ShortCycleStatus>> shortCycleTransitions = new EnumMap<>(ShortCycleStatus.class);
+    private static final Map<FullCycleStatus, List<FullCycleStatus>> FULL_CYCLE_TRANSITIONS = new EnumMap<>(FullCycleStatus.class);
+    private static final Map<ShortCycleStatus, List<ShortCycleStatus>> SHORT_CYCLE_TRANSITIONS = new EnumMap<>(ShortCycleStatus.class);
 
     public GetAvailableStatusesUseCase(AbstractTaskRepository abstractTaskRepository) {
         this.abstractTaskRepository = abstractTaskRepository;
-        fullCycleTransitions.put(FullCycleStatus.OPEN, List.of(FullCycleStatus.IN_PROGRESS));
-        fullCycleTransitions.put(FullCycleStatus.IN_PROGRESS, List.of(FullCycleStatus.REVIEW, FullCycleStatus.RESOLVED));
-        fullCycleTransitions.put(FullCycleStatus.REVIEW, List.of(FullCycleStatus.RESOLVED, FullCycleStatus.QA_READY));
-        fullCycleTransitions.put(FullCycleStatus.RESOLVED, List.of(FullCycleStatus.QA_READY, FullCycleStatus.CLOSED));
-        fullCycleTransitions.put(FullCycleStatus.QA_READY, List.of(FullCycleStatus.IN_QA, FullCycleStatus.CLOSED));
-        fullCycleTransitions.put(FullCycleStatus.IN_QA, List.of(FullCycleStatus.CLOSED));
-        fullCycleTransitions.put(FullCycleStatus.CLOSED, List.of());
-        shortCycleTransitions.put(ShortCycleStatus.OPEN, List.of(ShortCycleStatus.IN_PROGRESS));
-        shortCycleTransitions.put(ShortCycleStatus.IN_PROGRESS, List.of(ShortCycleStatus.REVIEW, ShortCycleStatus.CLOSED));
-        shortCycleTransitions.put(ShortCycleStatus.REVIEW, List.of(ShortCycleStatus.CLOSED));
-        shortCycleTransitions.put(ShortCycleStatus.CLOSED, List.of());
+        FULL_CYCLE_TRANSITIONS.put(FullCycleStatus.OPEN, List.of(FullCycleStatus.IN_PROGRESS));
+        FULL_CYCLE_TRANSITIONS.put(FullCycleStatus.IN_PROGRESS, List.of(FullCycleStatus.REVIEW, FullCycleStatus.OPEN));
+        FULL_CYCLE_TRANSITIONS.put(FullCycleStatus.REVIEW, List.of(FullCycleStatus.RESOLVED, FullCycleStatus.OPEN));
+        FULL_CYCLE_TRANSITIONS.put(FullCycleStatus.RESOLVED, List.of(FullCycleStatus.QA_READY, FullCycleStatus.OPEN));
+        FULL_CYCLE_TRANSITIONS.put(FullCycleStatus.QA_READY, List.of(FullCycleStatus.IN_QA));
+        FULL_CYCLE_TRANSITIONS.put(FullCycleStatus.IN_QA, List.of(FullCycleStatus.CLOSED, FullCycleStatus.OPEN));
+        FULL_CYCLE_TRANSITIONS.put(FullCycleStatus.CLOSED, List.of());
+        SHORT_CYCLE_TRANSITIONS.put(ShortCycleStatus.OPEN, List.of(ShortCycleStatus.IN_PROGRESS));
+        SHORT_CYCLE_TRANSITIONS.put(ShortCycleStatus.IN_PROGRESS, List.of(ShortCycleStatus.REVIEW, ShortCycleStatus.OPEN));
+        SHORT_CYCLE_TRANSITIONS.put(ShortCycleStatus.REVIEW, List.of(ShortCycleStatus.CLOSED));
+        SHORT_CYCLE_TRANSITIONS.put(ShortCycleStatus.CLOSED, List.of());
     }
 
     @Override
     @Transactional
-    public List<SimpleDictionary> getAppropriateStatuses(UUID taskId) {
-        AbstractTask task = abstractTaskRepository.findById(taskId);
-        log.info("Getting appropriate statuses for taskId {}", task.getId());
+    public List<SimpleDictionary> getAppropriateStatuses(String simpleId) {
+        log.info("Getting appropriate statuses for task simpleId {}", simpleId);
+        AbstractTask task = abstractTaskRepository.findBySimpleId(simpleId);
         if (task instanceof StoryTask story) {
             FullCycleStatus current = story.getStatus();
-            List<FullCycleStatus> next = fullCycleTransitions.getOrDefault(current, List.of());
+            List<FullCycleStatus> next = FULL_CYCLE_TRANSITIONS.getOrDefault(current, List.of());
             return toSimpleDictionaryList(next);
         }
         if (task instanceof DefectTask defect) {
             FullCycleStatus current = defect.getStatus();
-            List<FullCycleStatus> next = fullCycleTransitions.getOrDefault(current, List.of());
+            List<FullCycleStatus> next = FULL_CYCLE_TRANSITIONS.getOrDefault(current, List.of());
             return toSimpleDictionaryList(next);
         }
         if (task instanceof EpicTask epic) {
             ShortCycleStatus current = epic.getStatus();
-            List<ShortCycleStatus> next = shortCycleTransitions.getOrDefault(current, List.of());
+            List<ShortCycleStatus> next = SHORT_CYCLE_TRANSITIONS.getOrDefault(current, List.of());
             return toSimpleDictionaryList(next);
         }
         if (task instanceof Subtask subtask) {
             ShortCycleStatus current = subtask.getStatus();
-            List<ShortCycleStatus> next = shortCycleTransitions.getOrDefault(current, List.of());
+            List<ShortCycleStatus> next = SHORT_CYCLE_TRANSITIONS.getOrDefault(current, List.of());
             return toSimpleDictionaryList(next);
         }
         return List.of();

@@ -1,15 +1,13 @@
 {
-  "name": "name_ec83a7fed7a6",
-  "description": "description_86c64c67fe63",
+  "name": "Test Subtask",
+  "description": "This is a test subtask",
   "type": "SUBTASK",
   "priority": "MAJOR",
-  "storyPoints": 3,
+  "storyPoints": 5,
   "assigneeId": "84815256-3d29-4e43-a9ba-da5973b7c270",
   "reviewerId": "b89f4cdc-c518-436d-b4f6-c83ff9433f02",
-  "creatorId": "123e4567-e89b-12d3-a456-426614174001",
   "projectId": "bbfd72ce-640f-42ba-9fe9-46334dc40600",
   "dueDate": "2025-02-08",
-  "orderNumber": 0.00,
   "timeEstimation": {
     "timeUnit": "HOURS",
     "amount": 8

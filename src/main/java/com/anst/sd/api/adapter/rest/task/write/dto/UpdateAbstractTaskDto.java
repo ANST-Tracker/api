@@ -4,7 +4,6 @@ import com.anst.sd.api.domain.TimeEstimation;
 import com.anst.sd.api.domain.task.TaskPriority;
 import com.anst.sd.api.domain.task.TaskType;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,21 +21,16 @@ import java.util.UUID;
 public class UpdateAbstractTaskDto {
     @NotBlank
     String name;
-    @NotBlank
     String description;
-    @NotNull
     TaskType type;
-    @NotNull
     TaskPriority priority;
     Integer storyPoints;
     UUID assigneeId;
     UUID reviewerId;
     UUID testerId;
-    UUID projectId;
     UUID storyTaskId;
     UUID sprintId;
     LocalDate dueDate;
     TimeEstimation timeEstimation;
     List<UUID> tagIds;
-
 }
