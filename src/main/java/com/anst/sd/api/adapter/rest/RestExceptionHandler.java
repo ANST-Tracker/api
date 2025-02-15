@@ -1,5 +1,7 @@
 package com.anst.sd.api.adapter.rest;
 
+import com.anst.sd.api.app.api.project.ProjectNotFoundException;
+import com.anst.sd.api.app.api.project.ProjectValidationException;
 import com.anst.sd.api.app.api.user.UserNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,6 +33,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return super.handleExceptionInternal(ex, errorInfo, headers, statusCode, request);
     }
 
+    @ExceptionHandler({ProjectValidationException.class})
+    public ResponseEntity<Object> handleValidation(Exception ex) {
+        logger.error(ex.getMessage(), ex);
+        var errorInfo = createErrorInfo(CLIENT);
+        return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Object> handle(RuntimeException ex) {
         logger.error(ex.getMessage(), ex);
@@ -39,7 +48,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({
-            UserNotFoundException.class})
+            UserNotFoundException.class,
+            ProjectNotFoundException.class})
     public ResponseEntity<Object> handleNotFound(Exception ex) {
         logger.error(ex.getMessage(), ex);
         var errorInfo = createErrorInfo(CLIENT);

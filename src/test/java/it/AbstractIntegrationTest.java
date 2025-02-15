@@ -3,14 +3,17 @@ package it;
 import com.anst.sd.api.AnstApiTodoApplication;
 import com.anst.sd.api.adapter.persistence.relational.AbstractTaskJpaRepository;
 import com.anst.sd.api.adapter.persistence.relational.SubtaskJpaRepository;
+import com.anst.sd.api.adapter.persistence.relational.ProjectJpaRepository;
 import com.anst.sd.api.adapter.persistence.relational.UserJpaRepository;
 import com.anst.sd.api.domain.sprint.Sprint;
 import com.anst.sd.api.domain.task.*;
+import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.user.Position;
 import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.security.app.api.JwtResponse;
 import com.anst.sd.api.security.app.impl.JwtService;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -58,6 +61,12 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     protected UserJpaRepository userJpaRepository;
     @Autowired
+    protected JdbcTemplate jdbcTemplate;
+    @Autowired
+    protected ProjectJpaRepository projectJpaRepository;
+
+    protected User user;
+    protected Project project;
     protected AbstractTaskJpaRepository abstractTaskJpaRepository;
     @Autowired
     protected SubtaskJpaRepository subtaskJpaRepository;
@@ -69,6 +78,7 @@ public abstract class AbstractIntegrationTest {
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         abstractTaskJpaRepository.deleteAll();
+        projectJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
     }
 
@@ -87,6 +97,16 @@ public abstract class AbstractIntegrationTest {
         user.setTimeZone(1);
         user.setCreated(Instant.now());
         return userJpaRepository.save(user);
+    }
+
+    protected Project createTestProject(User headUser) {
+        Project project = new Project();
+        project.setName("Project1");
+        project.setDescription("New test project");
+        project.setHead(headUser);
+        project.setNextTaskId(1);
+        project.setKey("P1");
+        return projectJpaRepository.save(project);
     }
 
     protected AbstractTask createSubtask() {
