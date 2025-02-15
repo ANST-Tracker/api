@@ -73,9 +73,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({
-            UserNotFoundException.class,
-            ProjectNotFoundException.class,
-            UserCodeNotFoundException.class
+        UserNotFoundException.class,
+        ProjectNotFoundException.class,
+        UserCodeNotFoundException.class
     })
     public ResponseEntity<Object> handleNotFound(Exception ex) {
         logger.error(ex.getMessage(), ex);
