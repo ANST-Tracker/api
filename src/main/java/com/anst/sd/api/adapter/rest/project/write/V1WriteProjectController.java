@@ -7,7 +7,6 @@ import com.anst.sd.api.adapter.rest.project.write.dto.UpdateProjectDto;
 import com.anst.sd.api.app.api.project.CreateProjectInbound;
 import com.anst.sd.api.app.api.project.ProjectValidationException;
 import com.anst.sd.api.app.api.project.UpdateProjectInbound;
-import com.anst.sd.api.app.api.project.UpdateProjectNextTaskIdInbound;
 import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.security.app.impl.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +28,6 @@ public class V1WriteProjectController {
     private final JwtService jwtService;
     private final CreateProjectInbound createProjectInbound;
     private final UpdateProjectInbound updateProjectInbound;
-    private final UpdateProjectNextTaskIdInbound updateProjectNextTaskIdInbound;
     private final ProjectDomainMapper projectDomainMapper;
 
     @Operation(
@@ -69,18 +67,5 @@ public class V1WriteProjectController {
         Project project = projectDomainMapper.mapToDomain(request);
         Project result = updateProjectInbound.update(id, project, jwtService.getJwtAuth().getUserId());
         return ResponseEntity.ok(new IdResponseDto(result.getId()));
-    }
-
-    @Operation(
-            summary = "Increment project next task id",
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            useReturnTypeSchema = true)
-            })
-    @PutMapping("/{id}/next-task-id")
-    public ResponseEntity<Void> updateProjectNextTaskId(@PathVariable UUID id) {
-        updateProjectNextTaskIdInbound.updateNextTaskId(id);
-        return ResponseEntity.ok().build();
     }
 }

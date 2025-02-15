@@ -204,4 +204,14 @@ public abstract class AbstractIntegrationTest {
         user.setCreated(Instant.now());
         return userJpaRepository.save(user);
     }
+
+    protected Project createTestProject(User headUser) {
+        Project project = new Project();
+        project.setName("Project1");
+        project.setDescription("New test project");
+        project.setHead(headUser);
+        project.setNextTaskId(1);
+        project.setKey("P1");
+        return projectJpaRepository.save(project);
+    }
 }

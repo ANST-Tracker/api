@@ -14,7 +14,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 
 class V1WriteProjectControllerTest extends AbstractIntegrationTest {
     private static final String API_URL = "/project";
-    private static final String PROJECT_NEXT_TASK_ID_URL = "/next-task-id";
 
     @Test
     void updateProject_successfully() throws Exception {
@@ -110,21 +109,5 @@ class V1WriteProjectControllerTest extends AbstractIntegrationTest {
             .content(objectMapper.writeValueAsString(request)))
             .andDo(print())
             .andExpect(MockMvcResultMatchers.status().isBadRequest());
-    }
-
-    @Test
-    void updateProjectNextTaskId_successfully() throws Exception {
-        User user = createTestUser();
-        Project project = createTestProject(user);
-        Integer nextTaskId = 2;
-
-        performAuthenticated(user, MockMvcRequestBuilders
-                .put(API_URL + "/" + project.getId() + "/" + PROJECT_NEXT_TASK_ID_URL)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isOk());
-
-        project = projectJpaRepository.findAll().get(0);
-        assertEquals(nextTaskId, project.getNextTaskId());
     }
 }
