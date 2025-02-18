@@ -1,13 +1,10 @@
 package it;
 
 import com.anst.sd.api.AnstApiTodoApplication;
-import com.anst.sd.api.adapter.persistence.relational.ProjectJpaRepository;
 import com.anst.sd.api.adapter.persistence.mongo.UserCodeMongoRepository;
-import com.anst.sd.api.adapter.persistence.relational.DeviceJpaRepository;
-import com.anst.sd.api.adapter.persistence.relational.UserJpaRepository;
 import com.anst.sd.api.adapter.persistence.relational.*;
-import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.adapter.telegram.CreateUserCodeMessageSupplier;
+import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.sprint.Sprint;
 import com.anst.sd.api.domain.task.*;
 import com.anst.sd.api.domain.user.Position;
@@ -53,9 +50,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 public abstract class AbstractIntegrationTest {
     protected static final UUID DEVICE_ID = UUID.randomUUID();
     protected static final String USER_PASSWORD = UUID.randomUUID().toString();
-
-    protected User user;
-    protected Project project;
 
     @Autowired
     protected MockMvc mockMvc;
@@ -307,31 +301,5 @@ public abstract class AbstractIntegrationTest {
     private String createAuthData(User user) {
         JwtResponse result = jwtService.generateAccessRefreshTokens(user.getUsername(), user.getId(), DEVICE_ID);
         return result.getAccessToken();
-    }
-
-    protected User createTestUser() {
-        User user = new User();
-        user.setUsername("username");
-        user.setPassword(passwordEncoder.encode(USER_PASSWORD));
-        user.setFirstName("firstName");
-        user.setLastName("lastName");
-        user.setTelegramId("telegramId");
-        user.setDepartmentName("departmentName");
-        user.setEmail("email");
-        user.setPosition(Position.PM);
-        user.setRegistrationDate(LocalDate.now());
-        user.setTimeZone(5);
-        user.setCreated(Instant.now());
-        return userJpaRepository.save(user);
-    }
-
-    protected Project createTestProject(User headUser) {
-        Project project = new Project();
-        project.setName("Project1");
-        project.setDescription("New test project");
-        project.setHead(headUser);
-        project.setNextTaskId(1);
-        project.setKey("P1");
-        return projectJpaRepository.save(project);
     }
 }
