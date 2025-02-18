@@ -2,7 +2,5 @@
   "id": "e4d909c2-90d0-fb1c-a068-ffaddf22cbd0",
   "name": "Project1",
   "description": "New test project",
-  "head": {
-    "username": "username"
-  }
+  "headId": "cce819d0-07f5-4a41-8bdb-082b93669b8e"
 }

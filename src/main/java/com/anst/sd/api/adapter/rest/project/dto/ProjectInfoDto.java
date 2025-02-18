@@ -1,6 +1,5 @@
 package com.anst.sd.api.adapter.rest.project.dto;
 
-import com.anst.sd.api.domain.user.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -20,5 +19,5 @@ public class ProjectInfoDto {
     String name;
     String description;
     @NotNull
-    User head;
+    UUID headId;
 }

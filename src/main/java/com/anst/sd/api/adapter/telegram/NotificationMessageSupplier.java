@@ -1,5 +1,6 @@
 package com.anst.sd.api.adapter.telegram;
 
+import com.anst.sd.api.adapter.telegram.dto.KafkaMessageMapper;
 import com.anst.sd.api.adapter.telegram.dto.NotificationDto;
 import com.anst.sd.api.app.api.notification.SendNotificationOutbound;
 import com.anst.sd.api.domain.notification.Notification;

@@ -6,8 +6,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
-class ProjectInfoDtoMapperTest extends AbstractUnitTest {
+import java.util.ArrayList;
+import java.util.List;
 
+class ProjectInfoDtoMapperTest extends AbstractUnitTest {
     private ProjectInfoDtoMapper mapper;
 
     @BeforeEach
@@ -22,5 +24,17 @@ class ProjectInfoDtoMapperTest extends AbstractUnitTest {
         ProjectInfoDto dto = mapper.mapToDto(project);
 
         assertEqualsToFile("/ProjectInfoDtoMapperTest/projectInfoDto.json", dto);
+    }
+
+    @Test
+    void mapToDtoList() {
+        List<Project> list = new ArrayList<>();
+        for(int i = 0; i < 3;i++){
+            list.add(readFromFile("/ProjectInfoDtoMapperTest/project.json", Project.class));
+        }
+
+        List<ProjectInfoDto> dto = mapper.mapToDto(list);
+
+        assertEqualsToFile("/ProjectInfoDtoMapperTest/listProjectInfoDto.json", dto);
     }
 }

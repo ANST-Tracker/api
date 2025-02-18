@@ -1,8 +1,13 @@
 package it;
 
 import com.anst.sd.api.AnstApiTodoApplication;
+import com.anst.sd.api.adapter.persistence.relational.ProjectJpaRepository;
+import com.anst.sd.api.adapter.persistence.mongo.UserCodeMongoRepository;
+import com.anst.sd.api.adapter.persistence.relational.DeviceJpaRepository;
+import com.anst.sd.api.adapter.persistence.relational.UserJpaRepository;
 import com.anst.sd.api.adapter.persistence.relational.*;
 import com.anst.sd.api.domain.project.Project;
+import com.anst.sd.api.adapter.telegram.CreateUserCodeMessageSupplier;
 import com.anst.sd.api.domain.sprint.Sprint;
 import com.anst.sd.api.domain.task.*;
 import com.anst.sd.api.domain.user.Position;
@@ -21,6 +26,8 @@ import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -44,7 +51,11 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @ActiveProfiles({"test"})
 @AutoConfigureMockMvc
 public abstract class AbstractIntegrationTest {
-    protected static final UUID DEVICE_UUID = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
+    protected static final UUID DEVICE_ID = UUID.randomUUID();
+    protected static final String USER_PASSWORD = UUID.randomUUID().toString();
+
+    protected User user;
+    protected Project project;
 
     @Autowired
     protected MockMvc mockMvc;
@@ -57,6 +68,13 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     protected UserJpaRepository userJpaRepository;
     @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    protected DeviceJpaRepository deviceJpaRepository;
+    @Autowired
+    protected UserCodeMongoRepository userCodeMongoRepository;
+    @MockBean
+    protected CreateUserCodeMessageSupplier createUserCodeMessageSupplier;
     protected ProjectJpaRepository projectJpaRepository;
     @Autowired
     protected AbstractTaskJpaRepository abstractTaskJpaRepository;
@@ -80,6 +98,8 @@ public abstract class AbstractIntegrationTest {
         epicTaskJpaRepository.deleteAll();
         sprintJpaRepository.deleteAll();
         projectJpaRepository.deleteAll();
+        userCodeMongoRepository.deleteAll();
+        deviceJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
     }
 
@@ -285,7 +305,33 @@ public abstract class AbstractIntegrationTest {
     // ===================================================================================================================
 
     private String createAuthData(User user) {
-        JwtResponse result = jwtService.generateAccessRefreshTokens(user.getUsername(), user.getId(), DEVICE_UUID);
+        JwtResponse result = jwtService.generateAccessRefreshTokens(user.getUsername(), user.getId(), DEVICE_ID);
         return result.getAccessToken();
+    }
+
+    protected User createTestUser() {
+        User user = new User();
+        user.setUsername("username");
+        user.setPassword(passwordEncoder.encode(USER_PASSWORD));
+        user.setFirstName("firstName");
+        user.setLastName("lastName");
+        user.setTelegramId("telegramId");
+        user.setDepartmentName("departmentName");
+        user.setEmail("email");
+        user.setPosition(Position.PM);
+        user.setRegistrationDate(LocalDate.now());
+        user.setTimeZone(5);
+        user.setCreated(Instant.now());
+        return userJpaRepository.save(user);
+    }
+
+    protected Project createTestProject(User headUser) {
+        Project project = new Project();
+        project.setName("Project1");
+        project.setDescription("New test project");
+        project.setHead(headUser);
+        project.setNextTaskId(1);
+        project.setKey("P1");
+        return projectJpaRepository.save(project);
     }
 }

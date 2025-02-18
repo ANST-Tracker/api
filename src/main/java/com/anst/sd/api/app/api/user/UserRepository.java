@@ -8,4 +8,6 @@ public interface UserRepository {
     User getByUsername(String username);
 
     User getById(UUID id);
+
+    User save(User user);
 }

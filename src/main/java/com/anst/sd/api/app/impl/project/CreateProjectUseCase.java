@@ -21,9 +21,8 @@ public class CreateProjectUseCase implements CreateProjectInbound {
     @Override
     @Transactional
     public Project create(Project project, UUID userId) {
-        log.info("Creating project named {} ID {}, with head ID {}, created by user with ID {}",
+        log.info("Creating project named {}, with head ID {}, created by user with ID {}",
                 project.getName(),
-                project.getId(),
                 project.getHead().getId(),
                 userId);
         project.setHead(userRepository.getById(project.getHead().getId()));
