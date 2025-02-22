@@ -1,9 +1,10 @@
 package com.anst.sd.api.adapter.rest;
 
-import com.anst.sd.api.app.api.security.CodeAlreadySentException;
-import com.anst.sd.api.app.api.security.UserCodeNotFoundException;
 import com.anst.sd.api.app.api.project.ProjectNotFoundException;
 import com.anst.sd.api.app.api.project.ProjectValidationException;
+import com.anst.sd.api.app.api.security.CodeAlreadySentException;
+import com.anst.sd.api.app.api.security.UserCodeNotFoundException;
+import com.anst.sd.api.app.api.task.AbstractTaskNotFound;
 import com.anst.sd.api.app.api.user.UserNotFoundException;
 import com.anst.sd.api.security.app.api.AuthException;
 import org.springframework.http.HttpHeaders;
@@ -75,7 +76,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({
         UserNotFoundException.class,
         ProjectNotFoundException.class,
-        UserCodeNotFoundException.class
+            UserCodeNotFoundException.class,
+            AbstractTaskNotFound.class,
     })
     public ResponseEntity<Object> handleNotFound(Exception ex) {
         logger.error(ex.getMessage(), ex);

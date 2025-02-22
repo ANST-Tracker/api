@@ -10,8 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 class V1WriteAbstractTaskControllerTest extends AbstractIntegrationTest {
@@ -33,11 +32,32 @@ class V1WriteAbstractTaskControllerTest extends AbstractIntegrationTest {
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
-        AbstractTask response = abstractTaskJpaRepository.findAll().get(0);
-        assertEquals(request.getPriority(), response.getPriority());
-        assertEquals(request.getDescription(), response.getDescription());
-        assertEquals(request.getStoryPoints(), response.getStoryPoints());
-        assertEquals(request.getType(), response.getType());
+        AbstractTask result = abstractTaskJpaRepository.findAll().get(0);
+        assertEquals(request.getPriority(), result.getPriority());
+        assertEquals(request.getDescription(), result.getDescription());
+        assertEquals(request.getStoryPoints(), result.getStoryPoints());
+        assertEquals(request.getType(), result.getType());
+        assertNotNull(result.getProject());
+        assertNotNull(result.getCreator());
+        assertNotNull(result.getAssignee());
+    }
+
+    @Test
+    void createAbstractTask_invalidDto_returnsBadRequest() throws Exception {
+        CreateAbstractTaskDto request = readFromFile("/V1WriteAbstractTaskControllerTest/createAbstractTask.json",
+                CreateAbstractTaskDto.class);
+        request.setName(null);
+
+        user = createTestUser();
+        project = createTestProject(user);
+        request.setProjectId(project.getId());
+
+        performAuthenticated(user, MockMvcRequestBuilders
+                .post(API_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
@@ -55,12 +75,47 @@ class V1WriteAbstractTaskControllerTest extends AbstractIntegrationTest {
                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
-        AbstractTask updateResponse = abstractTaskJpaRepository.findAll().get(0);
+        AbstractTask updateResult = abstractTaskJpaRepository.findAll().get(0);
 
-        assertNotEquals(originalTask.getName(), updateResponse.getName());
-        assertNotEquals(originalTask.getDescription(), updateResponse.getDescription());
-        assertNotEquals(originalTask.getPriority(), updateResponse.getPriority());
-        assertNotEquals(originalTask.getTimeEstimation(), updateResponse.getTimeEstimation());
+        assertNotEquals(originalTask.getName(), updateResult.getName());
+        assertNotEquals(originalTask.getDescription(), updateResult.getDescription());
+        assertNotEquals(originalTask.getPriority(), updateResult.getPriority());
+        assertNotEquals(originalTask.getTimeEstimation(), updateResult.getTimeEstimation());
+    }
+
+    @Test
+    void updateAbstractTask_nonExistentSimpleId_returnsNotFound() throws Exception {
+        user = createTestUser();
+        project = createTestProject(user);
+        createSubtask(user, project);
+        String nonExistentSimpleId = "NON_EXISTENT_ID";
+        UpdateAbstractTaskDto request = readFromFile("/V1WriteAbstractTaskControllerTest/updateAbstractTask.json",
+                UpdateAbstractTaskDto.class);
+
+        performAuthenticated(user, MockMvcRequestBuilders
+                .put(API_URL + "/" + nonExistentSimpleId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    void updateAbstractTask_invalidDto_returnsBadRequest() throws Exception {
+        user = createTestUser();
+        project = createTestProject(user);
+        AbstractTask originalTask = createSubtask(user, project);
+        String simpleId = originalTask.getSimpleId();
+        UpdateAbstractTaskDto request = readFromFile("/V1WriteAbstractTaskControllerTest/updateAbstractTask.json",
+                UpdateAbstractTaskDto.class);
+        request.setName(null);
+
+        performAuthenticated(user, MockMvcRequestBuilders
+                .put(API_URL + "/" + simpleId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
@@ -84,4 +139,39 @@ class V1WriteAbstractTaskControllerTest extends AbstractIntegrationTest {
         assertNotEquals(originalSubtask.getStatus(), updateResponse.getStatus());
     }
 
+    @Test
+    void updateStatus_nonExistentSimpleId_returnsNotFound() throws Exception {
+        user = createTestUser();
+        project = createTestProject(user);
+        createSubtask(user, project);
+
+        String nonExistentSimpleId = "NON_EXISTENT_ID";
+        UpdateAbstractTaskStatusDto request = readFromFile("/V1WriteAbstractTaskControllerTest/updateAbstractTaskStatus.json",
+                UpdateAbstractTaskStatusDto.class);
+
+        performAuthenticated(user, MockMvcRequestBuilders
+                .put(API_URL + "/" + nonExistentSimpleId + "/status")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    void updateStatus_invalidStatusValue_returnsBadRequest() throws Exception {
+        user = createTestUser();
+        project = createTestProject(user);
+        AbstractTask original = createSubtask(user, project);
+        String simpleId = original.getSimpleId();
+        UpdateAbstractTaskStatusDto request = readFromFile("/V1WriteAbstractTaskControllerTest/updateAbstractTaskStatus.json",
+                UpdateAbstractTaskStatusDto.class);
+        request.setStatus(null);
+
+        performAuthenticated(user, MockMvcRequestBuilders
+                .put(API_URL + "/" + simpleId + "/status")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
 }

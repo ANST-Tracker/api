@@ -69,6 +69,7 @@ public abstract class AbstractIntegrationTest {
     protected UserCodeMongoRepository userCodeMongoRepository;
     @MockBean
     protected CreateUserCodeMessageSupplier createUserCodeMessageSupplier;
+    @Autowired
     protected ProjectJpaRepository projectJpaRepository;
     @Autowired
     protected AbstractTaskJpaRepository abstractTaskJpaRepository;
@@ -131,16 +132,7 @@ public abstract class AbstractIntegrationTest {
         task.setSimpleId("GD-2");
         task.setType(TaskType.SUBTASK);
         task.setStatus(ShortCycleStatus.OPEN);
-        task.setPriority(TaskPriority.MAJOR);
-        task.setStoryPoints(5);
-        task.setAssignee(user);
-        task.setReviewer(user);
-        task.setCreator(user);
-        task.setProject(project);
-        task.setDueDate(LocalDate.now().plusDays(7));
-        task.setOrderNumber(BigDecimal.ONE);
-        task.setTimeEstimation(null);
-        task.setTags(List.of());
+        fillAbstractTaskFields(task, user, project);
         return abstractTaskJpaRepository.save(task);
     }
 
@@ -148,24 +140,13 @@ public abstract class AbstractIntegrationTest {
         StoryTask task = new StoryTask();
         task.setName("Test StoryTask");
         task.setDescription("This is a test storytask");
-        task.setType(TaskType.STORY);
         task.setSimpleId("GD-2");
+        task.setType(TaskType.STORY);
         task.setStatus(FullCycleStatus.IN_PROGRESS);
-        task.setPriority(TaskPriority.MAJOR);
-        task.setStoryPoints(5);
-        task.setAssignee(user);
-        task.setSprint(sprint);
-        task.setEpicTask(epicTask);
-        task.setReviewer(user);
+        fillAbstractTaskFields(task, user, project);
         task.setSprint(sprint);
         task.setEpicTask(epicTask);
         task.setTester(user);
-        task.setCreator(user);
-        task.setProject(project);
-        task.setDueDate(LocalDate.now().plusDays(7));
-        task.setOrderNumber(BigDecimal.ONE);
-        task.setTimeEstimation(null);
-        task.setTags(List.of());
         return abstractTaskJpaRepository.save(task);
     }
 
@@ -183,17 +164,26 @@ public abstract class AbstractIntegrationTest {
     protected EpicTask createEpic(User user, Project project) {
         EpicTask epicTask = new EpicTask();
         epicTask.setSimpleId("GD-3");
-        sprint.setStartDate(LocalDate.now().minusDays(1));
-        sprint.setEndDate(LocalDate.now().plusDays(14));
-        epicTask.setCreator(user);
-        epicTask.setStatus(ShortCycleStatus.OPEN);
         epicTask.setName("Epic");
         epicTask.setType(TaskType.EPIC);
+        epicTask.setStatus(ShortCycleStatus.OPEN);
         epicTask.setDescription("description");
-        epicTask.setAssignee(user);
-        epicTask.setProject(project);
-        epicTask.setPriority(TaskPriority.MAJOR);
+        fillAbstractTaskFields(epicTask, user, project);
         return epicTaskJpaRepository.save(epicTask);
+    }
+
+    protected <T extends AbstractTask> T fillAbstractTaskFields(T task, User user, Project project) {
+        task.setPriority(TaskPriority.MAJOR);
+        task.setStoryPoints(5);
+        task.setAssignee(user);
+        task.setReviewer(user);
+        task.setCreator(user);
+        task.setProject(project);
+        task.setDueDate(LocalDate.now().plusDays(7));
+        task.setOrderNumber(BigDecimal.ONE);
+        task.setTimeEstimation(null);
+        task.setTags(List.of());
+        return task;
     }
 
     // ===================================================================================================================

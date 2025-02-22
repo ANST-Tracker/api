@@ -1,7 +1,6 @@
 package com.anst.sd.api.adapter.rest.task.write;
 
 import com.anst.sd.api.adapter.rest.task.dto.AbstractTaskDomainMapper;
-import com.anst.sd.api.adapter.rest.task.dto.AbstractTaskDtoMapper;
 import com.anst.sd.api.adapter.rest.task.dto.IdResponseDto;
 import com.anst.sd.api.adapter.rest.task.write.dto.CreateAbstractTaskDto;
 import com.anst.sd.api.adapter.rest.task.write.dto.UpdateAbstractTaskDto;
@@ -29,7 +28,6 @@ public class V1WriteAbstractTaskController {
     private final UpdateAbstractTaskStatusInBound updateAbstractTaskStatusInBound;
     private final JwtService jwtService;
     private final AbstractTaskDomainMapper abstractTaskDomainMapper;
-    private final AbstractTaskDtoMapper abstractTaskDtoMapper;
 
     @Operation(
             summary = "Create a new task",
@@ -45,7 +43,7 @@ public class V1WriteAbstractTaskController {
     public ResponseEntity<IdResponseDto> create(@Valid @RequestBody CreateAbstractTaskDto request) {
         AbstractTask task = abstractTaskDomainMapper.mapToDomain(request);
         AbstractTask result = createAbstractTaskInBound.create(jwtService.getJwtAuth().getUserId(), task);
-        return ResponseEntity.ok(abstractTaskDtoMapper.mapToDto(result));
+        return ResponseEntity.ok(new IdResponseDto(result.getId()));
     }
 
     @Operation(
@@ -64,7 +62,7 @@ public class V1WriteAbstractTaskController {
     ) {
         AbstractTask task = abstractTaskDomainMapper.mapToDomain(request);
         AbstractTask result = updateAbstractTaskInBound.update(jwtService.getJwtAuth().getUserId(), simpleId, task);
-        return ResponseEntity.ok(abstractTaskDtoMapper.mapToDto(result));
+        return ResponseEntity.ok(new IdResponseDto(result.getId()));
     }
 
     @Operation(
@@ -86,6 +84,6 @@ public class V1WriteAbstractTaskController {
                 simpleId,
                 request.getStatus().toString()
         );
-        return ResponseEntity.ok(abstractTaskDtoMapper.mapToDto(updated));
+        return ResponseEntity.ok(new IdResponseDto(updated.getId()));
     }
 }

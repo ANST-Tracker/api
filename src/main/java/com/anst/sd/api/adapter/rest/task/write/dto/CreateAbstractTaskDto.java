@@ -29,6 +29,7 @@ public class CreateAbstractTaskDto {
     TaskPriority priority;
     @NotNull
     Integer storyPoints;
+    UUID sprintId;
     UUID assigneeId;
     UUID reviewerId;
     UUID projectId;

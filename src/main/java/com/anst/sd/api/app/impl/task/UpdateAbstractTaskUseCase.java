@@ -1,7 +1,9 @@
 package com.anst.sd.api.app.impl.task;
 
+import com.anst.sd.api.app.api.project.ProjectRepository;
 import com.anst.sd.api.app.api.task.AbstractTaskRepository;
 import com.anst.sd.api.app.api.task.UpdateAbstractTaskInBound;
+import com.anst.sd.api.app.api.user.UserRepository;
 import com.anst.sd.api.domain.task.AbstractTask;
 import com.anst.sd.api.domain.task.DefectTask;
 import com.anst.sd.api.domain.task.StoryTask;
@@ -18,6 +20,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UpdateAbstractTaskUseCase implements UpdateAbstractTaskInBound {
     private final AbstractTaskRepository abstractTaskRepository;
+    private final UserRepository userRepository;
+    private final ProjectRepository projectRepository;
 
     @Override
     @Transactional
@@ -35,9 +39,15 @@ public class UpdateAbstractTaskUseCase implements UpdateAbstractTaskInBound {
         original.setType(updated.getType());
         original.setPriority(updated.getPriority());
         original.setStoryPoints(updated.getStoryPoints());
-        original.setAssignee(updated.getAssignee());
-        original.setReviewer(updated.getReviewer());
-        original.setProject(updated.getProject());
+        if (updated.getAssignee() != null && updated.getAssignee().getId() != null) {
+            original.setAssignee(userRepository.getById(updated.getAssignee().getId()));
+        }
+        if (updated.getReviewer() != null && updated.getReviewer().getId() != null) {
+            original.setReviewer(userRepository.getById(updated.getReviewer().getId()));
+        }
+        if (updated.getProject() != null && updated.getProject().getId() != null) {
+            original.setProject(projectRepository.getById(updated.getProject().getId()));
+        }
         original.setDueDate(updated.getDueDate());
         original.setTimeEstimation(updated.getTimeEstimation());
         original.setTags(updated.getTags());

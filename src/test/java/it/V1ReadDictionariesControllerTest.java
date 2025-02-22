@@ -11,7 +11,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 class V1ReadDictionariesControllerTest extends AbstractIntegrationTest {
-
     private static final String API_URL = "/dictionaries/";
 
     @Test
@@ -24,6 +23,7 @@ class V1ReadDictionariesControllerTest extends AbstractIntegrationTest {
                 .get(API_URL + subtask.getSimpleId() + "/appropriate-statuses")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
+
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].code", is("IN_PROGRESS")))
@@ -42,6 +42,7 @@ class V1ReadDictionariesControllerTest extends AbstractIntegrationTest {
                 .get(API_URL + storyTask.getSimpleId() + "/appropriate-statuses")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
+
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$[0].code").value("REVIEW"))
