@@ -1,0 +1,10 @@
+{
+  "name": "Test Subtask",
+  "description": "Subtask description",
+  "type": "SUBTASK",
+  "project": {
+    "id": "550e8400-e29b-41d4-a716-446655440000"
+  },
+  "tags": [],
+  "status": "OPEN"
+}
