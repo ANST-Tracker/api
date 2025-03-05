@@ -11,7 +11,7 @@ import org.mapstruct.Named;
 public interface AbstractTaskDomainMapper {
     @Mapping(target = "type", constant = "EPIC")
     @Mapping(source = "projectId", target = "project.id")
-    @Mapping(target = "status", expression = "java(com.anst.sd.api.domain.task.ShortCycleStatus.OPEN)")
+    @Mapping(target = "status", expression = "java(com.anst.sd.api.domain.task.TaskStatus.OPEN)")
     EpicTask toEpicTask(CreateAbstractTaskDto source);
 
     @Mapping(target = "type", constant = "EPIC")
@@ -19,7 +19,7 @@ public interface AbstractTaskDomainMapper {
 
     @Mapping(target = "type", constant = "STORY")
     @Mapping(source = "projectId", target = "project.id")
-    @Mapping(target = "status", expression = "java(com.anst.sd.api.domain.task.FullCycleStatus.OPEN)")
+    @Mapping(target = "status", expression = "java(com.anst.sd.api.domain.task.TaskStatus.OPEN)")
     StoryTask toStoryTask(CreateAbstractTaskDto source);
 
     @Mapping(target = "type", constant = "STORY")
@@ -27,7 +27,7 @@ public interface AbstractTaskDomainMapper {
 
     @Mapping(target = "type", constant = "SUBTASK")
     @Mapping(source = "projectId", target = "project.id")
-    @Mapping(target = "status", expression = "java(com.anst.sd.api.domain.task.ShortCycleStatus.OPEN)")
+    @Mapping(target = "status", expression = "java(com.anst.sd.api.domain.task.TaskStatus.OPEN)")
     Subtask toSubtask(CreateAbstractTaskDto source);
 
     @Mapping(target = "type", constant = "SUBTASK")
@@ -35,7 +35,7 @@ public interface AbstractTaskDomainMapper {
 
     @Mapping(target = "type", constant = "DEFECT")
     @Mapping(source = "projectId", target = "project.id")
-    @Mapping(target = "status", expression = "java(com.anst.sd.api.domain.task.FullCycleStatus.OPEN)")
+    @Mapping(target = "status", expression = "java(com.anst.sd.api.domain.task.TaskStatus.OPEN)")
     DefectTask toDefectTask(CreateAbstractTaskDto source);
 
     @Mapping(target = "type", constant = "DEFECT")

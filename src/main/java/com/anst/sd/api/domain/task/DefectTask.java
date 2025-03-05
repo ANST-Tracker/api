@@ -2,7 +2,10 @@ package com.anst.sd.api.domain.task;
 
 import com.anst.sd.api.domain.sprint.Sprint;
 import com.anst.sd.api.domain.user.User;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,9 +14,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class DefectTask extends AbstractTask {
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private FullCycleStatus status;
     @ManyToOne
     @JoinColumn(name = "tester_id")
     private User tester;

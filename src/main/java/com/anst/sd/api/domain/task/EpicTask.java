@@ -1,6 +1,8 @@
 package com.anst.sd.api.domain.task;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,9 +13,6 @@ import java.util.List;
 @Getter
 @Setter
 public class EpicTask extends AbstractTask {
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ShortCycleStatus status;
     @OneToMany(mappedBy = "epicTask")
     private List<StoryTask> stories;
 }

@@ -62,4 +62,7 @@ public abstract class AbstractTask extends DomainObject {
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     private List<Tag> tags = new ArrayList<>();
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TaskStatus status;
 }

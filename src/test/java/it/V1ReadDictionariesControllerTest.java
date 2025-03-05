@@ -1,11 +1,13 @@
 package it;
 
 import com.anst.sd.api.domain.task.AbstractTask;
+import com.anst.sd.api.domain.task.TaskStatus;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -19,11 +21,12 @@ class V1ReadDictionariesControllerTest extends AbstractIntegrationTest {
         project = createTestProject(user);
         AbstractTask subtask = createSubtask(user, project);
 
+        assertThat(subtask.getStatus()).isEqualTo(TaskStatus.OPEN);
+
         performAuthenticated(user, MockMvcRequestBuilders
                 .get(API_URL + subtask.getSimpleId() + "/appropriate-statuses")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(jsonPath("$[0].code", is("IN_PROGRESS")))
@@ -42,7 +45,6 @@ class V1ReadDictionariesControllerTest extends AbstractIntegrationTest {
                 .get(API_URL + storyTask.getSimpleId() + "/appropriate-statuses")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
                 .andExpect(jsonPath("$[0].code").value("REVIEW"))

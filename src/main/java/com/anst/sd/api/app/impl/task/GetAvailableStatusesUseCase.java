@@ -8,29 +8,40 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Service
 @Slf4j
 public class GetAvailableStatusesUseCase implements GetAvailableStatusesInBound {
+    private static final Map<Class<? extends AbstractTask>, Map<TaskStatus, List<TaskStatus>>> TRANSITIONS = new HashMap<>();
+
+    static {
+        Map<TaskStatus, List<TaskStatus>> fullCycleTransitions = new EnumMap<>(TaskStatus.class);
+        fullCycleTransitions.put(TaskStatus.OPEN, List.of(TaskStatus.IN_PROGRESS));
+        fullCycleTransitions.put(TaskStatus.IN_PROGRESS, List.of(TaskStatus.REVIEW, TaskStatus.OPEN));
+        fullCycleTransitions.put(TaskStatus.REVIEW, List.of(TaskStatus.RESOLVED, TaskStatus.OPEN));
+        fullCycleTransitions.put(TaskStatus.RESOLVED, List.of(TaskStatus.QA_READY, TaskStatus.OPEN));
+        fullCycleTransitions.put(TaskStatus.QA_READY, List.of(TaskStatus.IN_QA));
+        fullCycleTransitions.put(TaskStatus.IN_QA, List.of(TaskStatus.CLOSED, TaskStatus.OPEN));
+        fullCycleTransitions.put(TaskStatus.CLOSED, List.of());
+        TRANSITIONS.put(StoryTask.class, fullCycleTransitions);
+        TRANSITIONS.put(DefectTask.class, fullCycleTransitions);
+
+        Map<TaskStatus, List<TaskStatus>> shortCycleTransitions = new EnumMap<>(TaskStatus.class);
+        shortCycleTransitions.put(TaskStatus.OPEN, List.of(TaskStatus.IN_PROGRESS));
+        shortCycleTransitions.put(TaskStatus.IN_PROGRESS, List.of(TaskStatus.REVIEW, TaskStatus.OPEN));
+        shortCycleTransitions.put(TaskStatus.REVIEW, List.of(TaskStatus.CLOSED));
+        shortCycleTransitions.put(TaskStatus.CLOSED, List.of());
+        TRANSITIONS.put(EpicTask.class, shortCycleTransitions);
+        TRANSITIONS.put(Subtask.class, shortCycleTransitions);
+    }
+
     private final AbstractTaskRepository abstractTaskRepository;
-    private static final Map<FullCycleStatus, List<FullCycleStatus>> FULL_CYCLE_TRANSITIONS = new EnumMap<>(FullCycleStatus.class);
-    private static final Map<ShortCycleStatus, List<ShortCycleStatus>> SHORT_CYCLE_TRANSITIONS = new EnumMap<>(ShortCycleStatus.class);
 
     public GetAvailableStatusesUseCase(AbstractTaskRepository abstractTaskRepository) {
         this.abstractTaskRepository = abstractTaskRepository;
-        FULL_CYCLE_TRANSITIONS.put(FullCycleStatus.OPEN, List.of(FullCycleStatus.IN_PROGRESS));
-        FULL_CYCLE_TRANSITIONS.put(FullCycleStatus.IN_PROGRESS, List.of(FullCycleStatus.REVIEW, FullCycleStatus.OPEN));
-        FULL_CYCLE_TRANSITIONS.put(FullCycleStatus.REVIEW, List.of(FullCycleStatus.RESOLVED, FullCycleStatus.OPEN));
-        FULL_CYCLE_TRANSITIONS.put(FullCycleStatus.RESOLVED, List.of(FullCycleStatus.QA_READY, FullCycleStatus.OPEN));
-        FULL_CYCLE_TRANSITIONS.put(FullCycleStatus.QA_READY, List.of(FullCycleStatus.IN_QA));
-        FULL_CYCLE_TRANSITIONS.put(FullCycleStatus.IN_QA, List.of(FullCycleStatus.CLOSED, FullCycleStatus.OPEN));
-        FULL_CYCLE_TRANSITIONS.put(FullCycleStatus.CLOSED, List.of());
-        SHORT_CYCLE_TRANSITIONS.put(ShortCycleStatus.OPEN, List.of(ShortCycleStatus.IN_PROGRESS));
-        SHORT_CYCLE_TRANSITIONS.put(ShortCycleStatus.IN_PROGRESS, List.of(ShortCycleStatus.REVIEW, ShortCycleStatus.OPEN));
-        SHORT_CYCLE_TRANSITIONS.put(ShortCycleStatus.REVIEW, List.of(ShortCycleStatus.CLOSED));
-        SHORT_CYCLE_TRANSITIONS.put(ShortCycleStatus.CLOSED, List.of());
     }
 
     @Override
@@ -38,40 +49,26 @@ public class GetAvailableStatusesUseCase implements GetAvailableStatusesInBound 
     public List<SimpleDictionary> getAppropriateStatuses(String simpleId) {
         log.info("Getting appropriate statuses for task simpleId {}", simpleId);
         AbstractTask task = abstractTaskRepository.findBySimpleId(simpleId);
-        if (task instanceof StoryTask story) {
-            FullCycleStatus current = story.getStatus();
-            List<FullCycleStatus> next = FULL_CYCLE_TRANSITIONS.getOrDefault(current, List.of());
-            return toSimpleDictionaryList(next);
+        if (task == null) {
+            log.warn("Task with simpleId {} not found", simpleId);
+            return List.of();
         }
-        if (task instanceof DefectTask defect) {
-            FullCycleStatus current = defect.getStatus();
-            List<FullCycleStatus> next = FULL_CYCLE_TRANSITIONS.getOrDefault(current, List.of());
-            return toSimpleDictionaryList(next);
+
+        Map<TaskStatus, List<TaskStatus>> transitions = TRANSITIONS.get(task.getClass());
+        if (transitions != null) {
+            List<TaskStatus> nextStatuses = transitions.getOrDefault(task.getStatus(), List.of());
+            return toSimpleDictionaryList(nextStatuses);
         }
-        if (task instanceof EpicTask epic) {
-            ShortCycleStatus current = epic.getStatus();
-            List<ShortCycleStatus> next = SHORT_CYCLE_TRANSITIONS.getOrDefault(current, List.of());
-            return toSimpleDictionaryList(next);
-        }
-        if (task instanceof Subtask subtask) {
-            ShortCycleStatus current = subtask.getStatus();
-            List<ShortCycleStatus> next = SHORT_CYCLE_TRANSITIONS.getOrDefault(current, List.of());
-            return toSimpleDictionaryList(next);
-        }
+        log.warn("No transitions defined for task type {}", task.getClass().getSimpleName());
         return List.of();
     }
 
-    private List<SimpleDictionary> toSimpleDictionaryList(List<? extends Enum<?>> statuses) {
+    private List<SimpleDictionary> toSimpleDictionaryList(List<TaskStatus> statuses) {
         return statuses.stream()
-                .map(enumVal -> {
+                .map(status -> {
                     SimpleDictionary sd = new SimpleDictionary();
-                    sd.setCode(enumVal.name());
-                    if (enumVal instanceof FullCycleStatus f) {
-                        sd.setValue(f.getValue());
-                    }
-                    if (enumVal instanceof ShortCycleStatus s) {
-                        sd.setValue(s.getValue());
-                    }
+                    sd.setCode(status.name());
+                    sd.setValue(status.getValue());
                     return sd;
                 })
                 .toList();

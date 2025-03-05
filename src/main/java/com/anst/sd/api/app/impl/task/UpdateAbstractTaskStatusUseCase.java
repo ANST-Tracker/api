@@ -1,13 +1,17 @@
 package com.anst.sd.api.app.impl.task;
 
 import com.anst.sd.api.app.api.task.AbstractTaskRepository;
+import com.anst.sd.api.app.api.task.GetAvailableStatusesInBound;
 import com.anst.sd.api.app.api.task.UpdateAbstractTaskStatusInBound;
-import com.anst.sd.api.domain.task.*;
+import com.anst.sd.api.domain.task.AbstractTask;
+import com.anst.sd.api.domain.task.SimpleDictionary;
+import com.anst.sd.api.domain.task.TaskStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -15,28 +19,30 @@ import java.util.UUID;
 @Slf4j
 public class UpdateAbstractTaskStatusUseCase implements UpdateAbstractTaskStatusInBound {
     private final AbstractTaskRepository abstractTaskRepository;
+    private final GetAvailableStatusesInBound getAvailableStatusesInBound;
 
     @Override
     @Transactional
     public AbstractTask updateStatus(UUID userId, String simpleId, String status) {
         log.info("Updating task status for taskId {} to new status: {}", simpleId, status);
         AbstractTask task = abstractTaskRepository.findBySimpleId(simpleId);
-        if (task instanceof StoryTask storyTask) {
-            FullCycleStatus statusEnum = FullCycleStatus.valueOf(status);
-            storyTask.setStatus(statusEnum);
+        if (task == null) {
+            throw new IllegalArgumentException("Task with simpleId " + simpleId + " not found");
         }
-        if (task instanceof DefectTask defectTask) {
-            FullCycleStatus statusEnum = FullCycleStatus.valueOf(status);
-            defectTask.setStatus(statusEnum);
+        TaskStatus newStatus;
+        try {
+            newStatus = TaskStatus.valueOf(status);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid status: " + status);
         }
-        if (task instanceof Subtask subtask) {
-            ShortCycleStatus statusEnum = ShortCycleStatus.valueOf(status);
-            subtask.setStatus(statusEnum);
+
+        List<SimpleDictionary> availableStatuses = getAvailableStatusesInBound.getAppropriateStatuses(simpleId);
+        boolean isValidTransition = availableStatuses.stream()
+                .anyMatch(sd -> sd.getCode().equals(status));
+        if (!isValidTransition) {
+            throw new IllegalStateException("Cannot transition to status " + status + " from current status " + task.getStatus());
         }
-        if (task instanceof EpicTask epicTask) {
-            ShortCycleStatus statusEnum = ShortCycleStatus.valueOf(status);
-            epicTask.setStatus(statusEnum);
-        }
+        task.setStatus(newStatus);
         return abstractTaskRepository.save(task);
     }
 }

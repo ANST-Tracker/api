@@ -62,8 +62,6 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     protected UserJpaRepository userJpaRepository;
     @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
     protected DeviceJpaRepository deviceJpaRepository;
     @Autowired
     protected UserCodeMongoRepository userCodeMongoRepository;
@@ -79,19 +77,24 @@ public abstract class AbstractIntegrationTest {
     protected EpicTaskJpaRepository epicTaskJpaRepository;
     @Autowired
     protected SprintJpaRepository sprintJpaRepository;
-
+    @Autowired
+    protected StoryTaskJpaRepository storyTaskJpaRepository;
     protected User user;
     protected Project project;
     protected EpicTask epicTask;
     protected Sprint sprint;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void clearDataBase() {
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        abstractTaskJpaRepository.deleteAll();
+        subtaskJpaRepository.deleteAll();
+        storyTaskJpaRepository.deleteAll();
         epicTaskJpaRepository.deleteAll();
         sprintJpaRepository.deleteAll();
+        abstractTaskJpaRepository.deleteAll();
         projectJpaRepository.deleteAll();
         userCodeMongoRepository.deleteAll();
         deviceJpaRepository.deleteAll();
@@ -131,7 +134,7 @@ public abstract class AbstractIntegrationTest {
         task.setDescription("This is a test subtask");
         task.setSimpleId("GD-2");
         task.setType(TaskType.SUBTASK);
-        task.setStatus(ShortCycleStatus.OPEN);
+        task.setStatus(TaskStatus.OPEN);
         fillAbstractTaskFields(task, user, project);
         return abstractTaskJpaRepository.save(task);
     }
@@ -142,7 +145,7 @@ public abstract class AbstractIntegrationTest {
         task.setDescription("This is a test storytask");
         task.setSimpleId("GD-2");
         task.setType(TaskType.STORY);
-        task.setStatus(FullCycleStatus.IN_PROGRESS);
+        task.setStatus(TaskStatus.IN_PROGRESS);
         fillAbstractTaskFields(task, user, project);
         task.setSprint(sprint);
         task.setEpicTask(epicTask);
@@ -166,7 +169,7 @@ public abstract class AbstractIntegrationTest {
         epicTask.setSimpleId("GD-3");
         epicTask.setName("Epic");
         epicTask.setType(TaskType.EPIC);
-        epicTask.setStatus(ShortCycleStatus.OPEN);
+        epicTask.setStatus(TaskStatus.OPEN);
         epicTask.setDescription("description");
         fillAbstractTaskFields(epicTask, user, project);
         return epicTaskJpaRepository.save(epicTask);

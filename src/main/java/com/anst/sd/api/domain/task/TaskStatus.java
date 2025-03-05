@@ -3,7 +3,7 @@ package com.anst.sd.api.domain.task;
 import lombok.Getter;
 
 @Getter
-public enum FullCycleStatus {
+public enum TaskStatus {
     OPEN("Открыта"),
     IN_PROGRESS("В работе"),
     REVIEW("На ревью"),
@@ -14,7 +14,7 @@ public enum FullCycleStatus {
 
     private final String value;
 
-    FullCycleStatus(String value) {
+    TaskStatus(String value) {
         this.value = value;
     }
 }
