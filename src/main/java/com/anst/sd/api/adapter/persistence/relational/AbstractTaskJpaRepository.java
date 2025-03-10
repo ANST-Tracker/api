@@ -14,6 +14,8 @@ public interface AbstractTaskJpaRepository extends JpaRepository<AbstractTask, U
     @Query("SELECT COALESCE(MAX(t.orderNumber), 0) FROM AbstractTask t WHERE t.id = :taskId")
     BigDecimal findNextOrderNumber(UUID taskId);
 
-    @Query("SELECT t FROM AbstractTask t WHERE t.simpleId = :simpleId")
     Optional<AbstractTask> findBySimpleId(String simpleId);
+
+    @Query("SELECT t FROM AbstractTask t WHERE t.id = :taskId")
+    Optional<AbstractTask> findById(UUID taskId);
 }

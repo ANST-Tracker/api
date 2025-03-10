@@ -80,6 +80,8 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     protected StoryTaskJpaRepository storyTaskJpaRepository;
     protected User user;
+    protected User reviewer;
+    protected User assignee;
     protected Project project;
     protected EpicTask epicTask;
     protected Sprint sprint;
@@ -118,6 +120,40 @@ public abstract class AbstractIntegrationTest {
         return userJpaRepository.save(user);
     }
 
+    protected User createTestReviewer() {
+        User user = new User();
+        user.setUsername("reviewer");
+        user.setId(UUID.randomUUID());
+        user.setPassword("testPassword");
+        user.setTelegramId("reviewer");
+        user.setFirstName("firstName");
+        user.setLastName("lastName");
+        user.setEmail("reviewer@com");
+        user.setPosition(Position.DEVOPS);
+        user.setDepartmentName("HSE");
+        user.setRegistrationDate(LocalDate.now());
+        user.setTimeZone(1);
+        user.setCreated(Instant.now());
+        return userJpaRepository.save(user);
+    }
+
+    protected User createTestAssignee() {
+        User user = new User();
+        user.setUsername("assignee");
+        user.setId(UUID.randomUUID());
+        user.setPassword("testPassword");
+        user.setTelegramId("assignee");
+        user.setFirstName("firstName");
+        user.setLastName("lastName");
+        user.setEmail("assignee@com");
+        user.setPosition(Position.DEVOPS);
+        user.setDepartmentName("HSE");
+        user.setRegistrationDate(LocalDate.now());
+        user.setTimeZone(1);
+        user.setCreated(Instant.now());
+        return userJpaRepository.save(user);
+    }
+
     protected Project createTestProject(User headUser) {
         Project project = new Project();
         project.setName("Project1");
@@ -128,18 +164,21 @@ public abstract class AbstractIntegrationTest {
         return projectJpaRepository.save(project);
     }
 
-    protected AbstractTask createSubtask(User user, Project project) {
+    protected AbstractTask createSubtask(User user, Project project, User reviewer, User assignee) {
         Subtask task = new Subtask();
         task.setName("Test Subtask");
         task.setDescription("This is a test subtask");
         task.setSimpleId("GD-2");
         task.setType(TaskType.SUBTASK);
         task.setStatus(TaskStatus.OPEN);
+        task.setReviewer(reviewer);
+        task.setAssignee(assignee);
         fillAbstractTaskFields(task, user, project);
         return abstractTaskJpaRepository.save(task);
     }
 
-    protected AbstractTask createStoryTask(User user, Project project, Sprint sprint, EpicTask epicTask) {
+    protected AbstractTask createStoryTask(User user, Project project, Sprint sprint, EpicTask epicTask,
+                                           User reviewer, User assignee) {
         StoryTask task = new StoryTask();
         task.setName("Test StoryTask");
         task.setDescription("This is a test storytask");
@@ -149,6 +188,8 @@ public abstract class AbstractIntegrationTest {
         fillAbstractTaskFields(task, user, project);
         task.setSprint(sprint);
         task.setEpicTask(epicTask);
+        task.setReviewer(reviewer);
+        task.setAssignee(assignee);
         task.setTester(user);
         return abstractTaskJpaRepository.save(task);
     }

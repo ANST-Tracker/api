@@ -28,7 +28,6 @@ public class UpdateAbstractTaskDto {
     UUID assigneeId;
     UUID reviewerId;
     UUID testerId;
-    UUID storyTaskId;
     UUID sprintId;
     LocalDate dueDate;
     TimeEstimation timeEstimation;

@@ -1,5 +1,6 @@
 package com.anst.sd.api.app.impl.task;
 
+import com.anst.sd.api.app.api.task.AbstractTaskAppropriateStatusException;
 import com.anst.sd.api.app.api.task.AbstractTaskRepository;
 import com.anst.sd.api.app.api.task.GetAvailableStatusesInBound;
 import com.anst.sd.api.app.api.task.UpdateAbstractTaskStatusInBound;
@@ -40,7 +41,7 @@ public class UpdateAbstractTaskStatusUseCase implements UpdateAbstractTaskStatus
         boolean isValidTransition = availableStatuses.stream()
                 .anyMatch(sd -> sd.getCode().equals(status));
         if (!isValidTransition) {
-            throw new IllegalStateException("Cannot transition to status " + status + " from current status " + task.getStatus());
+            throw new AbstractTaskAppropriateStatusException(status, task.getStatus().toString());
         }
         task.setStatus(newStatus);
         return abstractTaskRepository.save(task);

@@ -32,6 +32,7 @@ public class CreateAbstractTaskDto {
     UUID sprintId;
     UUID assigneeId;
     UUID reviewerId;
+    UUID storyTaskId;
     UUID projectId;
     LocalDate dueDate;
     TimeEstimation timeEstimation;

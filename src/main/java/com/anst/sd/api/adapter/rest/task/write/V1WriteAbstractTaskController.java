@@ -5,6 +5,7 @@ import com.anst.sd.api.adapter.rest.task.dto.IdResponseDto;
 import com.anst.sd.api.adapter.rest.task.write.dto.CreateAbstractTaskDto;
 import com.anst.sd.api.adapter.rest.task.write.dto.UpdateAbstractTaskDto;
 import com.anst.sd.api.adapter.rest.task.write.dto.UpdateAbstractTaskStatusDto;
+import com.anst.sd.api.app.api.task.AbstractTaskValidationException;
 import com.anst.sd.api.app.api.task.CreateAbstractTaskInBound;
 import com.anst.sd.api.app.api.task.UpdateAbstractTaskInBound;
 import com.anst.sd.api.app.api.task.UpdateAbstractTaskStatusInBound;
@@ -16,6 +17,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -40,7 +42,11 @@ public class V1WriteAbstractTaskController {
             }
     )
     @PostMapping
-    public ResponseEntity<IdResponseDto> create(@Valid @RequestBody CreateAbstractTaskDto request) {
+    public ResponseEntity<IdResponseDto> create(@Valid @RequestBody CreateAbstractTaskDto request,
+                                                BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            throw new AbstractTaskValidationException();
+        }
         AbstractTask task = abstractTaskDomainMapper.mapToDomain(request);
         AbstractTask result = createAbstractTaskInBound.create(jwtService.getJwtAuth().getUserId(), task);
         return ResponseEntity.ok(new IdResponseDto(result.getId()));
@@ -58,8 +64,12 @@ public class V1WriteAbstractTaskController {
     )
     @PutMapping("/{simpleId}")
     public ResponseEntity<IdResponseDto> update(@PathVariable String simpleId,
-                                                @Valid @RequestBody UpdateAbstractTaskDto request
+                                                @Valid @RequestBody UpdateAbstractTaskDto request,
+                                                BindingResult bindingResult
     ) {
+        if (bindingResult.hasErrors()) {
+            throw new AbstractTaskValidationException(simpleId);
+        }
         AbstractTask task = abstractTaskDomainMapper.mapToDomain(request);
         AbstractTask result = updateAbstractTaskInBound.update(jwtService.getJwtAuth().getUserId(), simpleId, task);
         return ResponseEntity.ok(new IdResponseDto(result.getId()));

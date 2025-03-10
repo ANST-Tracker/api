@@ -64,5 +64,5 @@ public abstract class AbstractTask extends DomainObject {
     private List<Tag> tags = new ArrayList<>();
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private TaskStatus status;
+    private TaskStatus status = TaskStatus.OPEN;
 }

@@ -21,9 +21,13 @@ class V1WriteAbstractTaskControllerTest extends AbstractIntegrationTest {
         CreateAbstractTaskDto request = readFromFile("/V1WriteAbstractTaskControllerTest/createAbstractTask.json",
                 CreateAbstractTaskDto.class);
         user = createTestUser();
+        reviewer = createTestReviewer();
+        assignee = createTestAssignee();
         project = createTestProject(user);
-        createSubtask(user, project);
+        createSubtask(user, project, reviewer, assignee);
         request.setProjectId(project.getId());
+        request.setReviewerId(reviewer.getId());
+        request.setAssigneeId(assignee.getId());
 
         performAuthenticated(user, MockMvcRequestBuilders
                 .post(API_URL)
@@ -49,8 +53,12 @@ class V1WriteAbstractTaskControllerTest extends AbstractIntegrationTest {
         request.setName(null);
 
         user = createTestUser();
+        reviewer = createTestReviewer();
+        assignee = createTestAssignee();
         project = createTestProject(user);
         request.setProjectId(project.getId());
+        request.setReviewerId(reviewer.getId());
+        request.setAssigneeId(assignee.getId());
 
         performAuthenticated(user, MockMvcRequestBuilders
                 .post(API_URL)
@@ -64,7 +72,7 @@ class V1WriteAbstractTaskControllerTest extends AbstractIntegrationTest {
     void updateAbstractTask_successfully() throws Exception {
         user = createTestUser();
         project = createTestProject(user);
-        AbstractTask originalTask = createSubtask(user, project);
+        AbstractTask originalTask = createSubtask(user, project, null, null);
         String simpleId = originalTask.getSimpleId();
         UpdateAbstractTaskDto request = readFromFile("/V1WriteAbstractTaskControllerTest/updateAbstractTask.json",
                 UpdateAbstractTaskDto.class);
@@ -87,7 +95,7 @@ class V1WriteAbstractTaskControllerTest extends AbstractIntegrationTest {
     void updateAbstractTask_nonExistentSimpleId_returnsNotFound() throws Exception {
         user = createTestUser();
         project = createTestProject(user);
-        createSubtask(user, project);
+        createSubtask(user, project, null, null);
         String nonExistentSimpleId = "NON_EXISTENT_ID";
         UpdateAbstractTaskDto request = readFromFile("/V1WriteAbstractTaskControllerTest/updateAbstractTask.json",
                 UpdateAbstractTaskDto.class);
@@ -103,8 +111,10 @@ class V1WriteAbstractTaskControllerTest extends AbstractIntegrationTest {
     @Test
     void updateAbstractTask_invalidDto_returnsBadRequest() throws Exception {
         user = createTestUser();
+        reviewer = createTestReviewer();
+        assignee = createTestAssignee();
         project = createTestProject(user);
-        AbstractTask originalTask = createSubtask(user, project);
+        AbstractTask originalTask = createSubtask(user, project, reviewer, assignee);
         String simpleId = originalTask.getSimpleId();
         UpdateAbstractTaskDto request = readFromFile("/V1WriteAbstractTaskControllerTest/updateAbstractTask.json",
                 UpdateAbstractTaskDto.class);
@@ -122,7 +132,7 @@ class V1WriteAbstractTaskControllerTest extends AbstractIntegrationTest {
     void updateStatus_successfully() throws Exception {
         user = createTestUser();
         project = createTestProject(user);
-        AbstractTask original = createSubtask(user, project);
+        AbstractTask original = createSubtask(user, project, null, null);
         Subtask originalSubtask = subtaskJpaRepository.findAll().get(0);
         String simpleId = original.getSimpleId();
         UpdateAbstractTaskStatusDto request = readFromFile("/V1WriteAbstractTaskControllerTest/updateAbstractTaskStatus.json",
@@ -143,7 +153,7 @@ class V1WriteAbstractTaskControllerTest extends AbstractIntegrationTest {
     void updateStatus_nonExistentSimpleId_returnsNotFound() throws Exception {
         user = createTestUser();
         project = createTestProject(user);
-        createSubtask(user, project);
+        createSubtask(user, project, null, null);
 
         String nonExistentSimpleId = "NON_EXISTENT_ID";
         UpdateAbstractTaskStatusDto request = readFromFile("/V1WriteAbstractTaskControllerTest/updateAbstractTaskStatus.json",
@@ -161,7 +171,7 @@ class V1WriteAbstractTaskControllerTest extends AbstractIntegrationTest {
     void updateStatus_invalidStatusValue_returnsBadRequest() throws Exception {
         user = createTestUser();
         project = createTestProject(user);
-        AbstractTask original = createSubtask(user, project);
+        AbstractTask original = createSubtask(user, project, null, null);
         String simpleId = original.getSimpleId();
         UpdateAbstractTaskStatusDto request = readFromFile("/V1WriteAbstractTaskControllerTest/updateAbstractTaskStatus.json",
                 UpdateAbstractTaskStatusDto.class);

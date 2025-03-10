@@ -5,6 +5,7 @@ import com.anst.sd.api.app.api.project.ProjectValidationException;
 import com.anst.sd.api.app.api.security.CodeAlreadySentException;
 import com.anst.sd.api.app.api.security.UserCodeNotFoundException;
 import com.anst.sd.api.app.api.task.AbstractTaskNotFound;
+import com.anst.sd.api.app.api.task.AbstractTaskValidationException;
 import com.anst.sd.api.app.api.user.UserNotFoundException;
 import com.anst.sd.api.security.app.api.AuthException;
 import org.springframework.http.HttpHeaders;
@@ -28,11 +29,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @Nullable
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(
-        @NonNull Exception ex,
-        @Nullable Object body,
-        @NonNull HttpHeaders headers,
-        @NonNull HttpStatusCode statusCode,
-        @NonNull WebRequest request) {
+            @NonNull Exception ex,
+            @Nullable Object body,
+            @NonNull HttpHeaders headers,
+            @NonNull HttpStatusCode statusCode,
+            @NonNull WebRequest request) {
         logger.error(ex.getMessage(), ex);
         var errorInfo = createErrorInfo(SERVER);
         return super.handleExceptionInternal(ex, errorInfo, headers, statusCode, request);
@@ -52,7 +53,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorInfo, HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler({ProjectValidationException.class})
+    @ExceptionHandler({ProjectValidationException.class, AbstractTaskValidationException.class})
     public ResponseEntity<Object> handleValidation(Exception ex) {
         logger.error(ex.getMessage(), ex);
         var errorInfo = createErrorInfo(CLIENT);
@@ -74,8 +75,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({
-        UserNotFoundException.class,
-        ProjectNotFoundException.class,
+            UserNotFoundException.class,
+            ProjectNotFoundException.class,
             UserCodeNotFoundException.class,
             AbstractTaskNotFound.class,
     })

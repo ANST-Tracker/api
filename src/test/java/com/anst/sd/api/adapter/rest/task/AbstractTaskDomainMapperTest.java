@@ -11,7 +11,7 @@ import org.mapstruct.factory.Mappers;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AbstractTaskDomainMapperTest extends AbstractUnitTest {
+class AbstractTaskDomainMapperTest extends AbstractUnitTest {
     private AbstractTaskDomainMapper mapper;
 
     @BeforeEach

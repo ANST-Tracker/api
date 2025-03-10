@@ -1,9 +1,11 @@
 package com.anst.sd.api.app.impl.task;
 
 import com.anst.sd.api.app.api.project.ProjectRepository;
+import com.anst.sd.api.app.api.tag.TagRepository;
 import com.anst.sd.api.app.api.task.AbstractTaskRepository;
 import com.anst.sd.api.app.api.task.UpdateAbstractTaskInBound;
 import com.anst.sd.api.app.api.user.UserRepository;
+import com.anst.sd.api.domain.tag.Tag;
 import com.anst.sd.api.domain.task.AbstractTask;
 import com.anst.sd.api.domain.task.DefectTask;
 import com.anst.sd.api.domain.task.StoryTask;
@@ -22,6 +24,7 @@ public class UpdateAbstractTaskUseCase implements UpdateAbstractTaskInBound {
     private final AbstractTaskRepository abstractTaskRepository;
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
+    private final TagRepository tagRepository;
 
     @Override
     @Transactional
@@ -50,7 +53,7 @@ public class UpdateAbstractTaskUseCase implements UpdateAbstractTaskInBound {
         }
         original.setDueDate(updated.getDueDate());
         original.setTimeEstimation(updated.getTimeEstimation());
-        original.setTags(updated.getTags());
+        original.setTags(tagRepository.findAllByIdIn(updated.getTags().stream().map(Tag::getId).toList()));
     }
 
     private void mergeSpecificFields(AbstractTask original, AbstractTask updated) {

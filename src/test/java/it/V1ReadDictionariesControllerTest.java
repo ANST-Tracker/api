@@ -18,8 +18,10 @@ class V1ReadDictionariesControllerTest extends AbstractIntegrationTest {
     @Test
     void getAppropriateStatuses_forShortCycleTask_OPEN() throws Exception {
         user = createTestUser();
+        reviewer = createTestReviewer();
+        assignee = createTestAssignee();
         project = createTestProject(user);
-        AbstractTask subtask = createSubtask(user, project);
+        AbstractTask subtask = createSubtask(user, project, reviewer, assignee);
 
         assertThat(subtask.getStatus()).isEqualTo(TaskStatus.OPEN);
 
@@ -36,10 +38,12 @@ class V1ReadDictionariesControllerTest extends AbstractIntegrationTest {
     @Test
     void getAppropriateStatuses_forFullCycleTask_IN_PROGRESS() throws Exception {
         user = createTestUser();
+        reviewer = createTestReviewer();
+        assignee = createTestAssignee();
         project = createTestProject(user);
         sprint = createSprint(project);
         epicTask = createEpic(user, project);
-        AbstractTask storyTask = createStoryTask(user, project, sprint, epicTask);
+        AbstractTask storyTask = createStoryTask(user, project, sprint, epicTask, reviewer, assignee);
 
         performAuthenticated(user, MockMvcRequestBuilders
                 .get(API_URL + storyTask.getSimpleId() + "/appropriate-statuses")
