@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Repository
 public interface AbstractTaskJpaRepository extends JpaRepository<AbstractTask, UUID> {
-    @Query("SELECT COALESCE(MAX(t.orderNumber), 0) FROM AbstractTask t WHERE t.id = :taskId")
+    @Query("SELECT COALESCE(MAX(t.orderNumber), 0) FROM AbstractTask t")
     BigDecimal findNextOrderNumber(UUID taskId);
 
     Optional<AbstractTask> findBySimpleId(String simpleId);
