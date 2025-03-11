@@ -51,14 +51,7 @@ class V1WriteAbstractTaskControllerTest extends AbstractIntegrationTest {
         CreateAbstractTaskDto request = readFromFile("/V1WriteAbstractTaskControllerTest/createAbstractTask.json",
                 CreateAbstractTaskDto.class);
         request.setName(null);
-
         user = createTestUser();
-        reviewer = createTestReviewer();
-        assignee = createTestAssignee();
-        project = createTestProject(user);
-        request.setProjectId(project.getId());
-        request.setReviewerId(reviewer.getId());
-        request.setAssigneeId(assignee.getId());
 
         performAuthenticated(user, MockMvcRequestBuilders
                 .post(API_URL)
@@ -111,9 +104,6 @@ class V1WriteAbstractTaskControllerTest extends AbstractIntegrationTest {
     @Test
     void updateAbstractTask_invalidDto_returnsBadRequest() throws Exception {
         user = createTestUser();
-        reviewer = createTestReviewer();
-        assignee = createTestAssignee();
-        project = createTestProject(user);
         AbstractTask originalTask = createSubtask(user, project, reviewer, assignee);
         String simpleId = originalTask.getSimpleId();
         UpdateAbstractTaskDto request = readFromFile("/V1WriteAbstractTaskControllerTest/updateAbstractTask.json",

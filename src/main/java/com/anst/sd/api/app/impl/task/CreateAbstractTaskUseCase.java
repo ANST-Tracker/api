@@ -3,6 +3,7 @@ package com.anst.sd.api.app.impl.task;
 import com.anst.sd.api.app.api.project.ProjectRepository;
 import com.anst.sd.api.app.api.tag.TagRepository;
 import com.anst.sd.api.app.api.task.AbstractTaskRepository;
+import com.anst.sd.api.app.api.task.AbstractTaskValidationException;
 import com.anst.sd.api.app.api.task.CreateAbstractTaskInBound;
 import com.anst.sd.api.app.api.user.UserRepository;
 import com.anst.sd.api.domain.project.Project;
@@ -44,21 +45,45 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
         task.setSimpleId(SimpleIdGenerationDelegate.idGenerator(task));
         task.setOrderNumber(orderNumber.add(BigDecimal.ONE));
         task.setCreator(creator);
-        if (task instanceof Subtask subtask && subtask.getStoryTask() != null) {
+        if (task instanceof Subtask subtask) {
+            validateSubtask(subtask);
             StoryTask parentStory = (StoryTask) abstractTaskRepository.getById(subtask.getStoryTask().getId());
             subtask.setStoryTask(parentStory);
         }
 
-        if (task instanceof StoryTask storyTask && storyTask.getEpicTask() != null) {
+        if (task instanceof StoryTask storyTask) {
+            validateStoryTask(storyTask);
             EpicTask parentEpic = (EpicTask) abstractTaskRepository.getById(storyTask.getEpicTask().getId());
             storyTask.setEpicTask(parentEpic);
         }
 
-        if (task instanceof DefectTask defectTask && defectTask.getStoryTask() != null) {
+        if (task instanceof DefectTask defectTask) {
+            validateDefectTask(defectTask);
             StoryTask parentStory = (StoryTask) abstractTaskRepository.getById(defectTask.getStoryTask().getId());
             defectTask.setStoryTask(parentStory);
         }
 
         return abstractTaskRepository.save(task);
+    }
+
+    private void validateSubtask(AbstractTask task) {
+        if (task instanceof Subtask subtask && subtask.getStoryTask() == null) {
+            throw new AbstractTaskValidationException();
+        }
+
+    }
+
+    private void validateStoryTask(AbstractTask task) {
+        if (task instanceof StoryTask storyTask && storyTask.getEpicTask() == null) {
+            throw new AbstractTaskValidationException();
+        }
+
+    }
+
+    private void validateDefectTask(AbstractTask task) {
+        if (task instanceof DefectTask defectTask && defectTask.getStoryTask() == null) {
+            throw new AbstractTaskValidationException();
+        }
+
     }
 }
