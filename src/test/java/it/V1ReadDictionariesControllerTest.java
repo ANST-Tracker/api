@@ -1,13 +1,11 @@
 package it;
 
 import com.anst.sd.api.domain.task.AbstractTask;
-import com.anst.sd.api.domain.task.TaskStatus;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -21,9 +19,7 @@ class V1ReadDictionariesControllerTest extends AbstractIntegrationTest {
         reviewer = createTestReviewer();
         assignee = createTestAssignee();
         project = createTestProject(user);
-        AbstractTask subtask = createSubtask(user, project, reviewer, assignee);
-
-        assertThat(subtask.getStatus()).isEqualTo(TaskStatus.OPEN);
+        AbstractTask subtask = createSubtask(user, project, reviewer, assignee, null);
 
         performAuthenticated(user, MockMvcRequestBuilders
                 .get(API_URL + subtask.getSimpleId() + "/appropriate-statuses")

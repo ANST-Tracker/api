@@ -85,6 +85,7 @@ public abstract class AbstractIntegrationTest {
     protected Project project;
     protected EpicTask epicTask;
     protected Sprint sprint;
+    protected AbstractTask storyTask;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -164,7 +165,7 @@ public abstract class AbstractIntegrationTest {
         return projectJpaRepository.save(project);
     }
 
-    protected AbstractTask createSubtask(User user, Project project, User reviewer, User assignee) {
+    protected AbstractTask createSubtask(User user, Project project, User reviewer, User assignee, AbstractTask storyTask) {
         Subtask task = new Subtask();
         task.setName("Test Subtask");
         task.setDescription("This is a test subtask");
@@ -173,6 +174,7 @@ public abstract class AbstractIntegrationTest {
         task.setStatus(TaskStatus.OPEN);
         task.setReviewer(reviewer);
         task.setAssignee(assignee);
+        task.setStoryTask((StoryTask) storyTask);
         fillAbstractTaskFields(task, user, project);
         return abstractTaskJpaRepository.save(task);
     }

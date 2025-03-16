@@ -25,14 +25,14 @@ public class AbstractTaskRepositoryImpl implements AbstractTaskRepository {
     }
 
     @Override
-    public AbstractTask findBySimpleId(String simpleId) {
+    public AbstractTask getBySimpleId(String simpleId) {
         return abstractTaskJpaRepository.findBySimpleId(simpleId)
                 .orElseThrow(() -> new AbstractTaskNotFound(simpleId));
     }
 
     @Override
-    public AbstractTask getById(UUID uuid) {
-        return abstractTaskJpaRepository.findById(uuid)
+    public AbstractTask getByIdAndProjectId(UUID uuid, UUID projectId) {
+        return abstractTaskJpaRepository.findByIdAndProjectId(uuid, projectId)
                 .orElseThrow(() -> new AbstractTaskNotFound(uuid));
     }
 }

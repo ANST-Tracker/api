@@ -9,5 +9,5 @@ import java.util.UUID;
 
 @Repository
 public interface TagJpaRepository extends JpaRepository<Tag, UUID> {
-    List<Tag> findAllByIdIn(List<UUID> ids);
+    List<Tag> findAllByIdInAndProjectId(List<UUID> ids, UUID projectId);
 }

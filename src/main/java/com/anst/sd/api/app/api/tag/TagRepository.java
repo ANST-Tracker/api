@@ -6,7 +6,5 @@ import java.util.List;
 import java.util.UUID;
 
 public interface TagRepository {
-    Tag findById(UUID tagId);
-
-    List<Tag> findAllByIdIn(List<UUID> ids);
+    List<Tag> findAllByIdInAndProjectId(List<UUID> ids, UUID projectId);
 }

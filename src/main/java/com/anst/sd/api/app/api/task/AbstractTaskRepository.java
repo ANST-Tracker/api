@@ -12,7 +12,7 @@ public interface AbstractTaskRepository {
 
     BigDecimal findNextOrderNumber(UUID taskId);
 
-    AbstractTask findBySimpleId(String simpleId);
+    AbstractTask getBySimpleId(String simpleId);
 
-    AbstractTask getById(UUID uuid);
+    AbstractTask getByIdAndProjectId(UUID uuid, UUID projectId);
 }

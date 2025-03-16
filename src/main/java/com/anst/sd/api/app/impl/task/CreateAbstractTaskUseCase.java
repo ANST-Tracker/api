@@ -32,11 +32,12 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
     @Transactional
     public AbstractTask create(UUID userId, AbstractTask task) {
         log.info("Creating task with userId {}", userId);
+        Project project = projectRepository.getById(task.getProject().getId());
         User creator = userRepository.getById(userId);
         User reviewer = userRepository.getById(task.getReviewer().getId());
         User assignee = userRepository.getById(task.getAssignee().getId());
-        List<Tag> tags = tagRepository.findAllByIdIn(task.getTags().stream().map(Tag::getId).toList());
-        Project project = projectRepository.getById(task.getProject().getId());
+        List<Tag> tags = tagRepository.findAllByIdInAndProjectId(task.getTags().stream().map(Tag::getId).toList(),
+                project.getId());
         BigDecimal orderNumber = abstractTaskRepository.findNextOrderNumber(task.getId());
         task.setAssignee(assignee);
         task.setProject(project);
@@ -47,19 +48,22 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
         task.setCreator(creator);
         if (task instanceof Subtask subtask) {
             validateSubtask(subtask);
-            StoryTask parentStory = (StoryTask) abstractTaskRepository.getById(subtask.getStoryTask().getId());
+            StoryTask parentStory = (StoryTask) abstractTaskRepository.getByIdAndProjectId(subtask.getStoryTask().getId(),
+                    project.getId());
             subtask.setStoryTask(parentStory);
         }
 
         if (task instanceof StoryTask storyTask) {
             validateStoryTask(storyTask);
-            EpicTask parentEpic = (EpicTask) abstractTaskRepository.getById(storyTask.getEpicTask().getId());
+            EpicTask parentEpic = (EpicTask) abstractTaskRepository.getByIdAndProjectId(storyTask.getEpicTask().getId(),
+                    project.getId());
             storyTask.setEpicTask(parentEpic);
         }
 
         if (task instanceof DefectTask defectTask) {
             validateDefectTask(defectTask);
-            StoryTask parentStory = (StoryTask) abstractTaskRepository.getById(defectTask.getStoryTask().getId());
+            StoryTask parentStory = (StoryTask) abstractTaskRepository.getByIdAndProjectId(defectTask.getStoryTask().getId(),
+                    project.getId());
             defectTask.setStoryTask(parentStory);
         }
 

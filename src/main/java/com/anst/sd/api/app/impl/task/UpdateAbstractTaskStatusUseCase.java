@@ -1,9 +1,6 @@
 package com.anst.sd.api.app.impl.task;
 
-import com.anst.sd.api.app.api.task.AbstractTaskAppropriateStatusException;
-import com.anst.sd.api.app.api.task.AbstractTaskRepository;
-import com.anst.sd.api.app.api.task.GetAvailableStatusesInBound;
-import com.anst.sd.api.app.api.task.UpdateAbstractTaskStatusInBound;
+import com.anst.sd.api.app.api.task.*;
 import com.anst.sd.api.domain.task.AbstractTask;
 import com.anst.sd.api.domain.task.SimpleDictionary;
 import com.anst.sd.api.domain.task.TaskStatus;
@@ -26,15 +23,12 @@ public class UpdateAbstractTaskStatusUseCase implements UpdateAbstractTaskStatus
     @Transactional
     public AbstractTask updateStatus(UUID userId, String simpleId, String status) {
         log.info("Updating task status for taskId {} to new status: {}", simpleId, status);
-        AbstractTask task = abstractTaskRepository.findBySimpleId(simpleId);
-        if (task == null) {
-            throw new IllegalArgumentException("Task with simpleId " + simpleId + " not found");
-        }
+        AbstractTask task = abstractTaskRepository.getBySimpleId(simpleId);
         TaskStatus newStatus;
         try {
             newStatus = TaskStatus.valueOf(status);
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid status: " + status);
+            throw new AbstractTaskValidationException("Invalid status: " + status);
         }
 
         List<SimpleDictionary> availableStatuses = getAvailableStatusesInBound.getAppropriateStatuses(simpleId);

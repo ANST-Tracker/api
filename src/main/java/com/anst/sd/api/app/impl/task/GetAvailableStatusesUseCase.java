@@ -48,11 +48,7 @@ public class GetAvailableStatusesUseCase implements GetAvailableStatusesInBound 
     @Transactional
     public List<SimpleDictionary> getAppropriateStatuses(String simpleId) {
         log.info("Getting appropriate statuses for task simpleId {}", simpleId);
-        AbstractTask task = abstractTaskRepository.findBySimpleId(simpleId);
-        if (task == null) {
-            log.warn("Task with simpleId {} not found", simpleId);
-            return List.of();
-        }
+        AbstractTask task = abstractTaskRepository.getBySimpleId(simpleId);
 
         Map<TaskStatus, List<TaskStatus>> transitions = TRANSITIONS.get(task.getClass());
         if (transitions != null) {

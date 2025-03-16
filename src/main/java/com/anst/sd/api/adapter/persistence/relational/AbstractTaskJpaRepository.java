@@ -16,6 +16,5 @@ public interface AbstractTaskJpaRepository extends JpaRepository<AbstractTask, U
 
     Optional<AbstractTask> findBySimpleId(String simpleId);
 
-    @Query("SELECT t FROM AbstractTask t WHERE t.id = :taskId")
-    Optional<AbstractTask> findById(UUID taskId);
+    Optional<AbstractTask> findByIdAndProjectId(UUID taskId, UUID projectId);
 }

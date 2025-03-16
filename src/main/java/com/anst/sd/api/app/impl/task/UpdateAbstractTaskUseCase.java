@@ -30,7 +30,7 @@ public class UpdateAbstractTaskUseCase implements UpdateAbstractTaskInBound {
     @Transactional
     public AbstractTask update(UUID userId, String simpleId, AbstractTask updated) {
         log.info("Updating task with id {} and userId {}", simpleId, userId);
-        AbstractTask original = abstractTaskRepository.findBySimpleId(simpleId);
+        AbstractTask original = abstractTaskRepository.getBySimpleId(simpleId);
         mergeTask(original, updated);
         mergeSpecificFields(original, updated);
         return abstractTaskRepository.save(original);
@@ -53,7 +53,8 @@ public class UpdateAbstractTaskUseCase implements UpdateAbstractTaskInBound {
         }
         original.setDueDate(updated.getDueDate());
         original.setTimeEstimation(updated.getTimeEstimation());
-        original.setTags(tagRepository.findAllByIdIn(updated.getTags().stream().map(Tag::getId).toList()));
+        original.setTags(tagRepository.findAllByIdInAndProjectId(updated.getTags().stream().map(Tag::getId).toList(),
+                original.getProject().getId()));
     }
 
     private void mergeSpecificFields(AbstractTask original, AbstractTask updated) {
