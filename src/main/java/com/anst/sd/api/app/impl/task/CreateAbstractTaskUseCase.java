@@ -46,6 +46,7 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
         task.setSimpleId(SimpleIdGenerationDelegate.idGenerator(task));
         task.setOrderNumber(orderNumber.add(BigDecimal.ONE));
         task.setCreator(creator);
+        // TODO: After sprint realization, needs to link task with sprint and create associated parameters
         if (task instanceof Subtask subtask) {
             validateSubtask(subtask);
             StoryTask parentStory = (StoryTask) abstractTaskRepository.getByIdAndProjectId(subtask.getStoryTask().getId(),
