@@ -1,6 +1,9 @@
 package com.anst.sd.api.domain.task;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,9 +12,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Subtask extends AbstractTask {
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private ShortCycleStatus status;
     @ManyToOne
     @JoinColumn(name = "story_task_id")
     private StoryTask storyTask;

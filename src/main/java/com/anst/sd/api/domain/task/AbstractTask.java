@@ -23,7 +23,7 @@ import java.util.List;
 @Setter
 public abstract class AbstractTask extends DomainObject {
     @Column(name = "simple_id", nullable = false)
-    private Integer simpleId;
+    private String simpleId;
     @Column(nullable = false)
     private String name;
     @Column
@@ -57,8 +57,12 @@ public abstract class AbstractTask extends DomainObject {
     private TimeEstimation timeEstimation;
     @ManyToMany
     @JoinTable(
-        name = "tasks_tags", joinColumns = @JoinColumn(name = "task_id"),
-        inverseJoinColumns = @JoinColumn(name = "tag_id")
+            name = "tasks_tags",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     private List<Tag> tags = new ArrayList<>();
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private TaskStatus status = TaskStatus.OPEN;
 }

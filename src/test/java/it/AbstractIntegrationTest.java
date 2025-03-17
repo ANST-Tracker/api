@@ -1,20 +1,21 @@
 package it;
 
 import com.anst.sd.api.AnstApiTodoApplication;
-import com.anst.sd.api.adapter.persistence.relational.ProjectJpaRepository;
 import com.anst.sd.api.adapter.persistence.mongo.UserCodeMongoRepository;
-import com.anst.sd.api.adapter.persistence.relational.DeviceJpaRepository;
-import com.anst.sd.api.adapter.persistence.relational.UserJpaRepository;
-import com.anst.sd.api.domain.project.Project;
+import com.anst.sd.api.adapter.persistence.relational.*;
 import com.anst.sd.api.adapter.telegram.CreateUserCodeMessageSupplier;
+import com.anst.sd.api.domain.project.Project;
+import com.anst.sd.api.domain.sprint.Sprint;
+import com.anst.sd.api.domain.task.*;
 import com.anst.sd.api.domain.user.Position;
 import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.security.app.api.JwtResponse;
 import com.anst.sd.api.security.app.impl.JwtService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +32,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -49,9 +51,6 @@ public abstract class AbstractIntegrationTest {
     protected static final UUID DEVICE_ID = UUID.randomUUID();
     protected static final String USER_PASSWORD = UUID.randomUUID().toString();
 
-    protected User user;
-    protected Project project;
-
     @Autowired
     protected MockMvc mockMvc;
     @Autowired
@@ -63,8 +62,6 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     protected UserJpaRepository userJpaRepository;
     @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
     protected DeviceJpaRepository deviceJpaRepository;
     @Autowired
     protected UserCodeMongoRepository userCodeMongoRepository;
@@ -72,13 +69,167 @@ public abstract class AbstractIntegrationTest {
     protected CreateUserCodeMessageSupplier createUserCodeMessageSupplier;
     @Autowired
     protected ProjectJpaRepository projectJpaRepository;
+    @Autowired
+    protected AbstractTaskJpaRepository abstractTaskJpaRepository;
+    @Autowired
+    protected SubtaskJpaRepository subtaskJpaRepository;
+    @Autowired
+    protected EpicTaskJpaRepository epicTaskJpaRepository;
+    @Autowired
+    protected SprintJpaRepository sprintJpaRepository;
+    @Autowired
+    protected StoryTaskJpaRepository storyTaskJpaRepository;
+    protected User user;
+    protected User reviewer;
+    protected User assignee;
+    protected Project project;
+    protected EpicTask epicTask;
+    protected Sprint sprint;
+    protected AbstractTask storyTask;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void clearDataBase() {
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        subtaskJpaRepository.deleteAll();
+        storyTaskJpaRepository.deleteAll();
+        epicTaskJpaRepository.deleteAll();
+        sprintJpaRepository.deleteAll();
+        abstractTaskJpaRepository.deleteAll();
         projectJpaRepository.deleteAll();
         userCodeMongoRepository.deleteAll();
         deviceJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
+    }
+
+    protected User createTestUser() {
+        User user = new User();
+        user.setUsername("username");
+        user.setId(UUID.randomUUID());
+        user.setPassword("testPassword");
+        user.setTelegramId("eridiium");
+        user.setFirstName("firstName");
+        user.setLastName("lastName");
+        user.setEmail("test@com");
+        user.setPosition(Position.DEVOPS);
+        user.setDepartmentName("HSE");
+        user.setRegistrationDate(LocalDate.now());
+        user.setTimeZone(1);
+        user.setCreated(Instant.now());
+        return userJpaRepository.save(user);
+    }
+
+    protected User createTestReviewer() {
+        User user = new User();
+        user.setUsername("reviewer");
+        user.setId(UUID.randomUUID());
+        user.setPassword("testPassword");
+        user.setTelegramId("reviewer");
+        user.setFirstName("firstName");
+        user.setLastName("lastName");
+        user.setEmail("reviewer@com");
+        user.setPosition(Position.DEVOPS);
+        user.setDepartmentName("HSE");
+        user.setRegistrationDate(LocalDate.now());
+        user.setTimeZone(1);
+        user.setCreated(Instant.now());
+        return userJpaRepository.save(user);
+    }
+
+    protected User createTestAssignee() {
+        User user = new User();
+        user.setUsername("assignee");
+        user.setId(UUID.randomUUID());
+        user.setPassword("testPassword");
+        user.setTelegramId("assignee");
+        user.setFirstName("firstName");
+        user.setLastName("lastName");
+        user.setEmail("assignee@com");
+        user.setPosition(Position.DEVOPS);
+        user.setDepartmentName("HSE");
+        user.setRegistrationDate(LocalDate.now());
+        user.setTimeZone(1);
+        user.setCreated(Instant.now());
+        return userJpaRepository.save(user);
+    }
+
+    protected Project createTestProject(User headUser) {
+        Project project = new Project();
+        project.setName("Project1");
+        project.setDescription("New test project");
+        project.setHead(headUser);
+        project.setNextTaskId(1);
+        project.setKey("GD");
+        return projectJpaRepository.save(project);
+    }
+
+    protected AbstractTask createSubtask(User user, Project project, User reviewer, User assignee, AbstractTask storyTask) {
+        Subtask task = new Subtask();
+        task.setName("Test Subtask");
+        task.setDescription("This is a test subtask");
+        task.setSimpleId("GD-2");
+        task.setType(TaskType.SUBTASK);
+        task.setStatus(TaskStatus.OPEN);
+        task.setReviewer(reviewer);
+        task.setAssignee(assignee);
+        task.setStoryTask((StoryTask) storyTask);
+        fillAbstractTaskFields(task, user, project);
+        return abstractTaskJpaRepository.save(task);
+    }
+
+    protected AbstractTask createStoryTask(User user, Project project, Sprint sprint, EpicTask epicTask,
+                                           User reviewer, User assignee) {
+        StoryTask task = new StoryTask();
+        task.setName("Test StoryTask");
+        task.setDescription("This is a test storytask");
+        task.setSimpleId("GD-2");
+        task.setType(TaskType.STORY);
+        task.setStatus(TaskStatus.IN_PROGRESS);
+        fillAbstractTaskFields(task, user, project);
+        task.setSprint(sprint);
+        task.setEpicTask(epicTask);
+        task.setReviewer(reviewer);
+        task.setAssignee(assignee);
+        task.setTester(user);
+        return abstractTaskJpaRepository.save(task);
+    }
+
+    protected Sprint createSprint(Project project) {
+        Sprint sprint = new Sprint();
+        sprint.setProject(project);
+        sprint.setCreated(Instant.now());
+        sprint.setName("sprint");
+        sprint.setStartDate(LocalDate.now().minusDays(1));
+        sprint.setEndDate(LocalDate.now().plusDays(14));
+        sprint.setIsActive(true);
+        return sprintJpaRepository.save(sprint);
+    }
+
+    protected EpicTask createEpic(User user, Project project) {
+        EpicTask epicTask = new EpicTask();
+        epicTask.setSimpleId("GD-3");
+        epicTask.setName("Epic");
+        epicTask.setType(TaskType.EPIC);
+        epicTask.setStatus(TaskStatus.OPEN);
+        epicTask.setDescription("description");
+        fillAbstractTaskFields(epicTask, user, project);
+        return epicTaskJpaRepository.save(epicTask);
+    }
+
+    protected <T extends AbstractTask> T fillAbstractTaskFields(T task, User user, Project project) {
+        task.setPriority(TaskPriority.MAJOR);
+        task.setStoryPoints(5);
+        task.setAssignee(user);
+        task.setReviewer(user);
+        task.setCreator(user);
+        task.setProject(project);
+        task.setDueDate(LocalDate.now().plusDays(7));
+        task.setOrderNumber(BigDecimal.ONE);
+        task.setTimeEstimation(null);
+        task.setTags(List.of());
+        return task;
     }
 
     // ===================================================================================================================
@@ -121,11 +272,10 @@ public abstract class AbstractIntegrationTest {
         }
     }
 
-    protected <T> T readFromFile(String fileName) {
+    protected <T> T readFromFile(String fileName, Class<T> clazz) {
         String content = readFile(fileName);
         try {
-            return objectMapper.readValue(content, new TypeReference<>() {
-            });
+            return objectMapper.readValue(content, clazz);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -187,31 +337,5 @@ public abstract class AbstractIntegrationTest {
     private String createAuthData(User user) {
         JwtResponse result = jwtService.generateAccessRefreshTokens(user.getUsername(), user.getId(), DEVICE_ID);
         return result.getAccessToken();
-    }
-
-    protected User createTestUser() {
-        User user = new User();
-        user.setUsername("username");
-        user.setPassword(passwordEncoder.encode(USER_PASSWORD));
-        user.setFirstName("firstName");
-        user.setLastName("lastName");
-        user.setTelegramId("telegramId");
-        user.setDepartmentName("departmentName");
-        user.setEmail("email");
-        user.setPosition(Position.PM);
-        user.setRegistrationDate(LocalDate.now());
-        user.setTimeZone(5);
-        user.setCreated(Instant.now());
-        return userJpaRepository.save(user);
-    }
-
-    protected Project createTestProject(User headUser) {
-        Project project = new Project();
-        project.setName("Project1");
-        project.setDescription("New test project");
-        project.setHead(headUser);
-        project.setNextTaskId(1);
-        project.setKey("P1");
-        return projectJpaRepository.save(project);
     }
 }

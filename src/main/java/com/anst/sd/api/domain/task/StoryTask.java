@@ -13,9 +13,6 @@ import java.util.List;
 @Getter
 @Setter
 public class StoryTask extends AbstractTask {
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private FullCycleStatus status;
     @ManyToOne
     @JoinColumn(name = "tester_id")
     private User tester;

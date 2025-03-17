@@ -11,5 +11,6 @@ import java.util.UUID;
 public interface UserJpaRepository extends JpaRepository<User, UUID> {
     Optional<User> findByUsername(String username);
 
+    //TODO: After UsersProjects need to create a query, which gets an userId with projectId from UsersProjects entity.
     Optional<User> findById(UUID id);
 }
