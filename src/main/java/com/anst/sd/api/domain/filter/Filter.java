@@ -10,6 +10,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.UUID;
+
 @Data
 @Document(collection = "filter")
 @AllArgsConstructor
@@ -20,11 +22,13 @@ public class Filter {
     @Id
     private String id;
     @Column
-    @Indexed
-    private String projectId;
+    private String name;
     @Column
     @Indexed
-    private String userId;
+    private UUID projectId;
+    @Column
+    @Indexed
+    private UUID userId;
     @Column
     private FilterPayload payload;
 }

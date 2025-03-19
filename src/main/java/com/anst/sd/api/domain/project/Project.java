@@ -29,7 +29,7 @@ public class Project extends DomainObject {
     private String key;
     @OneToMany(mappedBy = "project")
     private List<Sprint> sprints;
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UsersProjects> users;
     @OneToMany(mappedBy = "project")
     private List<Tag> tags;

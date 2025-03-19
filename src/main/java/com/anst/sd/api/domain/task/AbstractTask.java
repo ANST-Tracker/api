@@ -33,6 +33,9 @@ public abstract class AbstractTask extends DomainObject {
     private TaskType type;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
+    private FullCycleStatus status;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private TaskPriority priority;
     @Column(name = "story_points")
     private Integer storyPoints;

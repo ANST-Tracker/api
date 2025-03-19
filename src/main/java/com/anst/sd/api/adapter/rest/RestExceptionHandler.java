@@ -1,5 +1,9 @@
 package com.anst.sd.api.adapter.rest;
 
+import com.anst.sd.api.app.api.filter.FilterNotFoundException;
+import com.anst.sd.api.app.api.filter.FilterValidationException;
+import com.anst.sd.api.app.api.security.CodeAlreadySentException;
+import com.anst.sd.api.app.api.security.UserCodeNotFoundException;
 import com.anst.sd.api.app.api.project.ProjectNotFoundException;
 import com.anst.sd.api.app.api.project.ProjectValidationException;
 import com.anst.sd.api.app.api.security.CodeAlreadySentException;
@@ -54,6 +58,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({ProjectValidationException.class, AbstractTaskValidationException.class})
+    @ExceptionHandler({
+        ProjectValidationException.class,
+        FilterValidationException.class
+    })
     public ResponseEntity<Object> handleValidation(Exception ex) {
         logger.error(ex.getMessage(), ex);
         var errorInfo = createErrorInfo(CLIENT);
@@ -79,6 +87,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             ProjectNotFoundException.class,
             UserCodeNotFoundException.class,
             AbstractTaskNotFound.class,
+        UserNotFoundException.class,
+        ProjectNotFoundException.class,
+        UserCodeNotFoundException.class,
+        FilterNotFoundException.class
     })
     public ResponseEntity<Object> handleNotFound(Exception ex) {
         logger.error(ex.getMessage(), ex);

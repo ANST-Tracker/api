@@ -5,6 +5,7 @@ create table public.abstract_task
     name            varchar not null,
     description     varchar,
     type            varchar not null,
+    status          varchar not null,
     priority        varchar not null,
     status          varchar not null,
     story_points    bigint,

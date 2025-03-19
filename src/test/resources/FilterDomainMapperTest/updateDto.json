@@ -1,0 +1,30 @@
+{
+  "payload": {
+    "nameFragment": "testName",
+    "statuses": [
+      "OPEN"
+    ],
+    "types": [
+      "DEFECT"
+    ],
+    "priorities": [
+      "BLOCKER"
+    ],
+    "storyPoints": [
+      0
+    ],
+    "assigneeIds": [
+      "9ad5389b-ae0f-44ba-9b58-e5211b70e8f8"
+    ],
+    "reviewerIds": [
+      "1cb0e5b0-129d-4bbf-a449-86b87a439da9"
+    ],
+    "creatorIds": [
+      "be6ff7be-cbfa-4600-a93d-bc2b4debdaea"
+    ],
+    "tagIds": [
+      "fdaa74da-56b1-481d-9d47-0143b76d9ffc"
+    ]
+  },
+  "name": "test"
+}

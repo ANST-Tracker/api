@@ -5,11 +5,13 @@ import com.anst.sd.api.domain.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Entity
 @Table(name = "users_projects")
 @Getter
 @Setter
+@Accessors(chain = true)
 public class UsersProjects extends BusinessEntity {
     @ManyToOne(optional = false)
     @JoinColumn(name = "user_id")
