@@ -93,6 +93,9 @@ public class TaskFindByFilterDelegate {
         if (!CollectionUtils.isEmpty(payload.getStoryPoints())) {
             predicates.add(taskRoot.get(AbstractTask_.storyPoints).in(payload.getStoryPoints()));
         }
+        if (!CollectionUtils.isEmpty(payload.getStatuses())) {
+            predicates.add(taskRoot.get(AbstractTask_.status).in(payload.getStatuses()));
+        }
     }
 
     private void addTagsPredicates(CriteriaBuilder criteriaBuilder, Filter filter, Root<AbstractTask> taskRoot, List<Predicate> predicates,

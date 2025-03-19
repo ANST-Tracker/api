@@ -1,7 +1,6 @@
 package com.anst.sd.api.adapter.rest.task.dto;
 
-import com.anst.sd.api.domain.task.FullCycleStatus;
-import com.anst.sd.api.domain.task.TaskType;
+import com.anst.sd.api.domain.task.SimpleDictionary;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -11,10 +10,11 @@ import lombok.experimental.FieldDefaults;
 @Accessors(chain = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TaskRegistryDto {
-    Integer simpleId;
+    String simpleId;
     String name;
-    TaskType type;
-    FullCycleStatus status;
+    SimpleDictionary type;
+    SimpleDictionary status;
+    SimpleDictionary priority;
     String assigneeFullName;
     String creatorFullName;
 }

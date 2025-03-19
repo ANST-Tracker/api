@@ -2,8 +2,6 @@ package com.anst.sd.api.adapter.rest;
 
 import com.anst.sd.api.app.api.filter.FilterNotFoundException;
 import com.anst.sd.api.app.api.filter.FilterValidationException;
-import com.anst.sd.api.app.api.security.CodeAlreadySentException;
-import com.anst.sd.api.app.api.security.UserCodeNotFoundException;
 import com.anst.sd.api.app.api.project.ProjectNotFoundException;
 import com.anst.sd.api.app.api.project.ProjectValidationException;
 import com.anst.sd.api.app.api.security.CodeAlreadySentException;
@@ -33,11 +31,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @Nullable
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(
-            @NonNull Exception ex,
-            @Nullable Object body,
-            @NonNull HttpHeaders headers,
-            @NonNull HttpStatusCode statusCode,
-            @NonNull WebRequest request) {
+        @NonNull Exception ex,
+        @Nullable Object body,
+        @NonNull HttpHeaders headers,
+        @NonNull HttpStatusCode statusCode,
+        @NonNull WebRequest request) {
         logger.error(ex.getMessage(), ex);
         var errorInfo = createErrorInfo(SERVER);
         return super.handleExceptionInternal(ex, errorInfo, headers, statusCode, request);
@@ -57,9 +55,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorInfo, HttpStatus.FORBIDDEN);
     }
 
-    @ExceptionHandler({ProjectValidationException.class, AbstractTaskValidationException.class})
     @ExceptionHandler({
         ProjectValidationException.class,
+        AbstractTaskValidationException.class,
         FilterValidationException.class
     })
     public ResponseEntity<Object> handleValidation(Exception ex) {
@@ -83,13 +81,10 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({
-            UserNotFoundException.class,
-            ProjectNotFoundException.class,
-            UserCodeNotFoundException.class,
-            AbstractTaskNotFound.class,
         UserNotFoundException.class,
         ProjectNotFoundException.class,
         UserCodeNotFoundException.class,
+        AbstractTaskNotFound.class,
         FilterNotFoundException.class
     })
     public ResponseEntity<Object> handleNotFound(Exception ex) {

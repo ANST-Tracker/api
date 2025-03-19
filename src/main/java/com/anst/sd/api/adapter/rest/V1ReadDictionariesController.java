@@ -1,6 +1,6 @@
-package com.anst.sd.api.adapter.rest.task.read;
+package com.anst.sd.api.adapter.rest;
 
-import com.anst.sd.api.adapter.rest.task.dto.SimpleDictionaryDto;
+import com.anst.sd.api.adapter.rest.dto.SimpleDictionaryDto;
 import com.anst.sd.api.adapter.rest.task.dto.SimpleDictionaryDtoMapper;
 import com.anst.sd.api.app.api.task.GetAvailableStatusesInBound;
 import io.swagger.v3.oas.annotations.Operation;

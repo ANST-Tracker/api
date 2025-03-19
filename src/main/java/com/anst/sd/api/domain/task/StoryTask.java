@@ -5,6 +5,7 @@ import com.anst.sd.api.domain.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
 @Table(name = "story_task")
 @Getter
 @Setter
+@Accessors(chain = true)
 public class StoryTask extends AbstractTask {
     @ManyToOne
     @JoinColumn(name = "tester_id")

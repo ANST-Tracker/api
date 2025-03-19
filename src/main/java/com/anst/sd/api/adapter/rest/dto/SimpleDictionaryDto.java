@@ -1,4 +1,4 @@
-package com.anst.sd.api.adapter.rest.task.dto;
+package com.anst.sd.api.adapter.rest.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
