@@ -68,14 +68,14 @@ public class WriteFilterController {
     }
 
     @Operation(
-        summary = "Update filter",
+        summary = "Delete filter",
         responses = {
             @ApiResponse(
                 responseCode = "200",
                 useReturnTypeSchema = true)
         })
     @DeleteMapping("/{id}")
-    public ResponseEntity<StringIdResponseDto> updateFilter(@PathVariable String id) {
+    public ResponseEntity<StringIdResponseDto> deleteFilter(@PathVariable String id) {
         Filter result = deleteFilterInbound.delete(id, jwtService.getJwtAuth().getUserId());
         return ResponseEntity.ok(new StringIdResponseDto(result.getId()));
     }
