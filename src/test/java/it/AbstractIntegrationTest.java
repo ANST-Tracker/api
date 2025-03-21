@@ -2,7 +2,9 @@ package it;
 
 import com.anst.sd.api.AnstApiTodoApplication;
 import com.anst.sd.api.adapter.persistence.mongo.FilterMongoRepository;
+import com.anst.sd.api.adapter.persistence.relational.*;
 import com.anst.sd.api.adapter.persistence.mongo.UserCodeMongoRepository;
+import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.adapter.persistence.relational.*;
 import com.anst.sd.api.adapter.telegram.CreateUserCodeMessageSupplier;
 import com.anst.sd.api.domain.PermissionCode;
@@ -79,6 +81,11 @@ public abstract class AbstractIntegrationTest {
     protected SprintJpaRepository sprintJpaRepository;
     @Autowired
     protected StoryTaskJpaRepository storyTaskJpaRepository;
+    @Autowired
+    protected TagJpaRepository tagJpaRepository;
+    @Autowired
+    protected UsersProjectsJpaRepository usersProjectsJpaRepository;
+
     protected User user;
     protected User reviewer;
     protected User assignee;
@@ -100,6 +107,8 @@ public abstract class AbstractIntegrationTest {
         epicTaskJpaRepository.deleteAll();
         sprintJpaRepository.deleteAll();
         abstractTaskJpaRepository.deleteAll();
+        tagJpaRepository.deleteAll();
+        usersProjectsJpaRepository.deleteAll();
         filterMongoRepository.deleteAll();
         projectJpaRepository.deleteAll();
         userCodeMongoRepository.deleteAll();

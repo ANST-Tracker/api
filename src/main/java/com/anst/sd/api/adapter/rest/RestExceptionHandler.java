@@ -2,13 +2,18 @@ package com.anst.sd.api.adapter.rest;
 
 import com.anst.sd.api.app.api.filter.FilterNotFoundException;
 import com.anst.sd.api.app.api.filter.FilterValidationException;
+import com.anst.sd.api.app.api.security.CodeAlreadySentException;
+import com.anst.sd.api.app.api.security.UserCodeNotFoundException;
 import com.anst.sd.api.app.api.project.ProjectNotFoundException;
 import com.anst.sd.api.app.api.project.ProjectValidationException;
+import com.anst.sd.api.app.api.tag.TagNotFoundException;
+import com.anst.sd.api.app.api.tag.TagValidationException;
 import com.anst.sd.api.app.api.security.CodeAlreadySentException;
 import com.anst.sd.api.app.api.security.UserCodeNotFoundException;
 import com.anst.sd.api.app.api.task.AbstractTaskNotFound;
 import com.anst.sd.api.app.api.task.AbstractTaskValidationException;
 import com.anst.sd.api.app.api.user.UserNotFoundException;
+import com.anst.sd.api.app.api.usersProjects.UsersProjectsValidationException;
 import com.anst.sd.api.security.app.api.AuthException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -58,7 +63,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({
         ProjectValidationException.class,
         AbstractTaskValidationException.class,
-        FilterValidationException.class
+        FilterValidationException.class,
+        TagValidationException.class,
+        UsersProjectsValidationException.class
     })
     public ResponseEntity<Object> handleValidation(Exception ex) {
         logger.error(ex.getMessage(), ex);
@@ -84,6 +91,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         UserNotFoundException.class,
         ProjectNotFoundException.class,
         UserCodeNotFoundException.class,
+        TagNotFoundException.class,
         AbstractTaskNotFound.class,
         FilterNotFoundException.class
     })
