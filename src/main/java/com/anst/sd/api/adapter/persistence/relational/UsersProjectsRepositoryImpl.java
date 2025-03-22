@@ -6,6 +6,7 @@ import com.anst.sd.api.domain.UsersProjects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -17,6 +18,11 @@ public class UsersProjectsRepositoryImpl implements UsersProjectsRepository {
     public UsersProjects findByUserIdAndProjectId(UUID userId, UUID projectId) {
         return usersProjectsJpaRepository.findByUserIdAndProjectId(userId, projectId)
                 .orElseThrow(() -> new UsersProjectsNotFoundException(userId, projectId));
+    }
+
+    @Override
+    public List<UsersProjects> findByProjectId(UUID projectId) {
+        return usersProjectsJpaRepository.findByProjectId(projectId);
     }
 
     @Override

@@ -85,17 +85,4 @@ public class V1WriteUsersProjectsControllerTest extends AbstractIntegrationTest{
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
-
-    // ===================================================================================================================
-    // = Implementation
-    // ===================================================================================================================
-
-    private UsersProjects createUsersProjects(Project project, User user) {
-        UsersProjects usersProjects = new UsersProjects();
-        usersProjects.setUser(user);
-        usersProjects.setProject(project);
-        usersProjects.setPermissionCode(PermissionCode.READ_ONLY);
-        return usersProjectsJpaRepository.save(usersProjects);
-    }
-
 }

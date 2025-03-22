@@ -1,10 +1,13 @@
 package com.anst.sd.api.adapter.rest.project.dto;
 
 import com.anst.sd.api.AbstractUnitTest;
+import com.anst.sd.api.adapter.rest.tag.dto.TagDtoMapper;
+import com.anst.sd.api.adapter.rest.user.dto.UserDtoMapper;
 import com.anst.sd.api.domain.project.Project;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +18,8 @@ class ProjectInfoDtoMapperTest extends AbstractUnitTest {
     @BeforeEach
     void setUp() {
         mapper = Mappers.getMapper(ProjectInfoDtoMapper.class);
+        ReflectionTestUtils.setField(mapper, "tagDtoMapper", Mappers.getMapper(TagDtoMapper.class));
+        ReflectionTestUtils.setField(mapper, "userDtoMapper", Mappers.getMapper(UserDtoMapper.class));
     }
 
     @Test

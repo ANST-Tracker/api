@@ -102,15 +102,4 @@ class V1WriteTagControllerTest extends AbstractIntegrationTest {
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
-
-    // ===================================================================================================================
-    // = Implementation
-    // ===================================================================================================================
-
-    private Tag createTag(Project project, String name) {
-        Tag tag = new Tag();
-        tag.setName(name);
-        tag.setProject(project);
-        return tagJpaRepository.save(tag);
-    }
 }
