@@ -48,7 +48,7 @@ public class TagRepositoryImpl implements TagRepository {
     @Override
     public Tag findByNameAndProjectId(String name, UUID projectId) {
         return tagJpaRepository.findByNameAndProjectId(name, projectId)
-                .orElseThrow(() -> new TagNotFoundException(name,projectId));
+                .orElseThrow(() -> new TagNotFoundException(name, projectId));
     }
 
     @Override

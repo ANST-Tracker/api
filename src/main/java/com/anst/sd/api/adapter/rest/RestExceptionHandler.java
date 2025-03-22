@@ -13,6 +13,7 @@ import com.anst.sd.api.app.api.security.UserCodeNotFoundException;
 import com.anst.sd.api.app.api.task.AbstractTaskNotFound;
 import com.anst.sd.api.app.api.task.AbstractTaskValidationException;
 import com.anst.sd.api.app.api.user.UserNotFoundException;
+import com.anst.sd.api.app.api.usersProjects.UsersProjectsNotFoundException;
 import com.anst.sd.api.app.api.usersProjects.UsersProjectsValidationException;
 import com.anst.sd.api.security.app.api.AuthException;
 import org.springframework.http.HttpHeaders;
@@ -92,6 +93,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         ProjectNotFoundException.class,
         UserCodeNotFoundException.class,
         TagNotFoundException.class,
+        AbstractTaskNotFound.class,
+        UsersProjectsNotFoundException.class
         AbstractTaskNotFound.class,
         FilterNotFoundException.class
     })
