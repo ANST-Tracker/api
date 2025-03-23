@@ -4,12 +4,16 @@ import com.anst.sd.api.adapter.rest.tag.dto.TagInfoDto;
 import com.anst.sd.api.adapter.rest.tag.write.dto.CreateTagDto;
 import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.tag.Tag;
+import com.anst.sd.api.domain.task.AbstractTask;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -85,6 +89,22 @@ class V1WriteTagControllerTest extends AbstractIntegrationTest {
     @Test
     void deleteTag_successfully() throws Exception {
         Tag existingTag = createTag(project, "TagToDelete");
+
+        performAuthenticated(user, MockMvcRequestBuilders
+                .delete(API_URL + "/" + existingTag.getId()))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        assertFalse(tagJpaRepository.existsById(existingTag.getId()));
+    }
+
+    @Test
+    void deleteTagWithTask_successfully() throws Exception {
+        Tag existingTag = createTag(project, "TagToDelete");
+        List<Tag> tags = new ArrayList<>();
+        tags.add(existingTag);
+        AbstractTask task = createEpic(user, project, tags);
 
         performAuthenticated(user, MockMvcRequestBuilders
                 .delete(API_URL + "/" + existingTag.getId()))
