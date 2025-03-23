@@ -5,7 +5,6 @@ import com.anst.sd.api.adapter.persistence.mongo.FilterMongoRepository;
 import com.anst.sd.api.adapter.persistence.relational.*;
 import com.anst.sd.api.adapter.persistence.mongo.UserCodeMongoRepository;
 import com.anst.sd.api.domain.project.Project;
-import com.anst.sd.api.adapter.persistence.relational.*;
 import com.anst.sd.api.adapter.telegram.CreateUserCodeMessageSupplier;
 import com.anst.sd.api.domain.PermissionCode;
 import com.anst.sd.api.domain.tag.Tag;
@@ -160,6 +159,21 @@ public abstract class AbstractIntegrationTest {
                 .setUser(headUser)
         ));
         return projectJpaRepository.save(project);
+    }
+
+    protected UsersProjects createUsersProjects(Project project, User user) {
+        UsersProjects usersProjects = new UsersProjects();
+        usersProjects.setUser(user);
+        usersProjects.setProject(project);
+        usersProjects.setPermissionCode(PermissionCode.READ_ONLY);
+        return usersProjectsJpaRepository.save(usersProjects);
+    }
+
+    protected Tag createTag(Project project, String name) {
+        Tag tag = new Tag();
+        tag.setName(name);
+        tag.setProject(project);
+        return tagJpaRepository.save(tag);
     }
 
     protected AbstractTask createSubtask(User user, Project project, User reviewer, User assignee, AbstractTask storyTask) {

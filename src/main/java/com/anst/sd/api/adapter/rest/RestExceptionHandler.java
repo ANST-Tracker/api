@@ -8,8 +8,6 @@ import com.anst.sd.api.app.api.project.ProjectNotFoundException;
 import com.anst.sd.api.app.api.project.ProjectValidationException;
 import com.anst.sd.api.app.api.tag.TagNotFoundException;
 import com.anst.sd.api.app.api.tag.TagValidationException;
-import com.anst.sd.api.app.api.security.CodeAlreadySentException;
-import com.anst.sd.api.app.api.security.UserCodeNotFoundException;
 import com.anst.sd.api.app.api.task.AbstractTaskNotFound;
 import com.anst.sd.api.app.api.task.AbstractTaskValidationException;
 import com.anst.sd.api.app.api.user.UserNotFoundException;
