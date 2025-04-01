@@ -33,6 +33,7 @@ class V1WriteTagControllerTest extends AbstractIntegrationTest {
         CreateTagDto createTagDto = new CreateTagDto();
         createTagDto.setName("TestTag");
         createTagDto.setProjectId(project.getId());
+        createUsersProjects(project, user);
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
                 .post(API_URL)
@@ -65,8 +66,10 @@ class V1WriteTagControllerTest extends AbstractIntegrationTest {
 
     @Test
     void createTag_withSameNameInDifferentProjects_successfully() throws Exception {
+        createUsersProjects(project, user);
         createTag(project, "TestTag");
         Project newProject = createTestProject(user);
+        createUsersProjects(newProject, user);
 
         CreateTagDto createTagDto = new CreateTagDto();
         createTagDto.setName("TestTag");
@@ -89,6 +92,7 @@ class V1WriteTagControllerTest extends AbstractIntegrationTest {
     @Test
     void deleteTag_successfully() throws Exception {
         Tag existingTag = createTag(project, "TagToDelete");
+        createUsersProjects(project, user);
 
         performAuthenticated(user, MockMvcRequestBuilders
                 .delete(API_URL + "/" + existingTag.getId()))
@@ -105,6 +109,7 @@ class V1WriteTagControllerTest extends AbstractIntegrationTest {
         List<Tag> tags = new ArrayList<>();
         tags.add(existingTag);
         AbstractTask task = createEpic(user, project, tags);
+        createUsersProjects(project, user);
 
         performAuthenticated(user, MockMvcRequestBuilders
                 .delete(API_URL + "/" + existingTag.getId()))

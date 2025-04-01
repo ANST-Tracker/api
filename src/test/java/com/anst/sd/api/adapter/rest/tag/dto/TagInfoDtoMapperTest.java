@@ -29,7 +29,7 @@ public class TagInfoDtoMapperTest extends AbstractUnitTest {
     @Test
     void mapToDtoList() {
         List<Tag> list = new ArrayList<>();
-        for(int i = 0; i < 3;i++){
+        for(int i = 0; i < 3; i++){
             list.add(readFromFile("/TagInfoDtoMapperTest/tag.json", Tag.class));
         }
 

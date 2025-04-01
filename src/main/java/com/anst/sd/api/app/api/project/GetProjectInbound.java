@@ -5,5 +5,5 @@ import com.anst.sd.api.domain.project.Project;
 import java.util.UUID;
 
 public interface GetProjectInbound {
-    Project get(UUID userId);
+    Project get(UUID projectId, UUID userId);
 }

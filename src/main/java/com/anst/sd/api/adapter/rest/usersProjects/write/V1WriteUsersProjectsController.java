@@ -30,7 +30,7 @@ public class V1WriteUsersProjectsController {
     private final UsersProjectsDomainMapper usersProjectsDomainMapper;
 
     @Operation(
-            summary = "add user in project",
+            summary = "Add user in project",
             responses = {
                     @ApiResponse(
                             responseCode = "200",

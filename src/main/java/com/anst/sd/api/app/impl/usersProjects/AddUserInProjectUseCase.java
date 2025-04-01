@@ -31,13 +31,12 @@ public class AddUserInProjectUseCase implements AddUserInProjectInBound {
                 usersProjects.getProject().getId(),
                 adminUserId);
 
-        User user = userRepository.getById(usersProjects.getUser().getId());
-        Project project = projectRepository.getById(usersProjects.getProject().getId());
-
-        if (usersProjectsRepository.existsByUserIdAndProjectId(user.getId(), project.getId())) {
+        if (usersProjectsRepository.existsByUserIdAndProjectId(usersProjects.getUser().getId(), usersProjects.getProject().getId())) {
             throw new UsersProjectsValidationException();
         }
 
+        User user = userRepository.getById(usersProjects.getUser().getId());
+        Project project = projectRepository.getById(usersProjects.getProject().getId());
         usersProjects.setUser(user);
         usersProjects.setProject(project);
 

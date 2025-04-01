@@ -1,6 +1,7 @@
 package com.anst.sd.api.adapter.persistence.relational;
 
 import com.anst.sd.api.domain.tag.Tag;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +12,7 @@ import java.util.UUID;
 @Repository
 public interface TagJpaRepository extends JpaRepository<Tag, UUID> {
     List<Tag> findAllByProjectId(UUID projectId);
-
+    @EntityGraph(attributePaths = "tasks")
     Optional<Tag> findById(UUID id);
 
     void deleteById(UUID id);

@@ -4,6 +4,7 @@ import com.anst.sd.api.adapter.rest.project.dto.ProjectInfoDto;
 import com.anst.sd.api.adapter.rest.project.dto.ProjectInfoDtoMapper;
 import com.anst.sd.api.app.api.project.GetProjectInbound;
 import com.anst.sd.api.domain.project.Project;
+import com.anst.sd.api.security.app.impl.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import java.util.UUID;
 public class V1ReadProjectController {
     private final GetProjectInbound getProjectInbound;
     private final ProjectInfoDtoMapper projectInfoDtoMapper;
+    private final JwtService jwtService;
 
     @Operation(
             summary = "Get project information",
@@ -32,8 +34,8 @@ public class V1ReadProjectController {
                             useReturnTypeSchema = true)
             })
     @GetMapping("/{projectId}")
-    public ResponseEntity<ProjectInfoDto> getProjects(@PathVariable UUID projectId) {
-        Project project = getProjectInbound.get(projectId);
+    public ResponseEntity<ProjectInfoDto> getProject(@PathVariable UUID projectId) {
+        Project project = getProjectInbound.get(projectId, jwtService.getJwtAuth().getUserId());
         return ResponseEntity.ok(projectInfoDtoMapper.mapToDto(project));
     }
 }

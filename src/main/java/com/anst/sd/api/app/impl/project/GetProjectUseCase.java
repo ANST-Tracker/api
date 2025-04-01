@@ -22,10 +22,10 @@ public class GetProjectUseCase implements GetProjectInbound {
 
     @Override
     @Transactional(readOnly = true)
-    public Project get(UUID id) {
-        log.info("Getting project information by Id {}", id);
+    public Project get(UUID projectId, UUID userId) {
+        log.info("Getting project information by Id {}, by user {}", projectId, userId);
 
-        Project project = projectRepository.getById(id);
+        Project project = projectRepository.getByIdAndUserId(projectId, userId);
         project.setTags(tagRepository.findAllByProjectId(project.getId()));
         project.setUsers(usersProjectsRepository.findByProjectId(project.getId()));
 

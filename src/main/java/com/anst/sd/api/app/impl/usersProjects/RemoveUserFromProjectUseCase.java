@@ -22,6 +22,9 @@ public class RemoveUserFromProjectUseCase implements RemoveUserFromProjectInBoun
     public void remove(UUID projectId, UUID userId, UUID adminUserId) {
         log.info("Remove user with id {} to project with id {} by admin with id{}", userId, projectId, adminUserId);
 
+        if (!usersProjectsRepository.existsByUserIdAndProjectId(adminUserId, projectId)) {
+            throw new UsersProjectsNotFoundException(adminUserId, projectId);
+        }
         if (!usersProjectsRepository.existsByUserIdAndProjectId(userId, projectId)) {
             throw new UsersProjectsNotFoundException(userId, projectId);
         }
