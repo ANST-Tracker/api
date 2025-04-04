@@ -1,5 +1,5 @@
 {
-  "name": "Test Subtask",
+  "name": "Under Test",
   "description": "This is a test subtask",
   "type": "SUBTASK",
   "priority": "MAJOR",

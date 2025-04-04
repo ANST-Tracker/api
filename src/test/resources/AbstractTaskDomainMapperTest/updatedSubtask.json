@@ -2,6 +2,6 @@
   "name": "Updated Subtask",
   "description": "Updated subtask description",
   "type": "SUBTASK",
-  "tags": [],
+  "tags": [ ],
   "status": "OPEN"
 }

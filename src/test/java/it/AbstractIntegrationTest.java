@@ -19,7 +19,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -58,8 +57,6 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     protected ObjectMapper objectMapper;
     @Autowired
-    protected RedissonClient redissonClient;
-    @Autowired
     protected UserJpaRepository userJpaRepository;
     @Autowired
     protected DeviceJpaRepository deviceJpaRepository;
@@ -87,7 +84,7 @@ public abstract class AbstractIntegrationTest {
     protected Sprint sprint;
     protected AbstractTask storyTask;
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    protected PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void clearDataBase() {
@@ -105,48 +102,26 @@ public abstract class AbstractIntegrationTest {
     }
 
     protected User createTestUser() {
-        User user = new User();
-        user.setUsername("username");
-        user.setId(UUID.randomUUID());
-        user.setPassword("testPassword");
-        user.setTelegramId("eridiium");
-        user.setFirstName("firstName");
-        user.setLastName("lastName");
-        user.setEmail("test@com");
-        user.setPosition(Position.DEVOPS);
-        user.setDepartmentName("HSE");
-        user.setRegistrationDate(LocalDate.now());
-        user.setTimeZone(1);
-        user.setCreated(Instant.now());
-        return userJpaRepository.save(user);
+        return createUser("username", "eridiium", "eridiium@gmail.com");
     }
 
     protected User createTestReviewer() {
-        User user = new User();
-        user.setUsername("reviewer");
-        user.setId(UUID.randomUUID());
-        user.setPassword("testPassword");
-        user.setTelegramId("reviewer");
-        user.setFirstName("firstName");
-        user.setLastName("lastName");
-        user.setEmail("reviewer@com");
-        user.setPosition(Position.DEVOPS);
-        user.setDepartmentName("HSE");
-        user.setRegistrationDate(LocalDate.now());
-        user.setTimeZone(1);
-        user.setCreated(Instant.now());
-        return userJpaRepository.save(user);
+        return createUser("reviewer", "reviewer", "reviewer@gmail.com");
     }
 
     protected User createTestAssignee() {
+        return createUser("assignee", "assignee", "assignee@gmail.com");
+    }
+
+    private User createUser(String username, String telegramId, String email) {
         User user = new User();
-        user.setUsername("assignee");
+        user.setUsername(username);
         user.setId(UUID.randomUUID());
-        user.setPassword("testPassword");
-        user.setTelegramId("assignee");
+        user.setPassword(passwordEncoder.encode(USER_PASSWORD));
+        user.setTelegramId(telegramId);
         user.setFirstName("firstName");
         user.setLastName("lastName");
-        user.setEmail("assignee@com");
+        user.setEmail(email);
         user.setPosition(Position.DEVOPS);
         user.setDepartmentName("HSE");
         user.setRegistrationDate(LocalDate.now());
@@ -218,7 +193,7 @@ public abstract class AbstractIntegrationTest {
         return epicTaskJpaRepository.save(epicTask);
     }
 
-    protected <T extends AbstractTask> T fillAbstractTaskFields(T task, User user, Project project) {
+    protected <T extends AbstractTask> void fillAbstractTaskFields(T task, User user, Project project) {
         task.setPriority(TaskPriority.MAJOR);
         task.setStoryPoints(5);
         task.setAssignee(user);
@@ -229,7 +204,6 @@ public abstract class AbstractIntegrationTest {
         task.setOrderNumber(BigDecimal.ONE);
         task.setTimeEstimation(null);
         task.setTags(List.of());
-        return task;
     }
 
     // ===================================================================================================================
