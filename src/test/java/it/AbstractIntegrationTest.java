@@ -2,12 +2,13 @@ package it;
 
 import com.anst.sd.api.AnstApiTodoApplication;
 import com.anst.sd.api.adapter.persistence.mongo.FilterMongoRepository;
-import com.anst.sd.api.adapter.persistence.mongo.UserCodeMongoRepository;
 import com.anst.sd.api.adapter.persistence.relational.*;
+import com.anst.sd.api.adapter.persistence.mongo.UserCodeMongoRepository;
+import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.adapter.telegram.CreateUserCodeMessageSupplier;
 import com.anst.sd.api.domain.PermissionCode;
+import com.anst.sd.api.domain.tag.Tag;
 import com.anst.sd.api.domain.UsersProjects;
-import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.sprint.Sprint;
 import com.anst.sd.api.domain.task.*;
 import com.anst.sd.api.domain.user.Position;
@@ -79,6 +80,11 @@ public abstract class AbstractIntegrationTest {
     protected SprintJpaRepository sprintJpaRepository;
     @Autowired
     protected StoryTaskJpaRepository storyTaskJpaRepository;
+    @Autowired
+    protected TagJpaRepository tagJpaRepository;
+    @Autowired
+    protected UsersProjectsJpaRepository usersProjectsJpaRepository;
+
     protected User user;
     protected User reviewer;
     protected User assignee;
@@ -100,6 +106,8 @@ public abstract class AbstractIntegrationTest {
         epicTaskJpaRepository.deleteAll();
         sprintJpaRepository.deleteAll();
         abstractTaskJpaRepository.deleteAll();
+        tagJpaRepository.deleteAll();
+        usersProjectsJpaRepository.deleteAll();
         filterMongoRepository.deleteAll();
         projectJpaRepository.deleteAll();
         userCodeMongoRepository.deleteAll();
@@ -119,7 +127,7 @@ public abstract class AbstractIntegrationTest {
         return createUser("assignee", "assignee", "assignee@gmail.com");
     }
 
-    private User createUser(String username, String telegramId, String email) {
+    protected User createUser(String username, String telegramId, String email) {
         User user = new User();
         user.setUsername(username);
         user.setId(UUID.randomUUID());
@@ -150,6 +158,21 @@ public abstract class AbstractIntegrationTest {
                 .setUser(headUser)
         ));
         return projectJpaRepository.save(project);
+    }
+
+    protected UsersProjects createUsersProjects(Project project, User user) {
+        UsersProjects usersProjects = new UsersProjects();
+        usersProjects.setUser(user);
+        usersProjects.setProject(project);
+        usersProjects.setPermissionCode(PermissionCode.READ_ONLY);
+        return usersProjectsJpaRepository.save(usersProjects);
+    }
+
+    protected Tag createTag(Project project, String name) {
+        Tag tag = new Tag();
+        tag.setName(name);
+        tag.setProject(project);
+        return tagJpaRepository.save(tag);
     }
 
     protected AbstractTask createSubtask(User user, Project project, User reviewer, User assignee, AbstractTask storyTask) {
@@ -201,6 +224,18 @@ public abstract class AbstractIntegrationTest {
         epicTask.setType(TaskType.EPIC);
         epicTask.setStatus(TaskStatus.OPEN);
         epicTask.setDescription("description");
+        fillAbstractTaskFields(epicTask, user, project);
+        return epicTaskJpaRepository.save(epicTask);
+    }
+
+    protected EpicTask createEpic(User user, Project project, List<Tag> tags) {
+        EpicTask epicTask = new EpicTask();
+        epicTask.setSimpleId("GD-3");
+        epicTask.setName("Epic");
+        epicTask.setType(TaskType.EPIC);
+        epicTask.setStatus(TaskStatus.OPEN);
+        epicTask.setDescription("description");
+        epicTask.setTags(tags);
         fillAbstractTaskFields(epicTask, user, project);
         return epicTaskJpaRepository.save(epicTask);
     }

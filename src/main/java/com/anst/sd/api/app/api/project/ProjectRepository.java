@@ -10,4 +10,6 @@ public interface ProjectRepository {
     Project getById(UUID id);
 
     boolean existsByIdAndUserId(UUID userId, UUID id);
+
+    Project getByIdAndUserId(UUID projectId, UUID userId);
 }
