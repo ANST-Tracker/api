@@ -37,11 +37,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @Nullable
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(
-        @NonNull Exception ex,
-        @Nullable Object body,
-        @NonNull HttpHeaders headers,
-        @NonNull HttpStatusCode statusCode,
-        @NonNull WebRequest request) {
+            @NonNull Exception ex,
+            @Nullable Object body,
+            @NonNull HttpHeaders headers,
+            @NonNull HttpStatusCode statusCode,
+            @NonNull WebRequest request) {
         logger.error(ex.getMessage(), ex);
         var errorInfo = createErrorInfo(SERVER);
         return super.handleExceptionInternal(ex, errorInfo, headers, statusCode, request);
@@ -62,15 +62,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({
-        ProjectValidationException.class,
-        AbstractTaskValidationException.class,
-        FilterValidationException.class,
-        TagValidationException.class,
-        UsersProjectsValidationException.class
-    })
-    @ExceptionHandler({
             ProjectValidationException.class,
             AbstractTaskValidationException.class,
+            FilterValidationException.class,
+            TagValidationException.class,
+            UsersProjectsValidationException.class,
             CommentValidationException.class
     })
     public ResponseEntity<Object> handleValidation(Exception ex) {
@@ -94,18 +90,14 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({
-        UserNotFoundException.class,
-        ProjectNotFoundException.class,
-        UserCodeNotFoundException.class,
-        TagNotFoundException.class,
-        AbstractTaskNotFound.class,
-        UsersProjectsNotFoundException.class,
-        AbstractTaskNotFound.class,
-        FilterNotFoundException.class
             UserNotFoundException.class,
             ProjectNotFoundException.class,
             UserCodeNotFoundException.class,
+            TagNotFoundException.class,
             AbstractTaskNotFound.class,
+            UsersProjectsNotFoundException.class,
+            AbstractTaskNotFound.class,
+            FilterNotFoundException.class,
             CommentNotFound.class
     })
     public ResponseEntity<Object> handleNotFound(Exception ex) {

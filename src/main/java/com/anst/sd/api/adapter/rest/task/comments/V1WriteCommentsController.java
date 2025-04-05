@@ -1,18 +1,14 @@
 package com.anst.sd.api.adapter.rest.task.comments;
 
+import com.anst.sd.api.adapter.rest.dto.IdResponseDto;
 import com.anst.sd.api.adapter.rest.task.comments.dto.CreateUpdateCommentDto;
-import com.anst.sd.api.adapter.rest.task.dto.IdResponseDto;
-import com.anst.sd.api.adapter.rest.task.write.dto.UpdateAbstractTaskDto;
-import com.anst.sd.api.app.api.task.AbstractTaskValidationException;
 import com.anst.sd.api.app.api.task.comment.CommentValidationException;
 import com.anst.sd.api.app.api.task.comment.CreateCommentInbound;
 import com.anst.sd.api.app.api.task.comment.DeleteCommentInbound;
 import com.anst.sd.api.app.api.task.comment.UpdateCommentInbound;
-import com.anst.sd.api.domain.task.AbstractTask;
 import com.anst.sd.api.domain.task.Comment;
 import com.anst.sd.api.security.app.impl.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
