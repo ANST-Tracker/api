@@ -44,4 +44,15 @@ public class AbstractTaskRepositoryImpl implements AbstractTaskRepository {
         List<UUID> taskIds = delegate.findByFilter(filter);
         return abstractTaskJpaRepository.findAllById(taskIds);
     }
+
+    @Override
+    public AbstractTask getByIdAndProjectId(String simpleId, UUID projectId) {
+        return abstractTaskJpaRepository.findByIdAndProjectId(simpleId, projectId)
+                .orElseThrow(() -> new AbstractTaskNotFound(simpleId));
+    }
+
+    @Override
+    public boolean existsBySimpleIdAndProjectId(String simpleId, UUID projectId) {
+        return abstractTaskJpaRepository.existsBySimpleIdAndProjectId(simpleId, projectId);
+    }
 }

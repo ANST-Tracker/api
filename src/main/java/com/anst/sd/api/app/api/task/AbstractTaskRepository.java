@@ -19,4 +19,8 @@ public interface AbstractTaskRepository {
     AbstractTask getByIdAndProjectId(UUID uuid, UUID projectId);
 
     List<AbstractTask> findByFilter(Filter filter);
+
+    AbstractTask getByIdAndProjectId(String simpleId, UUID projectId);
+
+    boolean existsBySimpleIdAndProjectId(String simpleId, UUID projectId);
 }

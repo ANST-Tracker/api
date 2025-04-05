@@ -17,4 +17,8 @@ public interface AbstractTaskJpaRepository extends JpaRepository<AbstractTask, U
     Optional<AbstractTask> findBySimpleId(String simpleId);
 
     Optional<AbstractTask> findByIdAndProjectId(UUID taskId, UUID projectId);
+
+    Optional<AbstractTask> findBySimpleIdAndProjectId(String simpleId, UUID projectId);
+
+    boolean existsBySimpleIdAndProjectId(String simpleId, UUID projectId);
 }

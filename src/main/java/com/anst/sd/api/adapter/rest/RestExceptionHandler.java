@@ -10,6 +10,8 @@ import com.anst.sd.api.app.api.tag.TagNotFoundException;
 import com.anst.sd.api.app.api.tag.TagValidationException;
 import com.anst.sd.api.app.api.task.AbstractTaskNotFound;
 import com.anst.sd.api.app.api.task.AbstractTaskValidationException;
+import com.anst.sd.api.app.api.task.comment.CommentNotFound;
+import com.anst.sd.api.app.api.task.comment.CommentValidationException;
 import com.anst.sd.api.app.api.user.UserNotFoundException;
 import com.anst.sd.api.app.api.usersProjects.UsersProjectsNotFoundException;
 import com.anst.sd.api.app.api.usersProjects.UsersProjectsValidationException;
@@ -66,6 +68,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         TagValidationException.class,
         UsersProjectsValidationException.class
     })
+    @ExceptionHandler({
+            ProjectValidationException.class,
+            AbstractTaskValidationException.class,
+            CommentValidationException.class
+    })
     public ResponseEntity<Object> handleValidation(Exception ex) {
         logger.error(ex.getMessage(), ex);
         var errorInfo = createErrorInfo(CLIENT);
@@ -95,6 +102,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         UsersProjectsNotFoundException.class,
         AbstractTaskNotFound.class,
         FilterNotFoundException.class
+            UserNotFoundException.class,
+            ProjectNotFoundException.class,
+            UserCodeNotFoundException.class,
+            AbstractTaskNotFound.class,
+            CommentNotFound.class
     })
     public ResponseEntity<Object> handleNotFound(Exception ex) {
         logger.error(ex.getMessage(), ex);
