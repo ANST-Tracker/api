@@ -8,4 +8,6 @@ public interface ProjectRepository {
     Project save(Project project);
 
     Project getById(UUID id);
+
+    boolean existsByIdAndUserId(UUID userId, UUID id);
 }

@@ -4,11 +4,13 @@ import com.anst.sd.api.domain.task.TaskPriority;
 import com.anst.sd.api.domain.task.TaskStatus;
 import com.anst.sd.api.domain.task.TaskType;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 import java.util.UUID;
 
 @Data
+@Accessors(chain = true)
 public class FilterPayload {
     private String nameFragment;
     private List<TaskStatus> statuses;

@@ -23,4 +23,9 @@ public class ProjectRepositoryImpl implements ProjectRepository {
         return projectJpaRepository.findById(id)
             .orElseThrow(() -> new ProjectNotFoundException(id));
     }
+
+    @Override
+    public boolean existsByIdAndUserId(UUID userId, UUID id) {
+        return projectJpaRepository.existsByIdAndUserId(userId, id);
+    }
 }

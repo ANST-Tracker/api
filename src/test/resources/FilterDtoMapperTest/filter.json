@@ -1,0 +1,33 @@
+{
+  "id": "testId",
+  "name": "testName",
+  "projectId": "8000c4e3-348c-4f28-94c1-8ec8c32043fb",
+  "userId": "c2c4e74f-5e91-4355-abc4-16251e826f71",
+  "payload": {
+    "nameFragment": "testFragment",
+    "statuses": [
+      "OPEN"
+    ],
+    "types": [
+      "DEFECT"
+    ],
+    "priorities": [
+      "BLOCKER"
+    ],
+    "storyPoints": [
+      0
+    ],
+    "assigneeIds": [
+      "6e892eda-25ba-4e1a-aeb8-2803297b4292"
+    ],
+    "reviewerIds": [
+      "f41e458b-9940-4bd4-b340-fc5ec7de8a31"
+    ],
+    "creatorIds": [
+      "ab688dd0-9cbc-4a49-a680-72b9c9dad22b"
+    ],
+    "tagIds": [
+      "e68700ed-cacd-47e5-8acb-35cbf647ab00"
+    ]
+  }
+}

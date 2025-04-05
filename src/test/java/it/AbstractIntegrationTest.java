@@ -1,9 +1,12 @@
 package it;
 
 import com.anst.sd.api.AnstApiTodoApplication;
+import com.anst.sd.api.adapter.persistence.mongo.FilterMongoRepository;
 import com.anst.sd.api.adapter.persistence.mongo.UserCodeMongoRepository;
 import com.anst.sd.api.adapter.persistence.relational.*;
 import com.anst.sd.api.adapter.telegram.CreateUserCodeMessageSupplier;
+import com.anst.sd.api.domain.PermissionCode;
+import com.anst.sd.api.domain.UsersProjects;
 import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.sprint.Sprint;
 import com.anst.sd.api.domain.task.*;
@@ -85,6 +88,8 @@ public abstract class AbstractIntegrationTest {
     protected AbstractTask storyTask;
     @Autowired
     protected PasswordEncoder passwordEncoder;
+    @Autowired
+    protected FilterMongoRepository filterMongoRepository;
 
     @BeforeEach
     void clearDataBase() {
@@ -95,6 +100,7 @@ public abstract class AbstractIntegrationTest {
         epicTaskJpaRepository.deleteAll();
         sprintJpaRepository.deleteAll();
         abstractTaskJpaRepository.deleteAll();
+        filterMongoRepository.deleteAll();
         projectJpaRepository.deleteAll();
         userCodeMongoRepository.deleteAll();
         deviceJpaRepository.deleteAll();
@@ -137,6 +143,12 @@ public abstract class AbstractIntegrationTest {
         project.setHead(headUser);
         project.setNextTaskId(1);
         project.setKey("GD");
+        project.setUsers(List.of(
+            new UsersProjects()
+                .setPermissionCode(PermissionCode.READ_WRITE)
+                .setProject(project)
+                .setUser(headUser)
+        ));
         return projectJpaRepository.save(project);
     }
 
