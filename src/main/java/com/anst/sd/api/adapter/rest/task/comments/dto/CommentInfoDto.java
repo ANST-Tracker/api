@@ -14,4 +14,6 @@ public class CommentInfoDto {
     String content;
     Instant created;
     Instant updated;
+    UUID authorId;
+    String authorName;
 }

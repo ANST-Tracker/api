@@ -8,4 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface EpicTaskJpaRepository extends JpaRepository<EpicTask, UUID> {
+    EpicTask getBySimpleId(String simpleId);
 }

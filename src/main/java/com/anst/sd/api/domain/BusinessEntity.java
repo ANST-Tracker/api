@@ -6,12 +6,14 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.time.Instant;
 
 @Getter
 @Setter
 @MappedSuperclass
+@Accessors(chain = true)
 public class BusinessEntity extends DomainObject {
     @Column(name = "created_at", nullable = false)
     private Instant created;

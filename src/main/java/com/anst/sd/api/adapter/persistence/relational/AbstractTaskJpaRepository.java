@@ -1,6 +1,7 @@
 package com.anst.sd.api.adapter.persistence.relational;
 
 import com.anst.sd.api.domain.task.AbstractTask;
+import com.anst.sd.api.domain.task.TaskType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -20,5 +21,12 @@ public interface AbstractTaskJpaRepository extends JpaRepository<AbstractTask, U
 
     Optional<AbstractTask> findBySimpleIdAndProjectId(String simpleId, UUID projectId);
 
-    boolean existsBySimpleIdAndProjectId(String simpleId, UUID projectId);
+    @Query(value = """
+        select t.type from abstract_task t
+        left join project p on t.project_id = p.id
+        left join users_projects u on p.id = u.project_id
+        where t.simple_id = :simpleId
+        and u.user_id = :userId
+    """, nativeQuery = true)
+    Optional<TaskType> findTypeBySimpleIdAndUserId(String simpleId, UUID userId);
 }

@@ -1,23 +1,21 @@
 package com.anst.sd.api.adapter.rest.task.read;
 
-import com.anst.sd.api.adapter.rest.task.dto.TaskFilterDomainMapper;
-import com.anst.sd.api.adapter.rest.task.dto.TaskFilterDto;
-import com.anst.sd.api.adapter.rest.task.dto.TaskRegistryDto;
-import com.anst.sd.api.adapter.rest.task.dto.TaskRegistryDtoMapper;
+import com.anst.sd.api.adapter.rest.task.dto.*;
 import com.anst.sd.api.app.api.filter.FilterValidationException;
 import com.anst.sd.api.app.api.task.FindTasksByFilterInbound;
+import com.anst.sd.api.app.api.task.GetTaskInbound;
 import com.anst.sd.api.domain.filter.Filter;
+import com.anst.sd.api.domain.task.AbstractTask;
 import com.anst.sd.api.security.app.impl.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,6 +27,8 @@ public class ReadTaskController {
     private final JwtService jwtService;
     private final FindTasksByFilterInbound findTasksByFilterInbound;
     private final TaskFilterDomainMapper taskFilterDomainMapper;
+    private final GetTaskInbound getTaskInbound;
+    private final TaskInfoDtoMapper taskInfoDtoMapper;
 
     @Operation(
         summary = "Find tasks by filter",
@@ -49,5 +49,27 @@ public class ReadTaskController {
             .map(taskRegistryDtoMapper::mapToDto)
             .toList()
         );
+    }
+
+    @Operation(
+            summary = "Get task by ID",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            useReturnTypeSchema = true)
+            })
+    @ApiResponse(
+            responseCode = "200",
+            description = "Task got successfully",
+            content = @Content(schema = @Schema(oneOf = {
+                    DefectTaskInfoDto.class,
+                    SubtaskInfoDto.class,
+                    StoryTaskInfoDto.class,
+                    EpicTaskInfoDto.class
+            })))
+    @GetMapping("/{simpleId}")
+    public ResponseEntity<Object> getById(@PathVariable String simpleId) {
+        AbstractTask task = getTaskInbound.get(simpleId, jwtService.getJwtAuth().getUserId());
+        return ResponseEntity.ok(taskInfoDtoMapper.mapToDtoAuto(task));
     }
 }

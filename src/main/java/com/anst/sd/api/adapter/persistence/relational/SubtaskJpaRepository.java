@@ -8,4 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface SubtaskJpaRepository extends JpaRepository<Subtask, UUID> {
+    Subtask getBySimpleId(String simpleId);
 }

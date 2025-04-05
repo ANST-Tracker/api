@@ -24,7 +24,7 @@ public interface CommentJpaRepository extends JpaRepository<Comment, UUID> {
         select c from Comment c
         left join c.task t
         left join t.project p
-        left join c.author u
+        left join fetch c.author u
         where p.id = :projectId
         and t.simpleId = :taskId
         and c.id = :id

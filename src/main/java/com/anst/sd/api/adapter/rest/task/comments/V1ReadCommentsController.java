@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @Slf4j
 @RestController
-@RequestMapping("project/{projectId}/task/{simpleId}/comments")
+@RequestMapping("/project/{projectId}/task/{simpleId}/comments")
 @RequiredArgsConstructor
 public class V1ReadCommentsController {
     private final GetCommentsInbound getCommentsInbound;

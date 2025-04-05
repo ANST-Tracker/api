@@ -2,6 +2,7 @@ package com.anst.sd.api.app.api.task;
 
 import com.anst.sd.api.domain.filter.Filter;
 import com.anst.sd.api.domain.task.AbstractTask;
+import com.anst.sd.api.domain.task.TaskType;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -22,5 +23,5 @@ public interface AbstractTaskRepository {
 
     AbstractTask getByIdAndProjectId(String simpleId, UUID projectId);
 
-    boolean existsBySimpleIdAndProjectId(String simpleId, UUID projectId);
+    TaskType getTypeBySimpleIdAndUserId(String simpleId, UUID userId);
 }
