@@ -24,13 +24,12 @@ public class V1ReadProjectControllerTest extends AbstractIntegrationTest{
     void getProject_successfully() throws Exception {
         User user = createTestUser();
         Project project = createTestProject(user);
-        createUsersProjects(project, user);
         List<Tag> tags = new ArrayList<>();
         List<User> users = new ArrayList<>();
         users.add(user);
         int countUsersTags = 5;
         for(int i = 1;i < countUsersTags;i++){
-            User newUser = createTestUser(
+            User newUser = createUser(
                     "username" + String.valueOf(i),
                     "email" + String.valueOf(i),
                     "telegramId" + String.valueOf(i));

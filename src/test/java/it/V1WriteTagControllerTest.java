@@ -33,7 +33,6 @@ class V1WriteTagControllerTest extends AbstractIntegrationTest {
         CreateTagDto createTagDto = new CreateTagDto();
         createTagDto.setName("TestTag");
         createTagDto.setProjectId(project.getId());
-        createUsersProjects(project, user);
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
                 .post(API_URL)
@@ -69,7 +68,6 @@ class V1WriteTagControllerTest extends AbstractIntegrationTest {
         createUsersProjects(project, user);
         createTag(project, "TestTag");
         Project newProject = createTestProject(user);
-        createUsersProjects(newProject, user);
 
         CreateTagDto createTagDto = new CreateTagDto();
         createTagDto.setName("TestTag");

@@ -92,7 +92,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         UserCodeNotFoundException.class,
         TagNotFoundException.class,
         AbstractTaskNotFound.class,
-        UsersProjectsNotFoundException.class
+        UsersProjectsNotFoundException.class,
         AbstractTaskNotFound.class,
         FilterNotFoundException.class
     })

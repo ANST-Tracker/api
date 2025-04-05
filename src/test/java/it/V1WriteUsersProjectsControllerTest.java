@@ -27,9 +27,10 @@ public class V1WriteUsersProjectsControllerTest extends AbstractIntegrationTest{
 
     @Test
     void addUserInProject_successfully() throws Exception {
+        User newUser = createUser("New","@you_chacne", "2342@a");
         AddUserInProjectDto addUserInProjectDto = new AddUserInProjectDto();
         addUserInProjectDto.setProjectId(project.getId());
-        addUserInProjectDto.setUserId(user.getId());
+        addUserInProjectDto.setUserId(newUser.getId());
         addUserInProjectDto.setPermissionCode("READ_ONLY");
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
@@ -40,7 +41,7 @@ public class V1WriteUsersProjectsControllerTest extends AbstractIntegrationTest{
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
-        UsersProjects usersProjects = usersProjectsJpaRepository.findAll().get(0);
+        UsersProjects usersProjects = usersProjectsJpaRepository.findAll().get(1);
         assertNotNull(usersProjects.getId());
         assertEquals(addUserInProjectDto.getUserId(), usersProjects.getUser().getId());
         assertEquals(addUserInProjectDto.getProjectId(), usersProjects.getProject().getId());
@@ -66,16 +67,18 @@ public class V1WriteUsersProjectsControllerTest extends AbstractIntegrationTest{
     @Test
     void removeUserFromProject_successfully() throws Exception {
         UsersProjects existingUsersProjects = createUsersProjects(project, user);
+        User newUser = createUser("New","@you_chacne", "2342@a");
+        UsersProjects newUsersProject= createUsersProjects(project, newUser);
         String removeUserFromProjectUrl = String.format("/projects/%s/users/%s",
-                existingUsersProjects.getProject().getId(),
-                existingUsersProjects.getUser().getId());
+                newUsersProject.getProject().getId(),
+                newUsersProject.getUser().getId());
 
         performAuthenticated(user, MockMvcRequestBuilders
                 .delete(API_URL + removeUserFromProjectUrl))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
 
-        assertFalse(usersProjectsJpaRepository.existsById(existingUsersProjects.getId()));
+        assertFalse(usersProjectsJpaRepository.existsById(newUsersProject.getId()));
     }
 
     @Test

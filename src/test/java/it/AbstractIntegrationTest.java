@@ -128,7 +128,7 @@ public abstract class AbstractIntegrationTest {
         return createUser("assignee", "assignee", "assignee@gmail.com");
     }
 
-    private User createUser(String username, String telegramId, String email) {
+    protected User createUser(String username, String telegramId, String email) {
         User user = new User();
         user.setUsername(username);
         user.setId(UUID.randomUUID());
@@ -225,6 +225,18 @@ public abstract class AbstractIntegrationTest {
         epicTask.setType(TaskType.EPIC);
         epicTask.setStatus(TaskStatus.OPEN);
         epicTask.setDescription("description");
+        fillAbstractTaskFields(epicTask, user, project);
+        return epicTaskJpaRepository.save(epicTask);
+    }
+
+    protected EpicTask createEpic(User user, Project project, List<Tag> tags) {
+        EpicTask epicTask = new EpicTask();
+        epicTask.setSimpleId("GD-3");
+        epicTask.setName("Epic");
+        epicTask.setType(TaskType.EPIC);
+        epicTask.setStatus(TaskStatus.OPEN);
+        epicTask.setDescription("description");
+        epicTask.setTags(tags);
         fillAbstractTaskFields(epicTask, user, project);
         return epicTaskJpaRepository.save(epicTask);
     }
