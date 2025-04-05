@@ -12,6 +12,7 @@ import java.util.UUID;
 @Repository
 public interface TagJpaRepository extends JpaRepository<Tag, UUID> {
     List<Tag> findAllByProjectId(UUID projectId);
+
     @EntityGraph(attributePaths = "tasks")
     Optional<Tag> findById(UUID id);
 
