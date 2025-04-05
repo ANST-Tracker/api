@@ -2,6 +2,6 @@
   "name": "Updated Defect",
   "description": "Updated defect description",
   "type": "DEFECT",
-  "tags": [],
+  "tags": [ ],
   "status": "OPEN"
 }

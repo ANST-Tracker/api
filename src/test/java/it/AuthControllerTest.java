@@ -29,8 +29,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
     @Test
     void loginUser_successfully() throws Exception {
         user = createTestUser();
-        user.setPassword(USER_PASSWORD);
-        LoginRequestDto loginRequestDto = new LoginRequestDto(user.getUsername(), user.getPassword());
+        LoginRequestDto loginRequestDto = new LoginRequestDto(user.getUsername(), USER_PASSWORD);
 
         MvcResult mvcResult = loginUser(user.getTelegramId(), loginRequestDto, MockMvcResultMatchers.status().isOk());
 
@@ -57,8 +56,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
     @Test
     void refreshToken_suspiciousActivity() throws Exception {
         user = createTestUser();
-        user.setPassword(USER_PASSWORD);
-        LoginRequestDto loginRequestDto = new LoginRequestDto(user.getUsername(), user.getPassword());
+        LoginRequestDto loginRequestDto = new LoginRequestDto(user.getUsername(), USER_PASSWORD);
         MvcResult loginResult = loginUser(user.getTelegramId(), loginRequestDto, MockMvcResultMatchers.status().isOk());
         JwtResponseDto jwtResponseDto = getFromResponse(loginResult, JwtResponseDto.class);
         RefreshRequestDto refreshRequestDto = new RefreshRequestDto(jwtResponseDto.getRefreshToken());

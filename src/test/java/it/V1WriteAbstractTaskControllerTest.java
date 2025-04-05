@@ -40,7 +40,9 @@ class V1WriteAbstractTaskControllerTest extends AbstractIntegrationTest {
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
-        AbstractTask result = abstractTaskJpaRepository.findAll().get(0);
+        AbstractTask result = abstractTaskJpaRepository.findAll().stream()
+                .filter(task -> "Under Test".equals(task.getName()))
+                .findFirst().orElseThrow();
         assertEquals(request.getPriority(), result.getPriority());
         assertEquals(request.getStoryPoints(), result.getStoryPoints());
         assertEquals(request.getType(), result.getType());
