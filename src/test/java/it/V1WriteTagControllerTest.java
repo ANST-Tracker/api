@@ -4,7 +4,6 @@ import com.anst.sd.api.adapter.rest.tag.dto.TagInfoDto;
 import com.anst.sd.api.adapter.rest.tag.write.dto.CreateTagDto;
 import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.tag.Tag;
-import com.anst.sd.api.domain.task.AbstractTask;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
