@@ -106,7 +106,7 @@ class V1WriteTagControllerTest extends AbstractIntegrationTest {
         Tag existingTag = createTag(project, "TagToDelete");
         List<Tag> tags = new ArrayList<>();
         tags.add(existingTag);
-        AbstractTask task = createEpic(user, project, tags);
+        createEpic(user, project, tags);
         createUsersProjects(project, user);
 
         performAuthenticated(user, MockMvcRequestBuilders

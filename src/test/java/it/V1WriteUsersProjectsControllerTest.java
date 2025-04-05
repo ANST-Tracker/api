@@ -3,7 +3,6 @@ package it;
 import com.anst.sd.api.adapter.rest.usersProjects.write.dto.AddUserInProjectDto;
 import com.anst.sd.api.domain.PermissionCode;
 import com.anst.sd.api.domain.UsersProjects;
-import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -66,7 +65,6 @@ public class V1WriteUsersProjectsControllerTest extends AbstractIntegrationTest{
 
     @Test
     void removeUserFromProject_successfully() throws Exception {
-        UsersProjects existingUsersProjects = createUsersProjects(project, user);
         User newUser = createUser("New","@you_chacne", "2342@a");
         UsersProjects newUsersProject= createUsersProjects(project, newUser);
         String removeUserFromProjectUrl = String.format("/projects/%s/users/%s",

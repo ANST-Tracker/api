@@ -30,12 +30,12 @@ public class V1ReadProjectControllerTest extends AbstractIntegrationTest{
         int countUsersTags = 5;
         for(int i = 1;i < countUsersTags;i++){
             User newUser = createUser(
-                    "username" + String.valueOf(i),
-                    "email" + String.valueOf(i),
-                    "telegramId" + String.valueOf(i));
+                    "username" + i,
+                    "email" + i,
+                    "telegramId" + i);
             createUsersProjects(project, newUser);
             users.add(newUser);
-            tags.add(createTag(project,"tag" + String.valueOf(i)));
+            tags.add(createTag(project,"tag" + i));
         }
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders

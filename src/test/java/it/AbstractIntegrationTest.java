@@ -16,7 +16,6 @@ import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.security.app.api.JwtResponse;
 import com.anst.sd.api.security.app.impl.JwtService;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
