@@ -2,14 +2,13 @@ package it;
 
 import com.anst.sd.api.AnstApiTodoApplication;
 import com.anst.sd.api.adapter.persistence.mongo.FilterMongoRepository;
-import com.anst.sd.api.adapter.persistence.relational.*;
 import com.anst.sd.api.adapter.persistence.mongo.UserCodeMongoRepository;
-import com.anst.sd.api.domain.project.Project;
+import com.anst.sd.api.adapter.persistence.relational.*;
 import com.anst.sd.api.adapter.telegram.CreateUserCodeMessageSupplier;
 import com.anst.sd.api.domain.PermissionCode;
-import com.anst.sd.api.domain.tag.Tag;
 import com.anst.sd.api.domain.TimeEstimation;
 import com.anst.sd.api.domain.UsersProjects;
+import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.sprint.Sprint;
 import com.anst.sd.api.domain.tag.Tag;
 import com.anst.sd.api.domain.task.*;
@@ -103,8 +102,6 @@ public abstract class AbstractIntegrationTest {
     protected PasswordEncoder passwordEncoder;
     @Autowired
     protected FilterMongoRepository filterMongoRepository;
-    @Autowired
-    private TagJpaRepository tagJpaRepository;
 
     @BeforeEach
     void clearDataBase() {
