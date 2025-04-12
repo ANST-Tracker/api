@@ -39,7 +39,7 @@ class CommentDtoMapperTest extends AbstractUnitTest {
         assertEquals(comment.getContent(), dto.getContent());
         assertEquals(comment.getCreated(), dto.getCreated());
         assertEquals(comment.getUpdated(), dto.getUpdated());
-        assertEquals("firstName lastName", dto.getAuthorName());
+        assertEquals("lastName firstName", dto.getAuthorName());
         assertEquals(comment.getAuthor().getId(), dto.getAuthorId());
     }
 }

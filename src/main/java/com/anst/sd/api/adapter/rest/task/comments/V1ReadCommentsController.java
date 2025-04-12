@@ -5,6 +5,8 @@ import com.anst.sd.api.adapter.rest.task.comments.dto.CommentInfoDto;
 import com.anst.sd.api.app.api.task.comment.GetCommentsInbound;
 import com.anst.sd.api.security.app.impl.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.UUID;
 
+@Tag(name = "CommentController")
 @Slf4j
 @RestController
 @RequestMapping("/project/{projectId}/task/{simpleId}/comments")
@@ -24,7 +27,13 @@ public class V1ReadCommentsController {
     private final JwtService jwtService;
     private final CommentDtoMapper commentDtoMapper;
 
-    @Operation(summary = "Get all comments")
+    @Operation(
+            summary = "Get all comments",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            useReturnTypeSchema = true)
+            })
     @GetMapping
     public List<CommentInfoDto> getAll(@PathVariable UUID projectId, @PathVariable String simpleId) {
         return getCommentsInbound.get(jwtService.getJwtAuth().getUserId(), projectId, simpleId).stream()

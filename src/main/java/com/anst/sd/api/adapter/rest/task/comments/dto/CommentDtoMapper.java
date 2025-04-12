@@ -1,6 +1,7 @@
 package com.anst.sd.api.adapter.rest.task.comments.dto;
 
 import com.anst.sd.api.domain.task.Comment;
+import com.anst.sd.api.domain.user.User;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -13,6 +14,7 @@ public interface CommentDtoMapper {
 
     @AfterMapping
     default void mapToDto(@MappingTarget CommentInfoDto dto, Comment comment) {
-        dto.setAuthorName(comment.getAuthor().getFirstName() + " " + comment.getAuthor().getLastName());
+        User author = comment.getAuthor();
+        dto.setAuthorName("%s %s".formatted(author.getLastName(), author.getFirstName()));
     }
 }

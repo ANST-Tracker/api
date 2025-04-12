@@ -259,7 +259,7 @@ public abstract class AbstractIntegrationTest {
         task.setReviewer(user);
         task.setCreator(user);
         task.setProject(project);
-        task.setDueDate(LocalDate.now().plusDays(7));
+        task.setDueDate(LocalDate.of(2025, 4, 12));
         task.setOrderNumber(BigDecimal.ONE);
         task.setTags(List.of(
                 createTag("tag1", project),

@@ -4,10 +4,8 @@ import com.anst.sd.api.adapter.rest.dto.SimpleDictionaryDto;
 import com.anst.sd.api.adapter.rest.task.dto.SimpleDictionaryDtoMapper;
 import com.anst.sd.api.app.api.task.GetAvailableStatusesInBound;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Tag(name = "DictionaryController")
 @Slf4j
 @RestController
 @RequestMapping("/dictionaries")
@@ -31,10 +30,7 @@ public class V1ReadDictionariesController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Next statuses retrieved successfully",
-                            content = @Content(
-                                    mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = SimpleDictionaryDto.class))
-                            )
+                            useReturnTypeSchema = true
                     )
             }
     )

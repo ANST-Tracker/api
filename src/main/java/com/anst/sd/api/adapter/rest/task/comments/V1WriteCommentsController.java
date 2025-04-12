@@ -9,6 +9,8 @@ import com.anst.sd.api.app.api.task.comment.UpdateCommentInbound;
 import com.anst.sd.api.domain.task.Comment;
 import com.anst.sd.api.security.app.impl.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+@Tag(name = "CommentController")
 @Slf4j
 @RestController
 @RequestMapping("project/{projectId}/task/{simpleId}/comments")
@@ -28,7 +31,13 @@ public class V1WriteCommentsController {
     private final UpdateCommentInbound updateCommentInbound;
     private final DeleteCommentInbound deleteCommentInbound;
 
-    @Operation(summary = "Create a new comment")
+    @Operation(
+            summary = "Create a new comment",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            useReturnTypeSchema = true)
+            })
     @PostMapping
     public ResponseEntity<IdResponseDto> create(@PathVariable UUID projectId, @PathVariable String simpleId,
                                                 @Valid @RequestBody CreateUpdateCommentDto request,

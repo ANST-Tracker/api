@@ -10,6 +10,7 @@ import com.anst.sd.api.domain.UsersProjects;
 import com.anst.sd.api.security.app.impl.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+@Tag(name = "UserProjectsController")
 @Slf4j
 @RequestMapping("/users-projects")
 @RestController
@@ -35,10 +37,7 @@ public class V1WriteUsersProjectsController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "User added in project successfully",
-                            useReturnTypeSchema = true),
-                    @ApiResponse(
-                            responseCode = "400",
-                            description = "Invalid input")
+                            useReturnTypeSchema = true)
             })
     @PostMapping
     public ResponseEntity<IdResponseDto> addUserInProject(

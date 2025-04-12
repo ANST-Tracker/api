@@ -54,7 +54,7 @@ public interface TaskInfoDtoMapper {
     }
 
     @AfterMapping
-    default void mapToDtoDicts(AbstractTask task, @MappingTarget AbstractTaskInfoDto dto) {
+    default void mapSimpleDictionaries(AbstractTask task, @MappingTarget AbstractTaskInfoDto dto) {
         dto.setStatus(new SimpleDictionary()
                 .setCode(task.getStatus().name())
                 .setValue(task.getStatus().getValue()));

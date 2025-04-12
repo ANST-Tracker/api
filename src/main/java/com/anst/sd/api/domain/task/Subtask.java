@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @NamedEntityGraph(
-        name = "subtasktask-full",
+        name = "subtask-full",
         attributeNodes = {
                 @NamedAttributeNode(value = "reviewer"),
                 @NamedAttributeNode(value = "assignee"),
