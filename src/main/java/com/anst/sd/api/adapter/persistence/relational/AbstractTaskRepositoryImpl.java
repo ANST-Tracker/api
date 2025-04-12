@@ -4,6 +4,7 @@ import com.anst.sd.api.app.api.task.AbstractTaskNotFound;
 import com.anst.sd.api.app.api.task.AbstractTaskRepository;
 import com.anst.sd.api.domain.filter.Filter;
 import com.anst.sd.api.domain.task.AbstractTask;
+import com.anst.sd.api.domain.task.TaskType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -43,5 +44,17 @@ public class AbstractTaskRepositoryImpl implements AbstractTaskRepository {
     public List<AbstractTask> findByFilter(Filter filter) {
         List<UUID> taskIds = delegate.findByFilter(filter);
         return abstractTaskJpaRepository.findAllById(taskIds);
+    }
+
+    @Override
+    public AbstractTask getByIdAndProjectId(String simpleId, UUID projectId) {
+        return abstractTaskJpaRepository.findBySimpleIdAndProjectId(simpleId, projectId)
+                .orElseThrow(() -> new AbstractTaskNotFound(simpleId));
+    }
+
+    @Override
+    public TaskType getTypeBySimpleIdAndUserId(String simpleId, UUID userId) {
+        return abstractTaskJpaRepository.findTypeBySimpleIdAndUserId(simpleId, userId)
+                .orElseThrow(() -> new AbstractTaskNotFound(simpleId));
     }
 }

@@ -1,0 +1,93 @@
+{
+  "tester": {
+    "username": "tester",
+    "firstName": "firstName_tester",
+    "lastName": "lastName_tester",
+    "created": 1743848819977,
+    "updated": 1743848819977,
+    "id": "c0285579-367b-47b1-914a-f620ee02ec5e"
+  },
+  "sprint": {
+    "id": "c9015c0e-aa78-4ad0-80a5-0af99d14ea5d",
+    "name": "name"
+  },
+  "storyTask": {
+    "simpleId": "GD-2",
+    "name": "name"
+  },
+  "simpleId": "GD-1",
+  "name": "name",
+  "description": "description",
+  "type": "DEFECT",
+  "priority": "BLOCKER",
+  "storyPoints": 5,
+  "assignee": {
+    "username": "assignee",
+    "firstName": "firstName_assignee",
+    "lastName": "lastName_assignee",
+    "created": 1743848819977,
+    "updated": 1743848819977,
+    "id": "c0285579-367b-47b1-914a-f620ee02ec5e"
+  },
+  "reviewer": {
+    "username": "reviewer",
+    "firstName": "firstName_reviewer",
+    "lastName": "lastName_reviewer",
+    "created": 1743848819977,
+    "updated": 1743848819977,
+    "id": "c0285579-367b-47b1-914a-f620ee02ec5e"
+  },
+  "creator": {
+    "username": "creator",
+    "firstName": "firstName_creator",
+    "lastName": "lastName_creator",
+    "created": 1743848819977,
+    "updated": 1743848819977,
+    "id": "c0285579-367b-47b1-914a-f620ee02ec5e"
+  },
+  "orderNumber": 10.00,
+  "dueDate": "2025-04-05",
+  "timeEstimation": {
+    "timeUnit": "HOURS",
+    "amount": 5
+  },
+  "tags": [
+    {
+      "name": "name1",
+      "id": "21c9c8d6-d30f-42bd-8c9c-fe2ac42ce28e"
+    },
+    {
+      "name": "name2",
+      "id": "21c9c8d6-d30f-42bd-8c9c-fe2ac42ce28e"
+    }
+  ],
+  "status": "OPEN",
+  "id": "c329c4a9-ca39-4e12-90cd-1d9f92d67dd5",
+  "project": {
+    "name": "name",
+    "description": "description",
+    "id": "33f3574d-ea4e-4561-8df0-f249999e9f4f"
+  },
+  "logs": [
+    {
+      "comment": "comment1",
+      "timeEstimation": {
+        "timeUnit": "HOURS",
+        "amount": 3
+      },
+      "created": 1743848986461,
+      "updated": 1743848986461,
+      "id": "343e51c1-ec44-4286-9ba1-e05e6c7da26f"
+    },
+    {
+      "comment": "comment2",
+      "timeEstimation": {
+        "timeUnit": "HOURS",
+        "amount": 2
+      },
+      "created": 1743848986461,
+      "updated": 1743848986461,
+      "id": "343e51c1-ec44-4286-9ba1-e05e6c7da26f"
+    }
+  ]
+}

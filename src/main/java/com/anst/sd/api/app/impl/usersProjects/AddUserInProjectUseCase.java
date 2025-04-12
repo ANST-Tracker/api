@@ -2,8 +2,8 @@ package com.anst.sd.api.app.impl.usersProjects;
 
 import com.anst.sd.api.app.api.project.ProjectRepository;
 import com.anst.sd.api.app.api.user.UserRepository;
-import com.anst.sd.api.app.api.usersProjects.UsersProjectsRepository;
 import com.anst.sd.api.app.api.usersProjects.AddUserInProjectInBound;
+import com.anst.sd.api.app.api.usersProjects.UsersProjectsRepository;
 import com.anst.sd.api.app.api.usersProjects.UsersProjectsValidationException;
 import com.anst.sd.api.domain.UsersProjects;
 import com.anst.sd.api.domain.project.Project;

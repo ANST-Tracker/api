@@ -6,6 +6,7 @@ import com.anst.sd.api.domain.task.AbstractTask;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @Table(name = "tag")
 @Getter
 @Setter
+@Accessors(chain = true)
 public class Tag extends DomainObject {
     @Column(nullable = false)
     private String name;

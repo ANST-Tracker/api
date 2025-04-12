@@ -34,7 +34,7 @@ public class CreateFilterUseCase implements CreateFilterInbound {
     }
 
     private void validateProject(UUID userId, UUID projectId) {
-        if (!projectRepository.existsByIdAndUserId(userId, projectId)) {
+        if (!projectRepository.existsByIdAndUserId(projectId, userId)) {
             throw new ProjectNotFoundException(projectId, userId);
         }
     }

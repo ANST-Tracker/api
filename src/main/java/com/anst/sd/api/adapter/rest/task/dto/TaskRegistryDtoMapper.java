@@ -24,6 +24,6 @@ public interface TaskRegistryDtoMapper {
     }
 
     private static String getFullName(User user) {
-        return user.getLastName() + " " + user.getFirstName();
+        return "%s %s".formatted(user.getLastName(), user.getFirstName());
     }
 }

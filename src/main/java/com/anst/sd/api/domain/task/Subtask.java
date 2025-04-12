@@ -1,18 +1,25 @@
 package com.anst.sd.api.domain.task;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+@NamedEntityGraph(
+        name = "subtask-full",
+        attributeNodes = {
+                @NamedAttributeNode(value = "reviewer"),
+                @NamedAttributeNode(value = "assignee"),
+                @NamedAttributeNode(value = "creator"),
+                @NamedAttributeNode(value = "project"),
+                @NamedAttributeNode(value = "tags"),
+                @NamedAttributeNode(value = "storyTask")
+        })
 @Entity
 @Table(name = "subtask")
 @Getter
 @Setter
 public class Subtask extends AbstractTask {
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "story_task_id")
     private StoryTask storyTask;
 }

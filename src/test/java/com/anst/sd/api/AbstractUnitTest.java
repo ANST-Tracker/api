@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.util.DefaultIndenter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -23,6 +24,7 @@ public abstract class AbstractUnitTest {
     public AbstractUnitTest() {
         JacksonConfig jacksonConfig = new JacksonConfig();
         objectMapper = jacksonConfig.objectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
         objectMapper.setDefaultPrettyPrinter(new MyDefaultPrettyPrinter());
     }
 

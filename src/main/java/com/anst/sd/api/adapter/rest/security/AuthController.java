@@ -8,6 +8,7 @@ import com.anst.sd.api.app.api.user.LoginUserInBound;
 import com.anst.sd.api.security.app.api.JwtResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Tag(name = "AuthController")
 @Slf4j
 @RestController
 @RequestMapping("/auth")
@@ -59,6 +61,13 @@ public class AuthController {
         return ResponseEntity.ok(jwtResponseDtoMapper.mapToDto(response));
     }
 
+    @Operation(
+            summary = "Send code for 2FA",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            useReturnTypeSchema = true)
+            })
     @PostMapping("code/send")
     public ResponseEntity<String> sendCode(@RequestBody SendCodeRequestDto sendCodeRequestDto) {
         String code = sendCodeInbound.send(sendCodeRequestDto.getTelegramId(), sendCodeRequestDto.getUsername());
@@ -68,6 +77,13 @@ public class AuthController {
         return null;
     }
 
+    @Operation(
+            summary = "Verify code for 2FA",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            useReturnTypeSchema = true)
+            })
     @PostMapping("code/verify")
     public ResponseEntity<JwtResponseDto> verifyCode(@RequestBody @Valid VerifyCodeRequestDto verifyCodeRequestDto) {
         String token = checkCodeInbound.check(verifyCodeRequestDto.getTelegramId(), verifyCodeRequestDto.getCode(),

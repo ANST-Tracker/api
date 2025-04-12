@@ -38,7 +38,7 @@ public class ProjectRepositoryImpl implements ProjectRepository {
     }
 
     @Override
-    public boolean existsByIdAndUserId(UUID userId, UUID id) {
-        return projectJpaRepository.existsByIdAndUserId(userId, id);
+    public boolean existsByIdAndUserId(UUID id, UUID userId) {
+        return projectJpaRepository.existsByIdAndUserId(id, userId);
     }
 }

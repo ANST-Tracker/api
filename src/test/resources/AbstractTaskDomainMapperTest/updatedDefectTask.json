@@ -3,5 +3,6 @@
   "description": "Updated defect description",
   "type": "DEFECT",
   "tags": [ ],
+  "logs": [ ],
   "status": "OPEN"
 }

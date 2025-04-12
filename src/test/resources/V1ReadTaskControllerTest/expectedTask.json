@@ -1,0 +1,57 @@
+{
+  "simpleId": "GD-3",
+  "name": "Epic",
+  "description": "description",
+  "type": {
+    "code": "EPIC",
+    "value": "Эпик стори"
+  },
+  "priority": {
+    "code": "MAJOR",
+    "value": "Major"
+  },
+  "storyPoints": 5,
+  "assignee": {
+    "firstName": "firstName",
+    "lastName": "lastName"
+  },
+  "reviewer": {
+    "firstName": "firstName",
+    "lastName": "lastName"
+  },
+  "creator": {
+    "firstName": "firstName",
+    "lastName": "lastName"
+  },
+  "dueDate": "2025-04-12",
+  "timeEstimation": {
+    "timeUnit": "HOURS",
+    "amount": 10.0
+  },
+  "timeUsed": {
+    "timeUnit": "HOURS",
+    "amount": 0.0
+  },
+  "timeRemaining": {
+    "timeUnit": "HOURS",
+    "amount": 10.0
+  },
+  "tags": [
+    {
+      "name": "tag1"
+    },
+    {
+      "name": "tag2"
+    }
+  ],
+  "status": {
+    "code": "OPEN",
+    "value": "Открыта"
+  },
+  "stories": [
+    {
+      "simpleId": "GD-2",
+      "name": "Test StoryTask"
+    }
+  ]
+}
