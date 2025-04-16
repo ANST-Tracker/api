@@ -12,6 +12,8 @@ import com.anst.sd.api.app.api.task.AbstractTaskNotFound;
 import com.anst.sd.api.app.api.task.AbstractTaskValidationException;
 import com.anst.sd.api.app.api.task.comment.CommentNotFound;
 import com.anst.sd.api.app.api.task.comment.CommentValidationException;
+import com.anst.sd.api.app.api.task.log.LogNotFound;
+import com.anst.sd.api.app.api.task.log.LogValidationException;
 import com.anst.sd.api.app.api.user.UserNotFoundException;
 import com.anst.sd.api.app.api.usersProjects.UsersProjectsNotFoundException;
 import com.anst.sd.api.app.api.usersProjects.UsersProjectsValidationException;
@@ -67,7 +69,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             FilterValidationException.class,
             TagValidationException.class,
             UsersProjectsValidationException.class,
-            CommentValidationException.class
+            CommentValidationException.class,
+            LogValidationException.class
     })
     public ResponseEntity<Object> handleValidation(Exception ex) {
         logger.error(ex.getMessage(), ex);
@@ -98,7 +101,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             UsersProjectsNotFoundException.class,
             AbstractTaskNotFound.class,
             FilterNotFoundException.class,
-            CommentNotFound.class
+            CommentNotFound.class,
+            LogNotFound.class
     })
     public ResponseEntity<Object> handleNotFound(Exception ex) {
         logger.error(ex.getMessage(), ex);

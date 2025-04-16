@@ -7,6 +7,7 @@ import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
 import org.hibernate.type.SqlTypes;
@@ -15,6 +16,7 @@ import org.hibernate.type.SqlTypes;
 @Table(name = "logs")
 @Getter
 @Setter
+@Accessors(chain = true)
 public class Log extends BusinessEntity {
     @Column
     private String comment;
