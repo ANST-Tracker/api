@@ -36,9 +36,8 @@ class V1WriteLogControllerTest extends AbstractIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(createUpdateLogDto)))
                 .andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
 
+                .andExpect(MockMvcResultMatchers.status().isOk());
         assertEquals(1, logJpaRepository.count());
         Log result = logJpaRepository.findAll().get(0);
         assertEquals(createUpdateLogDto.getComment(), result.getComment());
@@ -85,9 +84,8 @@ class V1WriteLogControllerTest extends AbstractIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updateLogDto)))
                 .andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
 
+                .andExpect(MockMvcResultMatchers.status().isOk());
         assertEquals(1, logJpaRepository.count());
         Log result = logJpaRepository.findAll().get(0);
         assertEquals(updateLogDto.getComment(), result.getComment());
