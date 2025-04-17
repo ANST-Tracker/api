@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 public class V1ReadTimeSheetControllerTest extends AbstractIntegrationTest{
-    private static final String API_URL = "/timeSheet";
+    private static final String API_URL = "/time-sheet";
 
     @Test
     void getTimeSheetByProject_successfully() throws Exception {
@@ -28,13 +28,12 @@ public class V1ReadTimeSheetControllerTest extends AbstractIntegrationTest{
         epicTask = createEpic(user, project);
         TimeEstimation timeEstimation = createTimeEstimation(TimeUnit.HOURS, 3);
         Log log = createLog(epicTask, user, "test content", timeEstimation);
-
         LocalDateTime now = LocalDateTime.now();
         String start = now.minusDays(1).toString();
         String end = now.plusDays(1).toString();
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
-                .get(API_URL + "/project/"+project.getId())
+                .get(API_URL + "/project/" + project.getId())
                 .param("startDate", start)
                 .param("endDate", end))
                 .andDo(print()).andExpect(MockMvcResultMatchers.status().isOk())
@@ -59,13 +58,12 @@ public class V1ReadTimeSheetControllerTest extends AbstractIntegrationTest{
         epicTask = createEpic(user, project);
         TimeEstimation timeEstimation = createTimeEstimation(TimeUnit.HOURS, 3);
         Log log = createLog(epicTask, user, "test content", timeEstimation);
-
         LocalDateTime now = LocalDateTime.now();
         String start = now.minusDays(1).toString();
         String end = now.plusDays(1).toString();
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
-                .get(API_URL + "/allProjects")
+                .get(API_URL + "/all-projects")
                 .param("startDate", start)
                 .param("endDate", end))
                 .andDo(print()).andExpect(MockMvcResultMatchers.status().isOk())
@@ -87,13 +85,12 @@ public class V1ReadTimeSheetControllerTest extends AbstractIntegrationTest{
     void getTimeSheetByProject_emptyList_successfully() throws Exception {
         user = createTestUser();
         project = createTestProject(user);
-
         LocalDateTime now = LocalDateTime.now();
         String start = now.minusDays(1).toString();
         String end = now.plusDays(1).toString();
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
-                .get(API_URL + "/project/"+project.getId())
+                .get(API_URL + "/project/" + project.getId())
                 .param("startDate", start)
                 .param("endDate", end))
                 .andDo(print()).andExpect(MockMvcResultMatchers.status().isOk())
@@ -107,13 +104,12 @@ public class V1ReadTimeSheetControllerTest extends AbstractIntegrationTest{
     void getTimeSheet_emptyList_successfully() throws Exception {
         user = createTestUser();
         project = createTestProject(user);
-
         LocalDateTime now = LocalDateTime.now();
         String start = now.minusDays(1).toString();
         String end = now.plusDays(1).toString();
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
-                .get(API_URL + "/allProjects")
+                .get(API_URL + "/all-projects")
                 .param("startDate", start)
                 .param("endDate", end))
                 .andDo(print()).andExpect(MockMvcResultMatchers.status().isOk())
@@ -137,7 +133,7 @@ public class V1ReadTimeSheetControllerTest extends AbstractIntegrationTest{
         String end = now.plusDays(1).toString();
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
-                .get(API_URL + "/project/"+project1.getId())
+                .get(API_URL + "/project/" + project1.getId())
                 .param("startDate", start)
                 .param("endDate", end))
                 .andDo(print()).andExpect(MockMvcResultMatchers.status().isUnauthorized())

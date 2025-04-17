@@ -1,7 +1,7 @@
 package com.anst.sd.api.app.impl.task.log;
 
 import com.anst.sd.api.app.api.project.ProjectRepository;
-import com.anst.sd.api.app.api.task.log.GetLogsForTimeSheetByProjectInBound;
+import com.anst.sd.api.app.api.task.log.GetTimeSheetLogsByProjectInBound;
 import com.anst.sd.api.app.api.task.log.LogRepository;
 import com.anst.sd.api.domain.task.Log;
 import com.anst.sd.api.security.app.api.AuthException;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class GetLogsForTimeSheetByProjectUseCase implements GetLogsForTimeSheetByProjectInBound {
+public class GetTimeSheetLogsByProjectUseCase implements GetTimeSheetLogsByProjectInBound {
     private final ProjectRepository projectRepository;
     private final LogRepository logRepository;
 

@@ -6,6 +6,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-public interface GetLogsForTimeSheetByProjectInBound {
+public interface GetTimeSheetLogsByProjectInBound {
     List<Log> get(UUID projectId, UUID userId, LocalDateTime start, LocalDateTime end);
 }

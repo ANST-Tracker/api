@@ -13,9 +13,9 @@ public interface LogRepository {
 
     Log findByIdAndTaskAndProjectIdAndUserId(UUID id, String taskId, UUID projectId, UUID userId);
 
-    List<Log>  findAllByPeriodAndProjectAndUser(UUID projectId, UUID userId, LocalDateTime start, LocalDateTime end);
+    List<Log> findAllByPeriodAndProjectAndUser(UUID projectId, UUID userId, LocalDateTime start, LocalDateTime end);
 
-    List<Log>  findAllByPeriodAndUser(UUID userId, LocalDateTime start, LocalDateTime end);
+    List<Log> findAllByPeriodAndUser(UUID userId, LocalDateTime start, LocalDateTime end);
 
     void delete(Log log);
 }

@@ -1,6 +1,6 @@
 package com.anst.sd.api.app.impl.task.log;
 
-import com.anst.sd.api.app.api.task.log.GetLogsForTimeSheetInBound;
+import com.anst.sd.api.app.api.task.log.GetTimeSheetLogsInBound;
 import com.anst.sd.api.app.api.task.log.LogRepository;
 import com.anst.sd.api.domain.task.Log;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import java.util.UUID;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class GetLogsForTimeSheetUseCase implements GetLogsForTimeSheetInBound {
+public class GetTimeSheetLogsUseCase implements GetTimeSheetLogsInBound {
     private final LogRepository logRepository;
 
     @Override
