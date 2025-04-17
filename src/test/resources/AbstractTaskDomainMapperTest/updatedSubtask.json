@@ -3,5 +3,6 @@
   "description": "Updated subtask description",
   "type": "SUBTASK",
   "tags": [ ],
+  "logs": [ ],
   "status": "OPEN"
 }

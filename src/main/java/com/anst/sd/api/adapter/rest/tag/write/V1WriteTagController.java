@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+@io.swagger.v3.oas.annotations.tags.Tag(name = "TagController")
 @Slf4j
 @RequestMapping("/tag")
 @RestController
@@ -39,10 +40,7 @@ public class V1WriteTagController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Tag created successfully",
-                            useReturnTypeSchema = true),
-                    @ApiResponse(
-                            responseCode = "400",
-                            description = "Invalid input")
+                            useReturnTypeSchema = true)
             })
     @PostMapping
     public ResponseEntity<TagInfoDto> createTag(
@@ -62,10 +60,7 @@ public class V1WriteTagController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Tag deleted successfully",
-                            useReturnTypeSchema = true),
-                    @ApiResponse(
-                            responseCode = "404",
-                            description = "Tag not found")
+                            useReturnTypeSchema = true)
             })
     @DeleteMapping("/{id}")
     public ResponseEntity<IdResponseDto> deleteTag(@Parameter(description = "Tag ID") @PathVariable UUID id) {

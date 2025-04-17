@@ -1,0 +1,56 @@
+{
+  "simpleId": "GD-1",
+  "name": "name",
+  "description": "description",
+  "type": {
+    "code": "DEFECT",
+    "value": "Дефект"
+  },
+  "priority": {
+    "code": "BLOCKER",
+    "value": "Blocker"
+  },
+  "storyPoints": 5,
+  "assignee": {
+    "id": "c0285579-367b-47b1-914a-f620ee02ec5e",
+    "firstName": "firstName_assignee",
+    "lastName": "lastName_assignee"
+  },
+  "reviewer": {
+    "id": "c0285579-367b-47b1-914a-f620ee02ec5e",
+    "firstName": "firstName_reviewer",
+    "lastName": "lastName_reviewer"
+  },
+  "creator": {
+    "id": "c0285579-367b-47b1-914a-f620ee02ec5e",
+    "firstName": "firstName_creator",
+    "lastName": "lastName_creator"
+  },
+  "dueDate": "2025-04-05",
+  "timeEstimation": {
+    "timeUnit": "HOURS",
+    "amount": 5.0
+  },
+  "timeUsed": {
+    "timeUnit": "HOURS",
+    "amount": 5.0
+  },
+  "timeRemaining": {
+    "timeUnit": "HOURS",
+    "amount": 0.0
+  },
+  "tags": [
+    {
+      "id": "21c9c8d6-d30f-42bd-8c9c-fe2ac42ce28e",
+      "name": "name1"
+    },
+    {
+      "id": "21c9c8d6-d30f-42bd-8c9c-fe2ac42ce28e",
+      "name": "name2"
+    }
+  ],
+  "status": {
+    "code": "OPEN",
+    "value": "Открыта"
+  }
+}

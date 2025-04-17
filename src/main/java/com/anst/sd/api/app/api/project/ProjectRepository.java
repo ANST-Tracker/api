@@ -9,7 +9,7 @@ public interface ProjectRepository {
 
     Project getById(UUID id);
 
-    boolean existsByIdAndUserId(UUID userId, UUID id);
+    boolean existsByIdAndUserId(UUID id, UUID userId);
 
     Project getByIdAndUserId(UUID projectId, UUID userId);
 }

@@ -5,11 +5,13 @@ import com.anst.sd.api.domain.TimeEstimation;
 import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.tag.Tag;
 import com.anst.sd.api.domain.user.User;
+import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.Type;
 import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
@@ -54,8 +56,9 @@ public abstract class AbstractTask extends DomainObject {
     private LocalDate dueDate;
     @Column(name = "order_number", nullable = false)
     private BigDecimal orderNumber;
+    @Type(JsonBinaryType.class)
     @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "time_estimation")
+    @Column(name = "time_estimation", columnDefinition = "jsonb")
     private TimeEstimation timeEstimation;
     @ManyToMany
     @JoinTable(
@@ -64,6 +67,8 @@ public abstract class AbstractTask extends DomainObject {
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
     private List<Tag> tags = new ArrayList<>();
+    @OneToMany(mappedBy = "task")
+    private List<Log> logs = new ArrayList<>();
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private TaskStatus status = TaskStatus.OPEN;

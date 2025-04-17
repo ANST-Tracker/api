@@ -6,6 +6,7 @@ import com.anst.sd.api.adapter.persistence.mongo.UserCodeMongoRepository;
 import com.anst.sd.api.adapter.persistence.relational.*;
 import com.anst.sd.api.adapter.telegram.CreateUserCodeMessageSupplier;
 import com.anst.sd.api.domain.PermissionCode;
+import com.anst.sd.api.domain.TimeEstimation;
 import com.anst.sd.api.domain.UsersProjects;
 import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.sprint.Sprint;
@@ -42,8 +43,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
@@ -86,7 +87,6 @@ public abstract class AbstractIntegrationTest {
     protected UsersProjectsJpaRepository usersProjectsJpaRepository;
     @Autowired
     protected DefectJpaRepository defectJpaRepository;
-
     protected User user;
     protected User reviewer;
     protected User assignee;
@@ -103,6 +103,7 @@ public abstract class AbstractIntegrationTest {
     void clearDataBase() {
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        commentJpaRepository.deleteAll();
         subtaskJpaRepository.deleteAll();
         defectJpaRepository.deleteAll();
         storyTaskJpaRepository.deleteAll();
@@ -112,6 +113,7 @@ public abstract class AbstractIntegrationTest {
         tagJpaRepository.deleteAll();
         usersProjectsJpaRepository.deleteAll();
         filterMongoRepository.deleteAll();
+        tagJpaRepository.deleteAll();
         projectJpaRepository.deleteAll();
         userCodeMongoRepository.deleteAll();
         deviceJpaRepository.deleteAll();
@@ -155,10 +157,10 @@ public abstract class AbstractIntegrationTest {
         project.setNextTaskId(1);
         project.setKey("GD");
         project.setUsers(List.of(
-            new UsersProjects()
-                .setPermissionCode(PermissionCode.READ_WRITE)
-                .setProject(project)
-                .setUser(headUser)
+                new UsersProjects()
+                        .setPermissionCode(PermissionCode.READ_WRITE)
+                        .setProject(project)
+                        .setUser(headUser)
         ));
         return projectJpaRepository.save(project);
     }
@@ -244,6 +246,9 @@ public abstract class AbstractIntegrationTest {
         epicTask.setType(TaskType.EPIC);
         epicTask.setStatus(TaskStatus.OPEN);
         epicTask.setDescription("description");
+        epicTask.setTimeEstimation(new TimeEstimation()
+                .setTimeUnit(TimeUnit.HOURS)
+                .setAmount(10));
         fillAbstractTaskFields(epicTask, user, project);
         return epicTaskJpaRepository.save(epicTask);
     }
@@ -267,15 +272,98 @@ public abstract class AbstractIntegrationTest {
         task.setReviewer(user);
         task.setCreator(user);
         task.setProject(project);
-        task.setDueDate(LocalDate.now().plusDays(7));
+        task.setDueDate(LocalDate.of(2025, 4, 12));
         task.setOrderNumber(BigDecimal.ONE);
-        task.setTimeEstimation(null);
-        task.setTags(List.of());
+        task.setTags(List.of(
+                createTag("tag1", project),
+                createTag("tag2", project)
+        ));
+    }
+
+    private Tag createTag(String name, Project project) {
+        Tag tag = new Tag()
+                .setName(name)
+                .setProject(project);
+        return tagJpaRepository.save(tag);
+    }
+
+    protected Comment createComment(AbstractTask task, User user, String content) {
+        Comment comment = new Comment()
+                .setAuthor(user)
+                .setContent(content)
+                .setTask(task);
+        return commentJpaRepository.save(comment);
     }
 
     // ===================================================================================================================
     // = ObjectMapper utils
     // ===================================================================================================================
+
+    protected void nullifyAllIdFields(Object obj) {
+        nullifyAllIdFields(obj, new IdentityHashMap<>());
+    }
+
+    private void nullifyAllIdFields(Object obj, Map<Object, Boolean> visited) {
+        if (obj == null || visited.containsKey(obj)) return;
+        visited.put(obj, true);
+
+        Class<?> clazz = obj.getClass();
+
+        if (clazz.isArray()) {
+            int length = Array.getLength(obj);
+            for (int i = 0; i < length; i++) {
+                Object element = Array.get(obj, i);
+                nullifyAllIdFields(element, visited);
+            }
+            return;
+        }
+
+        if (obj instanceof Collection<?>) {
+            for (Object item : (Collection<?>) obj) {
+                nullifyAllIdFields(item, visited);
+            }
+            return;
+        }
+
+        if (obj instanceof Map<?, ?>) {
+            for (Map.Entry<?, ?> entry : ((Map<?, ?>) obj).entrySet()) {
+                nullifyAllIdFields(entry.getKey(), visited);
+                nullifyAllIdFields(entry.getValue(), visited);
+            }
+            return;
+        }
+
+        if (isJavaBuiltin(clazz)) return;
+
+        while (clazz != null && clazz != Object.class) {
+            for (Field field : clazz.getDeclaredFields()) {
+                field.setAccessible(true);
+                try {
+                    Object value = field.get(obj);
+                    if ("id".equals(field.getName())) {
+                        if (!field.getType().isPrimitive()) {
+                            field.set(obj, null);
+                        }
+                    } else {
+                        nullifyAllIdFields(value, visited);
+                    }
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException("Error accessing field: " + field.getName(), e);
+                }
+            }
+            clazz = clazz.getSuperclass();
+        }
+    }
+
+    private boolean isJavaBuiltin(Class<?> clazz) {
+        return clazz.isPrimitive()
+                || clazz.getName().startsWith("java.")
+                || clazz.getName().startsWith("javax.")
+                || clazz == String.class
+                || Number.class.isAssignableFrom(clazz)
+                || clazz == Boolean.class
+                || clazz.isEnum();
+    }
 
     protected <T> T mapToObject(String string, Class<?> clazz, Class<?>... classes) {
         try {

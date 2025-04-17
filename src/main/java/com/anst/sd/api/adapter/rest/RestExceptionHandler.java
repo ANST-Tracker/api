@@ -12,6 +12,8 @@ import com.anst.sd.api.app.api.tag.TagNotFoundException;
 import com.anst.sd.api.app.api.tag.TagValidationException;
 import com.anst.sd.api.app.api.task.AbstractTaskNotFound;
 import com.anst.sd.api.app.api.task.AbstractTaskValidationException;
+import com.anst.sd.api.app.api.task.comment.CommentNotFound;
+import com.anst.sd.api.app.api.task.comment.CommentValidationException;
 import com.anst.sd.api.app.api.user.UserNotFoundException;
 import com.anst.sd.api.app.api.usersProjects.UsersProjectsNotFoundException;
 import com.anst.sd.api.app.api.usersProjects.UsersProjectsValidationException;
@@ -37,11 +39,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     @Nullable
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(
-        @NonNull Exception ex,
-        @Nullable Object body,
-        @NonNull HttpHeaders headers,
-        @NonNull HttpStatusCode statusCode,
-        @NonNull WebRequest request) {
+            @NonNull Exception ex,
+            @Nullable Object body,
+            @NonNull HttpHeaders headers,
+            @NonNull HttpStatusCode statusCode,
+            @NonNull WebRequest request) {
         logger.error(ex.getMessage(), ex);
         var errorInfo = createErrorInfo(SERVER);
         return super.handleExceptionInternal(ex, errorInfo, headers, statusCode, request);
@@ -62,12 +64,18 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({
-        ProjectValidationException.class,
-        AbstractTaskValidationException.class,
-        FilterValidationException.class,
-        TagValidationException.class,
+            ProjectValidationException.class,
+            AbstractTaskValidationException.class,
+            FilterValidationException.class,
+            TagValidationException.class,
             SprintValidationException.class,
-        UsersProjectsValidationException.class
+            UsersProjectsValidationException.class
+            ProjectValidationException.class,
+            AbstractTaskValidationException.class,
+            FilterValidationException.class,
+            TagValidationException.class,
+            UsersProjectsValidationException.class,
+            CommentValidationException.class
     })
     public ResponseEntity<Object> handleValidation(Exception ex) {
         logger.error(ex.getMessage(), ex);
@@ -90,15 +98,24 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({
-        UserNotFoundException.class,
-        ProjectNotFoundException.class,
-        UserCodeNotFoundException.class,
-        TagNotFoundException.class,
-        AbstractTaskNotFound.class,
-        UsersProjectsNotFoundException.class,
-        AbstractTaskNotFound.class,
+            UserNotFoundException.class,
+            ProjectNotFoundException.class,
+            UserCodeNotFoundException.class,
+            TagNotFoundException.class,
+            AbstractTaskNotFound.class,
+            UsersProjectsNotFoundException.class,
+            AbstractTaskNotFound.class,
             SprintNotFound.class,
-        FilterNotFoundException.class
+            FilterNotFoundException.class,
+            UserNotFoundException.class,
+            ProjectNotFoundException.class,
+            UserCodeNotFoundException.class,
+            TagNotFoundException.class,
+            AbstractTaskNotFound.class,
+            UsersProjectsNotFoundException.class,
+            AbstractTaskNotFound.class,
+            FilterNotFoundException.class,
+            CommentNotFound.class
     })
     public ResponseEntity<Object> handleNotFound(Exception ex) {
         logger.error(ex.getMessage(), ex);

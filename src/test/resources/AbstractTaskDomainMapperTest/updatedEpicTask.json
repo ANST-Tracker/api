@@ -3,5 +3,6 @@
   "description": "Updated description",
   "type": "EPIC",
   "tags": [ ],
+  "logs": [ ],
   "status": "OPEN"
 }

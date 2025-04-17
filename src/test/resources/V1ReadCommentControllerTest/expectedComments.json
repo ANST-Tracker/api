@@ -1,0 +1,14 @@
+[
+  {
+    "content": "assigneeComment",
+    "authorName": "lastName firstName"
+  },
+  {
+    "content": "reviewerComment",
+    "authorName": "lastName firstName"
+  },
+  {
+    "content": "userComment",
+    "authorName": "lastName firstName"
+  }
+]
