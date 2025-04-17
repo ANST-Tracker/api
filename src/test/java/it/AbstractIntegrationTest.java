@@ -36,6 +36,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -86,7 +88,9 @@ public abstract class AbstractIntegrationTest {
     @Autowired
     protected UsersProjectsJpaRepository usersProjectsJpaRepository;
     @Autowired
-    protected DefectJpaRepository defectJpaRepository;
+    protected DefectTaskJpaRepository defectTaskJpaRepository;
+    @Autowired
+    protected CommentJpaRepository commentJpaRepository;
     protected User user;
     protected User reviewer;
     protected User assignee;
@@ -105,7 +109,7 @@ public abstract class AbstractIntegrationTest {
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         commentJpaRepository.deleteAll();
         subtaskJpaRepository.deleteAll();
-        defectJpaRepository.deleteAll();
+        defectTaskJpaRepository.deleteAll();
         storyTaskJpaRepository.deleteAll();
         epicTaskJpaRepository.deleteAll();
         sprintJpaRepository.deleteAll();

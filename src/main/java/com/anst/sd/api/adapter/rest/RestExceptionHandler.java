@@ -69,7 +69,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             FilterValidationException.class,
             TagValidationException.class,
             SprintValidationException.class,
-            UsersProjectsValidationException.class
+            UsersProjectsValidationException.class,
             ProjectValidationException.class,
             AbstractTaskValidationException.class,
             FilterValidationException.class,
