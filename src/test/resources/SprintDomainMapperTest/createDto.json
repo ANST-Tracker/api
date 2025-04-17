@@ -1,0 +1,38 @@
+{
+  "id": "ba2e85b8-ac9f-443a-8df4-e649bc89effd",
+  "name": "name_1a232c8e131b",
+  "startDate": "2025-04-16",
+  "endDate": "2025-04-16",
+  "isActive": false,
+  "description": "description_7571aa5f2e9e",
+  "projectId": "da3257b2-80d6-42f6-a947-23ae3a9a623d",
+  "storyCount": 0,
+  "defectCount": 0,
+  "stories": [
+    {
+      "simpleId": "simpleId_76eb5d136e6b",
+      "name": "name_05da485abbbf",
+      "status": "OPEN",
+      "priority": "BLOCKER",
+      "assigneeId": "2ab87e12-88d7-4d0d-9c79-392cc27c1551",
+      "subtasks": [
+        {
+          "simpleId": "simpleId_281f726a42b7",
+          "name": "name_37c55a439eae",
+          "status": "OPEN",
+          "priority": "BLOCKER",
+          "assigneeId": "25c0152e-8ab9-4742-8fef-9a29068066cd"
+        }
+      ]
+    }
+  ],
+  "defects": [
+    {
+      "name": "name_f3975bcc4874",
+      "simpleId": "simpleId_216d2a1eda4b",
+      "status": "OPEN",
+      "priority": "BLOCKER",
+      "assigneeId": "9d043745-1da1-40af-badf-76237acb918d"
+    }
+  ]
+}

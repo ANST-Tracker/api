@@ -1,0 +1,36 @@
+{
+  "name": "sprint",
+  "startDate": "2025-04-13",
+  "endDate": "2025-04-28",
+  "isActive": true,
+  "description": "description",
+  "projectId": "953e175d-13ff-4110-8e06-0be1d0e2cbd3",
+  "storyCount": 1,
+  "defectCount": 1,
+  "stories": [
+    {
+      "userId": "a61bde5e-fde8-474c-b4c2-58984d683191",
+      "sprintId": "a748acce-3a1e-4f88-abbd-cd67710adafa",
+      "epicTaskId": "761dbde7-b44a-4c6b-8bb9-9c86a8a413e5",
+      "defects": [
+        {
+          "testerId": "6298678e-5b2e-44d0-99c2-8bcbe75229b6",
+          "sprintId": "e097c25d-8f60-4057-9ec0-9d99239d6030",
+          "storyTaskId": "3afa139a-abc7-4ae3-8ed2-d2805f868d20"
+        }
+      ],
+      "subtasks": [
+        {
+          "storyTaskId": "fecf320e-a6e4-4946-96d7-576de425fabb"
+        }
+      ]
+    }
+  ],
+  "defects": [
+    {
+      "testerId": "2e01d081-17d2-47de-a3ab-e9e841d9da4b",
+      "sprintId": "757df1d1-db19-4a2d-b743-5a375f20249a",
+      "storyTaskId": "d5a8ae24-cd73-41ca-a52b-2ad366985411"
+    }
+  ]
+}

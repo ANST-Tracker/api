@@ -55,7 +55,6 @@ public class UpdateAbstractTaskUseCase implements UpdateAbstractTaskInBound {
         original.setTimeEstimation(updated.getTimeEstimation());
         original.setTags(tagRepository.findAllByIdInAndProjectId(updated.getTags().stream().map(Tag::getId).toList(),
                 original.getProject().getId()));
-        // TODO: After sprint realization, needs to update sprint parameters in updated request
     }
 
     private void mergeSpecificFields(AbstractTask original, AbstractTask updated) {

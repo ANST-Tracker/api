@@ -2,14 +2,14 @@ package it;
 
 import com.anst.sd.api.AnstApiTodoApplication;
 import com.anst.sd.api.adapter.persistence.mongo.FilterMongoRepository;
-import com.anst.sd.api.adapter.persistence.relational.*;
 import com.anst.sd.api.adapter.persistence.mongo.UserCodeMongoRepository;
-import com.anst.sd.api.domain.project.Project;
+import com.anst.sd.api.adapter.persistence.relational.*;
 import com.anst.sd.api.adapter.telegram.CreateUserCodeMessageSupplier;
 import com.anst.sd.api.domain.PermissionCode;
-import com.anst.sd.api.domain.tag.Tag;
 import com.anst.sd.api.domain.UsersProjects;
+import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.sprint.Sprint;
+import com.anst.sd.api.domain.tag.Tag;
 import com.anst.sd.api.domain.task.*;
 import com.anst.sd.api.domain.user.Position;
 import com.anst.sd.api.domain.user.User;
@@ -84,6 +84,8 @@ public abstract class AbstractIntegrationTest {
     protected TagJpaRepository tagJpaRepository;
     @Autowired
     protected UsersProjectsJpaRepository usersProjectsJpaRepository;
+    @Autowired
+    protected DefectJpaRepository defectJpaRepository;
 
     protected User user;
     protected User reviewer;
@@ -102,6 +104,7 @@ public abstract class AbstractIntegrationTest {
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
         subtaskJpaRepository.deleteAll();
+        defectJpaRepository.deleteAll();
         storyTaskJpaRepository.deleteAll();
         epicTaskJpaRepository.deleteAll();
         sprintJpaRepository.deleteAll();
@@ -206,11 +209,28 @@ public abstract class AbstractIntegrationTest {
         return abstractTaskJpaRepository.save(task);
     }
 
+    protected AbstractTask createDefectTask(User user, Project project, Sprint sprint, AbstractTask storyTask) {
+        DefectTask defectTask = new DefectTask();
+        defectTask.setName("Test defect");
+        defectTask.setDescription("This is a test defect");
+        defectTask.setSprint(sprint);
+        defectTask.setType(TaskType.DEFECT);
+        defectTask.setStatus(TaskStatus.IN_PROGRESS);
+        defectTask.setStoryTask((StoryTask) storyTask);
+        fillAbstractTaskFields(defectTask, user, project);
+        defectTask.setSimpleId("GD-3");
+        defectTask.setTester(user);
+        defectTask.setSprint(sprint);
+        defectTask.setPriority(TaskPriority.MAJOR);
+        return abstractTaskJpaRepository.save(defectTask);
+    }
+
     protected Sprint createSprint(Project project) {
         Sprint sprint = new Sprint();
         sprint.setProject(project);
         sprint.setCreated(Instant.now());
         sprint.setName("sprint");
+        sprint.setDescription("description");
         sprint.setStartDate(LocalDate.now().minusDays(1));
         sprint.setEndDate(LocalDate.now().plusDays(14));
         sprint.setIsActive(true);

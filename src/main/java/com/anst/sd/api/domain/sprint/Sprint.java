@@ -3,6 +3,7 @@ package com.anst.sd.api.domain.sprint;
 import com.anst.sd.api.domain.BusinessEntity;
 import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.task.DefectTask;
+import com.anst.sd.api.domain.task.StoryTask;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,5 +32,5 @@ public class Sprint extends BusinessEntity {
     @OneToMany(mappedBy = "sprint")
     private List<DefectTask> defects;
     @OneToMany(mappedBy = "sprint")
-    private List<DefectTask> stories;
+    private List<StoryTask> stories;
 }

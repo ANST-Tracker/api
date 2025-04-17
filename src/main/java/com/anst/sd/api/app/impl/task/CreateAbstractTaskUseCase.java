@@ -1,12 +1,14 @@
 package com.anst.sd.api.app.impl.task;
 
 import com.anst.sd.api.app.api.project.ProjectRepository;
+import com.anst.sd.api.app.api.sprint.SprintRepository;
 import com.anst.sd.api.app.api.tag.TagRepository;
 import com.anst.sd.api.app.api.task.AbstractTaskRepository;
 import com.anst.sd.api.app.api.task.AbstractTaskValidationException;
 import com.anst.sd.api.app.api.task.CreateAbstractTaskInBound;
 import com.anst.sd.api.app.api.user.UserRepository;
 import com.anst.sd.api.domain.project.Project;
+import com.anst.sd.api.domain.sprint.Sprint;
 import com.anst.sd.api.domain.tag.Tag;
 import com.anst.sd.api.domain.task.*;
 import com.anst.sd.api.domain.user.User;
@@ -27,6 +29,7 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
     private final TagRepository tagRepository;
+    private final SprintRepository sprintRepository;
 
     @Override
     @Transactional
@@ -46,7 +49,6 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
         task.setSimpleId(SimpleIdGenerationDelegate.idGenerator(task));
         task.setOrderNumber(orderNumber.add(BigDecimal.ONE));
         task.setCreator(creator);
-        // TODO: After sprint realization, needs to link task with sprint and create associated parameters
         if (task instanceof Subtask subtask) {
             validateSubtask(subtask);
             StoryTask parentStory = (StoryTask) abstractTaskRepository.getByIdAndProjectId(subtask.getStoryTask().getId(),
@@ -56,15 +58,19 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
 
         if (task instanceof StoryTask storyTask) {
             validateStoryTask(storyTask);
+            Sprint sprint = sprintRepository.getById(storyTask.getSprint().getId());
             EpicTask parentEpic = (EpicTask) abstractTaskRepository.getByIdAndProjectId(storyTask.getEpicTask().getId(),
                     project.getId());
             storyTask.setEpicTask(parentEpic);
+            storyTask.setSprint(sprint);
         }
 
         if (task instanceof DefectTask defectTask) {
             validateDefectTask(defectTask);
+            Sprint sprint = sprintRepository.getById(defectTask.getSprint().getId());
             StoryTask parentStory = (StoryTask) abstractTaskRepository.getByIdAndProjectId(defectTask.getStoryTask().getId(),
                     project.getId());
+            defectTask.setSprint(sprint);
             defectTask.setStoryTask(parentStory);
         }
 

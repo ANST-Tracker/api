@@ -2,10 +2,12 @@ package com.anst.sd.api.adapter.rest;
 
 import com.anst.sd.api.app.api.filter.FilterNotFoundException;
 import com.anst.sd.api.app.api.filter.FilterValidationException;
-import com.anst.sd.api.app.api.security.CodeAlreadySentException;
-import com.anst.sd.api.app.api.security.UserCodeNotFoundException;
 import com.anst.sd.api.app.api.project.ProjectNotFoundException;
 import com.anst.sd.api.app.api.project.ProjectValidationException;
+import com.anst.sd.api.app.api.security.CodeAlreadySentException;
+import com.anst.sd.api.app.api.security.UserCodeNotFoundException;
+import com.anst.sd.api.app.api.sprint.SprintNotFound;
+import com.anst.sd.api.app.api.sprint.SprintValidationException;
 import com.anst.sd.api.app.api.tag.TagNotFoundException;
 import com.anst.sd.api.app.api.tag.TagValidationException;
 import com.anst.sd.api.app.api.task.AbstractTaskNotFound;
@@ -64,6 +66,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         AbstractTaskValidationException.class,
         FilterValidationException.class,
         TagValidationException.class,
+            SprintValidationException.class,
         UsersProjectsValidationException.class
     })
     public ResponseEntity<Object> handleValidation(Exception ex) {
@@ -94,6 +97,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         AbstractTaskNotFound.class,
         UsersProjectsNotFoundException.class,
         AbstractTaskNotFound.class,
+            SprintNotFound.class,
         FilterNotFoundException.class
     })
     public ResponseEntity<Object> handleNotFound(Exception ex) {
