@@ -8,6 +8,7 @@ import com.anst.sd.api.domain.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
 @Table(name = "project")
 @Getter
 @Setter
+@Accessors(chain = true)
 public class Project extends DomainObject {
     @Column(nullable = false)
     private String name;

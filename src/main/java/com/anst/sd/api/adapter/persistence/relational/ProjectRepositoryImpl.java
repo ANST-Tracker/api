@@ -6,6 +6,7 @@ import com.anst.sd.api.domain.project.Project;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -35,6 +36,11 @@ public class ProjectRepositoryImpl implements ProjectRepository {
         }
 
         return project;
+    }
+
+    @Override
+    public List<Project> getAllByUserId(UUID userId) {
+        return projectJpaRepository.findAllByUserId(userId);
     }
 
     @Override
