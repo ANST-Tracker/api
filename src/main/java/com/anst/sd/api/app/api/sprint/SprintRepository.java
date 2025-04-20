@@ -10,4 +10,6 @@ public interface SprintRepository {
     Sprint save(Sprint sprint);
 
     Sprint getById(UUID uuid);
+
+    Sprint getByIdAndProjectId(UUID uuid, UUID projectId);
 }

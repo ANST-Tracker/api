@@ -18,11 +18,13 @@ import java.util.UUID;
 public class CreateSprintUseCase implements CreateSprintInBound {
     private final SprintRepository sprintRepository;
     private final ProjectRepository projectRepository;
+    private final SprintValidationDelegate sprintValidationDelegate;
 
     @Override
     @Transactional
     public Sprint create(UUID userId, Sprint sprint) {
         log.info("Creating sprint named {} and description {}", sprint.getName(), sprint.getDescription());
+        sprintValidationDelegate.validateUserHasAccessToProject(userId, sprint.getProject().getId());
         Project project = projectRepository.getById(sprint.getProject().getId());
         sprint.setIsActive(true);
         sprint.setProject(project);

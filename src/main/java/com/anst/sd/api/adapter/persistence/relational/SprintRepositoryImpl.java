@@ -23,4 +23,10 @@ public class SprintRepositoryImpl implements SprintRepository {
         return sprintJpaRepository.findById(uuid)
                 .orElseThrow(() -> new SprintNotFound(uuid.toString()));
     }
+
+    @Override
+    public Sprint getByIdAndProjectId(UUID uuid, UUID projectId) {
+        return sprintJpaRepository.findByIdAndProjectId(uuid, projectId)
+                .orElseThrow(() -> new SprintNotFound(uuid.toString()));
+    }
 }

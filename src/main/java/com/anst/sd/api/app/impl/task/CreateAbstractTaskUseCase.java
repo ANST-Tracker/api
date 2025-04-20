@@ -1,6 +1,7 @@
 package com.anst.sd.api.app.impl.task;
 
 import com.anst.sd.api.app.api.project.ProjectRepository;
+import com.anst.sd.api.app.api.project.ProjectValidationException;
 import com.anst.sd.api.app.api.sprint.SprintRepository;
 import com.anst.sd.api.app.api.tag.TagRepository;
 import com.anst.sd.api.app.api.task.AbstractTaskRepository;
@@ -58,7 +59,8 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
 
         if (task instanceof StoryTask storyTask) {
             validateStoryTask(storyTask);
-            Sprint sprint = sprintRepository.getById(storyTask.getSprint().getId());
+            validateUserHasAccessToProject(userId, project.getId());
+            Sprint sprint = sprintRepository.getByIdAndProjectId(storyTask.getSprint().getId(), project.getId());
             EpicTask parentEpic = (EpicTask) abstractTaskRepository.getByIdAndProjectId(storyTask.getEpicTask().getId(),
                     project.getId());
             storyTask.setEpicTask(parentEpic);
@@ -95,6 +97,11 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
         if (task instanceof DefectTask defectTask && defectTask.getStoryTask() == null) {
             throw new AbstractTaskValidationException();
         }
+    }
 
+    private void validateUserHasAccessToProject(UUID userId, UUID projectId) {
+        if (!projectRepository.existsByIdAndUserId(userId, projectId)) {
+            throw new ProjectValidationException(userId, projectId);
+        }
     }
 }

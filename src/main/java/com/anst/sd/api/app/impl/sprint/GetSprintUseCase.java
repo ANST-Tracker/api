@@ -15,11 +15,14 @@ import java.util.UUID;
 @AllArgsConstructor
 public class GetSprintUseCase implements GetSprintInBound {
     private final SprintRepository sprintRepository;
+    private final SprintValidationDelegate sprintValidationDelegate;
 
     @Override
     @Transactional(readOnly = true)
     public Sprint get(UUID sprintId, UUID userId) {
         log.info("Getting sprint information by id {}, by user {}", sprintId, userId);
-        return sprintRepository.getById(sprintId);
+        Sprint sprint = sprintRepository.getById(sprintId);
+        sprintValidationDelegate.validateUserHasAccessToProject(userId, sprint.getProject().getId());
+        return sprint;
     }
 }
