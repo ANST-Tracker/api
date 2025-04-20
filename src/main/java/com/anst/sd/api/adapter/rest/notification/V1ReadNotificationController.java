@@ -37,8 +37,8 @@ public class V1ReadNotificationController {
     )
     @GetMapping
     ResponseEntity<List<NotificationInfoDto>> getNotifications() {
-        return ResponseEntity.ok(getNotificationsInBound.getNotifications(jwtService.getJwtAuth().getUserId())
-                .stream().map(notificationDtoMapper::mapToDto)
+        return ResponseEntity.ok(getNotificationsInBound.getNotifications(jwtService.getJwtAuth().getUserId()).stream()
+                .map(notificationDtoMapper::mapToDto)
                 .toList());
     }
 }
