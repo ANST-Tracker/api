@@ -40,7 +40,6 @@ public class SprintInfoDtoMapperTest extends AbstractUnitTest {
         assertEquals(sprint.getId(), dto.getId());
         assertEquals(sprint.getName(), dto.getName());
         assertEquals(sprint.getDescription(), dto.getDescription());
-        assertEquals(sprint.getProject().getId(), dto.getProjectId());
         assertEquals(sprint.getStartDate(), dto.getStartDate());
         assertEquals(sprint.getEndDate(), dto.getEndDate());
         assertEquals(sprint.getIsActive(), dto.getIsActive());

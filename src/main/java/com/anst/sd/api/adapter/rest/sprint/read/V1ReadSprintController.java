@@ -36,7 +36,7 @@ public class V1ReadSprintController {
                             responseCode = "200",
                             useReturnTypeSchema = true)
             })
-    @GetMapping()
+    @GetMapping("/all")
     public ResponseEntity<List<SprintInfoDto>> getSprints(@PathVariable UUID projectId) {
         List<Sprint> sprints = getSprintsByProjectInbound.get(jwtService.getJwtAuth().getUserId(), projectId);
         return ResponseEntity.ok(sprintDtoMapper.mapToDto(sprints));

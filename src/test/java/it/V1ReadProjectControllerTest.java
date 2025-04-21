@@ -1,6 +1,7 @@
 package it;
 
 import com.anst.sd.api.adapter.rest.project.dto.ProjectInfoDto;
+import com.anst.sd.api.adapter.rest.project.read.dto.ProjectsInfoDto;
 import com.anst.sd.api.adapter.rest.tag.dto.TagInfoDto;
 import com.anst.sd.api.adapter.rest.user.dto.UserInfoDto;
 import com.anst.sd.api.domain.project.Project;
@@ -90,13 +91,13 @@ public class V1ReadProjectControllerTest extends AbstractIntegrationTest{
         Project project2 = createTestProject(user2);
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
-                .get(API_URL))
+                .get(API_URL + "/all"))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
         List<Project> projects = projectJpaRepository.findAllByUserId(user.getId());
-        List<ProjectInfoDto> responseDto = getListFromResponse(response, ProjectInfoDto.class);
+        List<ProjectsInfoDto> responseDto = getListFromResponse(response, ProjectsInfoDto.class);
         assertEquals(projects.size(), responseDto.size());
         for(int i = 0;i < countProjects;i++){
             assertEquals(responseDto.get(i).getName(), projects.get(i).getName());

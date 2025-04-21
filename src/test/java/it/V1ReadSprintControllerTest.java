@@ -29,7 +29,7 @@ public class V1ReadSprintControllerTest extends AbstractIntegrationTest{
         createSprint(project1);
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
-                .get(API_URL.formatted(project.getId()))
+                .get(API_URL.formatted(project.getId()) + "/all")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -39,11 +39,9 @@ public class V1ReadSprintControllerTest extends AbstractIntegrationTest{
         assertEquals(2, sprintInfoDtoList.size());
         sprintInfoDtoList.forEach(sprintInfoDto -> {
             assertNotNull(sprintInfoDto.getId());
-            assertNotNull(sprintInfoDto.getProjectId());
             assertNotNull(sprintInfoDto.getStartDate());
             assertNotNull(sprintInfoDto.getEndDate());
             sprintInfoDto.setId(null);
-            sprintInfoDto.setProjectId(null);
             sprintInfoDto.setStartDate(null);
             sprintInfoDto.setEndDate(null);
         });
@@ -61,7 +59,7 @@ public class V1ReadSprintControllerTest extends AbstractIntegrationTest{
         createSprint(project1);
 
         performAuthenticated(user1, MockMvcRequestBuilders
-                .get(API_URL.formatted(project.getId()))
+                .get(API_URL.formatted(project.getId()) + "/all")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized());

@@ -1,9 +1,10 @@
-package com.anst.sd.api.adapter.rest.sprint.dto;
+package com.anst.sd.api.adapter.rest.project.read.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
@@ -11,11 +12,12 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor
-public class SprintInfoDto {
+public class ProjectsInfoDto {
+    @NotNull
     UUID id;
+    @NotBlank
     String name;
     String description;
-    LocalDate startDate;
-    LocalDate endDate;
-    Boolean isActive;
+    @NotNull
+    UUID headId;
 }
