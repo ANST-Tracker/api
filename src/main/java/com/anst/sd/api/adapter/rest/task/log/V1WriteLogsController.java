@@ -2,6 +2,7 @@ package com.anst.sd.api.adapter.rest.task.log;
 
 import com.anst.sd.api.adapter.rest.dto.IdResponseDto;
 import com.anst.sd.api.adapter.rest.task.log.dto.CreateUpdateLogDto;
+import com.anst.sd.api.adapter.rest.task.log.dto.LogDomainMapper;
 import com.anst.sd.api.app.api.task.log.CreateLogInBound;
 import com.anst.sd.api.app.api.task.log.DeleteLogInBound;
 import com.anst.sd.api.app.api.task.log.LogValidationException;
@@ -30,6 +31,7 @@ public class V1WriteLogsController {
     private final CreateLogInBound createLogInbound;
     private final UpdateLogInBound updateLogInbound;
     private final DeleteLogInBound deleteLogInbound;
+    private final LogDomainMapper logDomainMapper;
 
     @Operation(
             summary = "Create a new log",
@@ -49,12 +51,10 @@ public class V1WriteLogsController {
         }
 
         Log log = createLogInbound.create(
-                request.getComment(),
-                request.getTimeEstimation(),
+                logDomainMapper.mapToDomain(request),
                 projectId,
                 simpleId,
-                jwtService.getJwtAuth().getUserId(),
-                request.getDate());
+                jwtService.getJwtAuth().getUserId());
 
         return ResponseEntity.ok(new IdResponseDto(log.getId()));
     }
@@ -70,14 +70,13 @@ public class V1WriteLogsController {
         if (bindingResult.hasErrors()) {
             throw new LogValidationException(simpleId);
         }
+        Log updateLog = logDomainMapper.mapToDomain(request);
+        updateLog.setId(id);
         Log log = updateLogInbound.update(
-                id,
-                request.getComment(),
-                request.getTimeEstimation(),
+                updateLog,
                 projectId,
                 simpleId,
-                jwtService.getJwtAuth().getUserId(),
-                request.getDate());
+                jwtService.getJwtAuth().getUserId());
 
         return ResponseEntity.ok(new IdResponseDto(log.getId()));
     }
