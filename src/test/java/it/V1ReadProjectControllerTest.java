@@ -1,6 +1,7 @@
 package it;
 
 import com.anst.sd.api.adapter.rest.project.dto.ProjectInfoDto;
+import com.anst.sd.api.adapter.rest.project.read.dto.ProjectsInfoDto;
 import com.anst.sd.api.adapter.rest.tag.dto.TagInfoDto;
 import com.anst.sd.api.adapter.rest.user.dto.UserInfoDto;
 import com.anst.sd.api.domain.project.Project;
@@ -65,7 +66,6 @@ public class V1ReadProjectControllerTest extends AbstractIntegrationTest{
             assertEquals(tagTest.getName(), tagRes.getName());
             assertEquals(tagTest.getProject().getId(), tagRes.getProjectId());
         }
-
     }
 
     @Test
@@ -78,5 +78,31 @@ public class V1ReadProjectControllerTest extends AbstractIntegrationTest{
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andReturn();
+    }
+
+    @Test
+    void getProjects_successfully() throws Exception {
+        User user = createTestUser();
+        int countProjects = 3;
+        for(int i = 0;i < countProjects;i++){
+            Project projectIt = createTestProject(user);
+        }
+        User user2 = createUser("Men", "@men", "men@gmail.com");
+        Project project2 = createTestProject(user2);
+
+        MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
+                .get(API_URL + "/all"))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        List<Project> projects = projectJpaRepository.findAllByUserId(user.getId());
+        List<ProjectsInfoDto> responseDto = getListFromResponse(response, ProjectsInfoDto.class);
+        assertEquals(projects.size(), responseDto.size());
+        for(int i = 0;i < countProjects;i++){
+            assertEquals(responseDto.get(i).getName(), projects.get(i).getName());
+            assertEquals(responseDto.get(i).getDescription(), projects.get(i).getDescription());
+            assertEquals(responseDto.get(i).getHeadId(), projects.get(i).getHead().getId());
+        }
     }
 }
