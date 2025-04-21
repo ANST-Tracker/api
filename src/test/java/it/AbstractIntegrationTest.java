@@ -105,6 +105,9 @@ public abstract class AbstractIntegrationTest {
     protected EpicTask epicTask;
     protected Sprint sprint;
     protected AbstractTask storyTask;
+    protected AbstractTask subTask;
+    protected TimeEstimation timeEstimation;
+    protected Log logTask;
     @Autowired
     protected PasswordEncoder passwordEncoder;
     @Autowired
@@ -306,12 +309,13 @@ public abstract class AbstractIntegrationTest {
         return notificationMongoRepository.save(notification);
     }
 
-    protected Log createLog(AbstractTask task, User user, String comment, TimeEstimation estimation) {
+    protected Log createLog(AbstractTask task, User user, String comment, TimeEstimation estimation, LocalDate date) {
         Log log = new Log()
                 .setUser(user)
                 .setTask(task)
                 .setComment(comment)
-                .setTimeEstimation(estimation);
+                .setTimeEstimation(estimation)
+                .setDate(date);
         return logJpaRepository.save(log);
     }
 

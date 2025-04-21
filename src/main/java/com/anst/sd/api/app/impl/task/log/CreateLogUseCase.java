@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
@@ -26,9 +27,15 @@ public class CreateLogUseCase implements CreateLogInBound {
 
     @Override
     @Transactional
-    public Log create(String comment, TimeEstimation timeEstimation, UUID projectId, String taskId, UUID userId) {
-        log.info("Creating log in project {} for task {} by user {} with comment {} and time estimation {} {}",
-                projectId, taskId, userId, comment, timeEstimation.getAmount(), timeEstimation.getTimeUnit().toString());
+    public Log create(String comment, TimeEstimation timeEstimation, UUID projectId, String taskId, UUID userId, LocalDate date) {
+        log.info("Creating log in project {} for task {} by user {} with comment {} and time estimation {} {} on date {}",
+                projectId,
+                taskId,
+                userId,
+                comment,
+                timeEstimation.getAmount(),
+                timeEstimation.getTimeUnit().toString(),
+                date);
         if (!projectRepository.existsByIdAndUserId(projectId, userId)) {
             throw new AuthException("No auth for user %s in project %s".formatted(userId, projectId));
         }
@@ -36,7 +43,8 @@ public class CreateLogUseCase implements CreateLogInBound {
                 .setComment(comment)
                 .setTimeEstimation(timeEstimation)
                 .setTask(abstractTaskRepository.getByIdAndProjectId(taskId, projectId))
-                .setUser(userRepository.getById(userId));
+                .setUser(userRepository.getById(userId))
+                .setDate(date);
         return logRepository.save(log);
     }
 }

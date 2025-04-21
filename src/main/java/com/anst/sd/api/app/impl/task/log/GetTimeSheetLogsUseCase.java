@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,7 +20,7 @@ public class GetTimeSheetLogsUseCase implements GetTimeSheetLogsInBound {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Log> get(UUID userId, LocalDateTime start, LocalDateTime end) {
+    public List<Log> get(UUID userId, LocalDate start, LocalDate end) {
         log.info("Getting all logs for user {} from {} to {}", userId, start.toString(), end.toString());
         return logRepository.findAllByPeriodAndUser(userId, start, end);
     }

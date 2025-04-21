@@ -6,14 +6,14 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
-import java.time.Instant;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Accessors(chain = true)
 public class TimeSheetDto {
-    Instant created;
+    LocalDate date;
     TimeEstimation timeEstimation;
     String taskSimpleId;
     String projectName;

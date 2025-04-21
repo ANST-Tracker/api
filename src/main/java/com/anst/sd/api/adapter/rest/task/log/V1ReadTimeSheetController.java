@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,8 +38,8 @@ public class V1ReadTimeSheetController {
     @GetMapping("/project/{projectId}")
     public List<TimeSheetDto> getTimeSheetByProject(
             @PathVariable UUID projectId,
-            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
             ) {
         return getTimeSheetLogsByProjectInBound.get(projectId, jwtService.getJwtAuth().getUserId(), startDate, endDate)
                 .stream()
@@ -56,8 +56,8 @@ public class V1ReadTimeSheetController {
             })
     @GetMapping("/all-projects")
     public List<TimeSheetDto> getTimeSheetAllProjects(
-            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
-            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate
     ) {
         return getTimeSheetLogsInBound.get(jwtService.getJwtAuth().getUserId(), startDate, endDate)
                 .stream()

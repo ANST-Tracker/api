@@ -12,6 +12,8 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
 import org.hibernate.type.SqlTypes;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "logs")
 @Getter
@@ -30,4 +32,6 @@ public class Log extends BusinessEntity {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "time_estimation", columnDefinition = "jsonb")
     private TimeEstimation timeEstimation;
+    @Column(name = "date_", nullable = false)
+    private LocalDate date;
 }

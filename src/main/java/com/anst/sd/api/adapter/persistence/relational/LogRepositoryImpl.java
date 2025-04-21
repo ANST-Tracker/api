@@ -6,8 +6,7 @@ import com.anst.sd.api.domain.task.Log;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,21 +32,22 @@ public class LogRepositoryImpl implements LogRepository {
     }
 
     @Override
-    public List<Log> findAllByPeriodAndProjectAndUser(UUID projectId, UUID userId, LocalDateTime start, LocalDateTime end) {
-        return logJpaRepository.findAllByPeriodAndProjectAndUser(
-                projectId,
-                userId,
-                start.toInstant(ZoneOffset.UTC),
-                end.toInstant(ZoneOffset.UTC));
+    public List<Log> findAllByPeriodAndProjectAndUser(UUID projectId, UUID userId, LocalDate start, LocalDate end) {
+        return logJpaRepository.findAllByPeriodAndProjectAndUser(projectId, userId, start, end);
     }
 
     @Override
-    public List<Log> findAllByPeriodAndUser(UUID userId, LocalDateTime start, LocalDateTime end) {
-        return logJpaRepository.findAllByPeriodAndUser(userId, start.toInstant(ZoneOffset.UTC), end.toInstant(ZoneOffset.UTC));
+    public List<Log> findAllByPeriodAndUser(UUID userId, LocalDate start, LocalDate end) {
+        return logJpaRepository.findAllByPeriodAndUser(userId, start, end);
     }
 
     @Override
-    public void delete(Log log) {
-        logJpaRepository.delete(log);
+    public void delete(UUID id) {
+        logJpaRepository.deleteById(id);
+    }
+
+    @Override
+    public Boolean existsById(UUID id) {
+        return logJpaRepository.existsById(id);
     }
 }

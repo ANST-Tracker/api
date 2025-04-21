@@ -6,10 +6,13 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
+
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Accessors(chain = true)
 public class CreateUpdateLogDto {
     String comment;
     TimeEstimation timeEstimation;
+    LocalDate date;
 }

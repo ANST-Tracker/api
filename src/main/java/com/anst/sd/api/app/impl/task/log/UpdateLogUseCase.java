@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
@@ -22,9 +23,17 @@ public class UpdateLogUseCase implements UpdateLogInBound {
 
     @Override
     @Transactional
-    public Log update(UUID id, String comment, TimeEstimation timeEstimation, UUID projectId, String taskId, UUID userId) {
-        log.info("Update log {} in project {} for task {} by user {} with comment {} and timeEstimation {} {}",
-                id, projectId, taskId, userId, comment, timeEstimation.getAmount(), timeEstimation.getTimeUnit().toString());
+    public Log update(UUID id, String comment, TimeEstimation timeEstimation,
+                      UUID projectId, String taskId, UUID userId, LocalDate date) {
+        log.info("Update log {} in project {} for task {} by user {} with comment {} and timeEstimation {} {} on date {}",
+                id,
+                projectId,
+                taskId,
+                userId,
+                comment,
+                timeEstimation.getAmount(),
+                timeEstimation.getTimeUnit().toString(),
+                date);
         if (!projectRepository.existsByIdAndUserId(projectId, userId)) {
             throw new AuthException("No auth for user %s in project %s".formatted(userId, projectId));
         }
@@ -32,6 +41,7 @@ public class UpdateLogUseCase implements UpdateLogInBound {
                 id, taskId, projectId, userId);
         log.setComment(comment);
         log.setTimeEstimation(timeEstimation);
+        log.setDate(date);
         return logRepository.save(log);
     }
 }

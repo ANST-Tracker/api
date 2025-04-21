@@ -5,6 +5,7 @@ create table public.logs
     comment         varchar,
     user_id         uuid        not null,
     time_estimation jsonb,
+    date_           date        not null,
 
     created_at      timestamptz not null,
     updated_at      timestamptz

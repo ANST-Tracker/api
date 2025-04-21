@@ -3,6 +3,7 @@ package com.anst.sd.api.adapter.rest.task.log;
 import com.anst.sd.api.adapter.rest.dto.IdResponseDto;
 import com.anst.sd.api.adapter.rest.task.log.dto.CreateUpdateLogDto;
 import com.anst.sd.api.app.api.task.log.CreateLogInBound;
+import com.anst.sd.api.app.api.task.log.DeleteLogInBound;
 import com.anst.sd.api.app.api.task.log.LogValidationException;
 import com.anst.sd.api.app.api.task.log.UpdateLogInBound;
 import com.anst.sd.api.domain.task.Log;
@@ -28,6 +29,7 @@ public class V1WriteLogsController {
     private final JwtService jwtService;
     private final CreateLogInBound createLogInbound;
     private final UpdateLogInBound updateLogInbound;
+    private final DeleteLogInBound deleteLogInbound;
 
     @Operation(
             summary = "Create a new log",
@@ -42,7 +44,6 @@ public class V1WriteLogsController {
                                                 @Valid @RequestBody CreateUpdateLogDto request,
                                                 BindingResult bindingResult
     ) {
-
         if (bindingResult.hasErrors()) {
             throw new LogValidationException();
         }
@@ -52,14 +53,16 @@ public class V1WriteLogsController {
                 request.getTimeEstimation(),
                 projectId,
                 simpleId,
-                jwtService.getJwtAuth().getUserId());
+                jwtService.getJwtAuth().getUserId(),
+                request.getDate());
 
         return ResponseEntity.ok(new IdResponseDto(log.getId()));
     }
 
     @Operation(summary = "Update an existing log")
     @PutMapping("/{id}")
-    public ResponseEntity<IdResponseDto> update(@PathVariable UUID projectId, @PathVariable String simpleId,
+    public ResponseEntity<IdResponseDto> update(@PathVariable UUID projectId,
+                                                @PathVariable String simpleId,
                                                 @PathVariable UUID id,
                                                 @Valid @RequestBody CreateUpdateLogDto request,
                                                 BindingResult bindingResult
@@ -73,8 +76,27 @@ public class V1WriteLogsController {
                 request.getTimeEstimation(),
                 projectId,
                 simpleId,
-                jwtService.getJwtAuth().getUserId());
+                jwtService.getJwtAuth().getUserId(),
+                request.getDate());
 
         return ResponseEntity.ok(new IdResponseDto(log.getId()));
     }
+
+    @Operation(
+            summary = "Delete a log",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            useReturnTypeSchema = true)
+            })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<IdResponseDto> delete(@PathVariable UUID projectId,
+                                                @PathVariable String simpleId,
+                                                @PathVariable UUID id
+    ) {
+        Log log = deleteLogInbound.delete(id, projectId, simpleId, jwtService.getJwtAuth().getUserId());
+        return ResponseEntity.ok(new IdResponseDto(log.getId()));
+    }
 }
+
+
