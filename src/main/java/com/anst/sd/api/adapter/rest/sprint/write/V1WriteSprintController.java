@@ -22,7 +22,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/sprint")
+@RequestMapping("/project/{projectId}/sprint")
 public class V1WriteSprintController {
     private final CreateSprintInBound createSprintInBound;
     private final UpdateSprintInBound updateSprintInBound;

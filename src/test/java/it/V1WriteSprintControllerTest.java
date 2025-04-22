@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 class V1WriteSprintControllerTest extends AbstractIntegrationTest {
-    private static final String API_URL = "/sprint";
+    private static final String API_URL = "/project/%s/sprint";
 
     @Test
     void createSprint_successfully() throws Exception {
@@ -28,7 +28,7 @@ class V1WriteSprintControllerTest extends AbstractIntegrationTest {
         request.setProjectId(project.getId());
 
         performAuthenticated(user, MockMvcRequestBuilders
-                .post(API_URL)
+                .post(API_URL.formatted(project.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
@@ -50,7 +50,7 @@ class V1WriteSprintControllerTest extends AbstractIntegrationTest {
         UpdateSprintDto request = readFromFile("/V1WriteSprintControllerTest/updateSprint.json", UpdateSprintDto.class);
 
         performAuthenticated(user, MockMvcRequestBuilders
-                .put(API_URL + "/" + sprint.getId())
+                .put(API_URL.formatted(project.getId()) + "/" + sprint.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
@@ -72,7 +72,7 @@ class V1WriteSprintControllerTest extends AbstractIntegrationTest {
         UpdateSprintDto request = readFromFile("/V1WriteSprintControllerTest/updateSprint.json", UpdateSprintDto.class);
 
         performAuthenticated(user, MockMvcRequestBuilders
-                .put(API_URL + "/" + UUID.randomUUID())
+                .put(API_URL.formatted(project.getId()) + "/" + UUID.randomUUID())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
@@ -89,7 +89,7 @@ class V1WriteSprintControllerTest extends AbstractIntegrationTest {
         AbstractTask storyTask = createStoryTask(user, project, sprint, epicTask, user, user);
 
         performAuthenticated(user, MockMvcRequestBuilders
-                .put(API_URL + "/" + sprint.getId() + "/task/" + storyTask.getSimpleId())
+                .put(API_URL.formatted(project.getId()) + "/" + sprint.getId() + "/task/" + storyTask.getSimpleId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
 
@@ -105,7 +105,7 @@ class V1WriteSprintControllerTest extends AbstractIntegrationTest {
         AbstractTask storyTask = createStoryTask(user, project, sprint, epicTask, user, user);
 
         performAuthenticated(user, MockMvcRequestBuilders
-                .put(API_URL + "/" + UUID.randomUUID() + "/task/" + storyTask.getSimpleId())
+                .put(API_URL.formatted(project.getId()) + "/" + UUID.randomUUID() + "/task/" + storyTask.getSimpleId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
 
@@ -121,7 +121,7 @@ class V1WriteSprintControllerTest extends AbstractIntegrationTest {
         createStoryTask(user, project, sprint, epicTask, user, user);
 
         performAuthenticated(user, MockMvcRequestBuilders
-                .put(API_URL + "/" + sprint.getId() + "/task/RANDOM")
+                .put(API_URL.formatted(project.getId()) + "/" + sprint.getId() + "/task/RANDOM")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
 

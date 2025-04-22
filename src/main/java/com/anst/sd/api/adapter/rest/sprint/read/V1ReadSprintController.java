@@ -20,7 +20,7 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/sprint")
+@RequestMapping("/project/{projectId}/sprint")
 public class V1ReadSprintController {
     private final GetSprintInBound getSprintInBound;
     private final JwtService jwtService;

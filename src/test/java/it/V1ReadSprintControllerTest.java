@@ -15,7 +15,7 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 class V1ReadSprintControllerTest extends AbstractIntegrationTest {
-    private static final String API_URL = "/sprint";
+    private static final String API_URL = "/project/%s/sprint";
 
     @Test
     void getSprint_successfully() throws Exception {
@@ -28,7 +28,7 @@ class V1ReadSprintControllerTest extends AbstractIntegrationTest {
         createSubtask(user, project, user, user, story);
 
         performAuthenticated(user, MockMvcRequestBuilders
-                .get(API_URL + "/" + sprint.getId())
+                .get(API_URL.formatted(project.getId()) + "/" + sprint.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
 
@@ -46,7 +46,7 @@ class V1ReadSprintControllerTest extends AbstractIntegrationTest {
         createSubtask(user, project, user, user, story);
 
         performAuthenticated(user, MockMvcRequestBuilders
-                .get(API_URL + "/" + UUID.randomUUID())
+                .get(API_URL.formatted(project.getId()) + "/" + UUID.randomUUID())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
 

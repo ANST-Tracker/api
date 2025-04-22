@@ -58,8 +58,8 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
         }
 
         if (task instanceof StoryTask storyTask) {
-            validateStoryTask(storyTask);
             validateUserHasAccessToProject(userId, project.getId());
+            validateStoryTask(storyTask);
             Sprint sprint = sprintRepository.getByIdAndProjectId(storyTask.getSprint().getId(), project.getId());
             EpicTask parentEpic = (EpicTask) abstractTaskRepository.getByIdAndProjectId(storyTask.getEpicTask().getId(),
                     project.getId());
