@@ -294,8 +294,12 @@ public abstract class AbstractIntegrationTest {
                 .setRecipientLogin(user.getUsername())
                 .setRecipientTelegramId(user.getTelegramId())
                 .setTemplate(NotificationTemplate.TASK_NEW_ASSIGNEE)
-                .setCreationDateTime(Instant.now().minusSeconds(100))
-                .setParams(Map.of("A", "B"));
+                .setCreationDateTime(Instant.parse("2025-04-22T12:00:00Z"))
+                .setParams(Map.of(
+                        "userLogin", "testUser",
+                        "taskTitle", "afasf",
+                        "link", "www.google.com"
+                ));
         return notificationMongoRepository.save(notification);
     }
 
