@@ -1,7 +1,7 @@
 package com.anst.sd.api.adapter.rest.notification;
 
-import com.anst.sd.api.adapter.rest.notification.dto.NotificationDtoMapper;
 import com.anst.sd.api.adapter.rest.notification.dto.NotificationInfoDto;
+import com.anst.sd.api.adapter.telegram.NotificationDtoMapper;
 import com.anst.sd.api.app.api.notification.GetNotificationsInBound;
 import com.anst.sd.api.security.app.impl.JwtService;
 import io.swagger.v3.oas.annotations.Operation;

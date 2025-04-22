@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface NotificationMongoRepository extends MongoRepository<Notification, String> {
-    List<Notification> findAllByRecipientTelegramId(String recipientTelegramId);
+    List<Notification> findTop20ByRecipientTelegramIdOrderByCreationDateTimeDesc(String recipientTelegramId);
 }

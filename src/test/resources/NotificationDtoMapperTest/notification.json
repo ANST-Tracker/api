@@ -4,5 +4,9 @@
   "recipientTelegramId": "recipientTelegramId_0819ce71318b",
   "creationDateTime": "+57271-09-10T06:09:13Z",
   "template": "TASK_NEW_ASSIGNEE",
-  "params": {}
+  "params": {
+    "userLogin": "testUser",
+    "taskTitle": "Реализовать тестовую задачу",
+    "link": "www.google.com"
+  }
 }

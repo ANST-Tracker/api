@@ -19,6 +19,6 @@ public class NotificationRepositoryImpl implements NotificationRepository {
 
     @Override
     public List<Notification> findAllByRecipientTelegramId(String recipientTelegramId) {
-        return repository.findAllByRecipientTelegramId(recipientTelegramId);
+        return repository.findTop20ByRecipientTelegramIdOrderByCreationDateTimeDesc(recipientTelegramId);
     }
 }

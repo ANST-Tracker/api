@@ -1,20 +1,13 @@
 package com.anst.sd.api.adapter.rest.notification;
 
 import com.anst.sd.api.AbstractUnitTest;
-import com.anst.sd.api.adapter.rest.notification.dto.NotificationDtoMapper;
 import com.anst.sd.api.adapter.rest.notification.dto.NotificationInfoDto;
+import com.anst.sd.api.adapter.telegram.NotificationDtoMapper;
 import com.anst.sd.api.domain.notification.Notification;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
 
 class NotificationDtoMapperTest extends AbstractUnitTest {
-    private NotificationDtoMapper mapper;
-
-    @BeforeEach
-    void setUp() {
-        mapper = Mappers.getMapper(NotificationDtoMapper.class);
-    }
+    private final NotificationDtoMapper mapper = new NotificationDtoMapper();
 
     @Test
     void mapToDto() {

@@ -1,5 +1,6 @@
 package com.anst.sd.api.adapter.telegram;
 
+import com.anst.sd.api.adapter.rest.notification.dto.NotificationInfoDto;
 import com.anst.sd.api.adapter.telegram.dto.NotificationDto;
 import com.anst.sd.api.domain.notification.Notification;
 import com.anst.sd.api.domain.notification.NotificationTemplate;
@@ -21,6 +22,17 @@ public class NotificationDtoMapper {
         dto.setTitle(template.getTitle());
         dto.setTelegramId(notification.getRecipientTelegramId());
         return dto;
+    }
+
+    public NotificationInfoDto mapToDto(Notification notification) {
+        String text = constructNotificationBody(notification.getTemplate(), notification.getParams());
+
+        return NotificationInfoDto.builder()
+                .viewed(notification.getViewed())
+                .recipientTelegramId(notification.getRecipientTelegramId())
+                .creationDateTime(notification.getCreationDateTime())
+                .text(text)
+                .build();
     }
 
     // ===================================================================================================================
