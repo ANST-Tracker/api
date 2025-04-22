@@ -31,11 +31,8 @@ public class CreateLogUseCase implements CreateLogInBound {
             throw new AuthException("No auth for user %s in project %s".formatted(userId, projectId));
         }
         createLog
-                .setComment(createLog.getComment())
-                .setTimeEstimation(createLog.getTimeEstimation())
                 .setTask(abstractTaskRepository.getByIdAndProjectId(taskId, projectId))
-                .setUser(userRepository.getById(userId))
-                .setDate(createLog.getDate());
+                .setUser(userRepository.getById(userId));
         return logRepository.save(createLog);
     }
 }
