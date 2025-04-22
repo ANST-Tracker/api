@@ -7,6 +7,7 @@ import com.anst.sd.api.domain.task.EpicTask;
 import com.anst.sd.api.domain.user.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -27,12 +28,16 @@ class V1ReadSprintControllerTest extends AbstractIntegrationTest {
         createDefectTask(user, project, sprint, story);
         createSubtask(user, project, user, user, story);
 
-        performAuthenticated(user, MockMvcRequestBuilders
+        MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
                 .get(API_URL.formatted(project.getId()) + "/" + sprint.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
 
-                .andExpect(MockMvcResultMatchers.status().isOk());
+        Sprint result = getFromResponse(response, Sprint.class);
+        result.setId(null);
+        assertEqualsToFile("/V1ReadSprintControllerTest/getSprint.json", result);
     }
 
     @Test
