@@ -6,6 +6,7 @@ import com.anst.sd.api.domain.sprint.Sprint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -28,5 +29,8 @@ public class SprintRepositoryImpl implements SprintRepository {
     public Sprint getByIdAndProjectId(UUID uuid, UUID projectId) {
         return sprintJpaRepository.findByIdAndProjectId(uuid, projectId)
                 .orElseThrow(() -> new SprintNotFound(uuid.toString()));
+
+    public List<Sprint> getAllByProjectId(UUID projectId) {
+        return sprintJpaRepository.findAllByProjectId(projectId);
     }
 }

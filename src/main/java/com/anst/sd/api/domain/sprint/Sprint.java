@@ -7,6 +7,7 @@ import com.anst.sd.api.domain.task.StoryTask;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 @Table(name = "sprint")
 @Getter
 @Setter
+@Accessors(chain = true)
 public class Sprint extends BusinessEntity {
     @Column(nullable = false)
     private String name;

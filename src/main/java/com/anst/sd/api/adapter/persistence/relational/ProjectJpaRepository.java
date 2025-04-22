@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,4 +22,11 @@ public interface ProjectJpaRepository extends JpaRepository<Project, UUID> {
         and u.id = :userId
         """)
     boolean existsByIdAndUserId(UUID id, UUID userId);
+
+    @Query("""
+        select up.project from UsersProjects up
+        left join up.user u
+        where up.user.id = :userId    
+        """)
+    List<Project> findAllByUserId(UUID userId);
 }
