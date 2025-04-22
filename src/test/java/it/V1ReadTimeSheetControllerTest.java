@@ -54,8 +54,7 @@ public class V1ReadTimeSheetControllerTest extends AbstractIntegrationTest{
         assertEquals(log.getComment(), result.get(0).getComment());
         assertEquals(log.getDate(), result.get(0).getDate());
         assertEquals(log.getTask().getSimpleId(), result.get(0).getTaskSimpleId());
-        assertEquals(log.getTask().getProject().getId(), result.get(0).getProjectId());
-        assertEquals(log.getTask().getProject().getName(), result.get(0).getProjectName());
+        assertEquals(log.getTask().getName(), result.get(0).getTaskName());
     }
 
     @Test
@@ -77,8 +76,7 @@ public class V1ReadTimeSheetControllerTest extends AbstractIntegrationTest{
         assertEquals(log.getComment(), result.get(0).getComment());
         assertEquals(log.getDate(), result.get(0).getDate());
         assertEquals(log.getTask().getSimpleId(), result.get(0).getTaskSimpleId());
-        assertEquals(log.getTask().getProject().getId(), result.get(0).getProjectId());
-        assertEquals(log.getTask().getProject().getName(), result.get(0).getProjectName());
+        assertEquals(log.getTask().getName(), result.get(0).getTaskName());
     }
 
     @Test

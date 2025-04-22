@@ -9,8 +9,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface LogDtoMapper {
     @Mapping(source = "task.simpleId", target = "taskSimpleId")
-    @Mapping(source = "task.project.name", target = "projectName")
-    @Mapping(source = "task.project.id", target = "projectId")
+    @Mapping(source = "task.name", target = "taskName")
     TimeSheetDto mapToDto(Log log);
 
     List<TimeSheetDto> mapToDto(List<Log> logs);

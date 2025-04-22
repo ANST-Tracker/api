@@ -32,6 +32,6 @@ public class Log extends BusinessEntity {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "time_estimation", columnDefinition = "jsonb")
     private TimeEstimation timeEstimation;
-    @Column(name = "date_", nullable = false)
+    @Column(name = "\"date\"", nullable = false)
     private LocalDate date;
 }

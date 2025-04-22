@@ -27,8 +27,6 @@ class LogDtoMapperTest extends AbstractUnitTest {
         assertEquals(log.getId(), dto.getId());
         assertEquals(log.getComment(), dto.getComment());
         assertEquals(log.getDate(), dto.getDate());
-        assertEquals(log.getTask().getProject().getName(), dto.getProjectName());
-        assertEquals(log.getTask().getProject().getId(), dto.getProjectId());
         assertEquals(log.getTask().getSimpleId(), dto.getTaskSimpleId());
         assertEquals(log.getTimeEstimation().getAmount(), dto.getTimeEstimation().getAmount());
         assertEquals(log.getTimeEstimation().getTimeUnit(), dto.getTimeEstimation().getTimeUnit());

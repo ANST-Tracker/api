@@ -16,8 +16,7 @@ public class TimeSheetDto {
     LocalDate date;
     TimeEstimation timeEstimation;
     String taskSimpleId;
-    String projectName;
-    UUID projectId;
+    String taskName;
     String comment;
     UUID id;
 }

@@ -36,7 +36,7 @@ public interface LogJpaRepository extends JpaRepository<Log, UUID> {
     @Query("""
     select l from Log l
     left join fetch l.task t
-    left join fetch t.project p
+    left join t.project p
     where p.id = :projectId
     and l.user.id = :userId
     and l.date between :start and :end          
@@ -46,7 +46,7 @@ public interface LogJpaRepository extends JpaRepository<Log, UUID> {
     @Query("""
     select l from Log l
     left join fetch l.task t
-    left join fetch t.project p
+    left join t.project p
     where l.user.id = :userId
     and l.date between :start and :end          
     """)
