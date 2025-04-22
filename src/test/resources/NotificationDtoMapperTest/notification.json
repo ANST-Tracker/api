@@ -2,7 +2,7 @@
   "viewed": false,
   "recipientLogin": "recipientLogin_94f3be61649b",
   "recipientTelegramId": "recipientTelegramId_0819ce71318b",
-  "creationDateTime": "+57271-09-10T06:09:13Z",
+  "creationDateTime": "2025-04-22T15:45:30Z",
   "template": "TASK_NEW_ASSIGNEE",
   "params": {
     "userLogin": "testUser",
