@@ -37,6 +37,7 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
     public AbstractTask create(UUID userId, AbstractTask task) {
         log.info("Creating task with userId {}", userId);
         Project project = projectRepository.getById(task.getProject().getId());
+        validateUserHasAccessToProject(userId, project.getId());
         User creator = userRepository.getById(userId);
         User reviewer = userRepository.getById(task.getReviewer().getId());
         User assignee = userRepository.getById(task.getAssignee().getId());
@@ -58,7 +59,6 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
         }
 
         if (task instanceof StoryTask storyTask) {
-            validateUserHasAccessToProject(userId, project.getId());
             validateStoryTask(storyTask);
             Sprint sprint = sprintRepository.getByIdAndProjectId(storyTask.getSprint().getId(), project.getId());
             EpicTask parentEpic = (EpicTask) abstractTaskRepository.getByIdAndProjectId(storyTask.getEpicTask().getId(),
@@ -100,7 +100,7 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
     }
 
     private void validateUserHasAccessToProject(UUID userId, UUID projectId) {
-        if (!projectRepository.existsByIdAndUserId(userId, projectId)) {
+        if (!projectRepository.existsByIdAndUserId(projectId, userId)) {
             throw new ProjectValidationException(userId, projectId);
         }
     }
