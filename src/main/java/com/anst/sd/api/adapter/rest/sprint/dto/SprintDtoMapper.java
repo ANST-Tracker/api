@@ -19,7 +19,8 @@ public interface SprintDtoMapper {
     @Mapping(target = "assigneeId", source = "assignee.id")
     @Mapping(target = "subtasks", source = "subtasks")
     StoryTaskDto storyTaskToStoryTaskDto(StoryTask storyTask);
-    SprintInfoDto mapToDto(Sprint sprint);
+
+    SprintInfoDto mapToInfoDto(Sprint sprint);
 
     List<StoryTaskDto> storyTaskListToStoryTaskDtoList(List<StoryTask> storyTasks);
 

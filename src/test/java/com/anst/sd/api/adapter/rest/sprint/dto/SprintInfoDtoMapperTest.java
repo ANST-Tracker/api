@@ -35,7 +35,7 @@ public class SprintInfoDtoMapperTest extends AbstractUnitTest {
                 .setUpdated(Instant.now())
                 .setId(UUID.randomUUID());
 
-        SprintInfoDto dto = mapper.mapToDto(sprint);
+        SprintInfoDto dto = mapper.mapToInfoDto(sprint);
 
         assertEquals(sprint.getId(), dto.getId());
         assertEquals(sprint.getName(), dto.getName());

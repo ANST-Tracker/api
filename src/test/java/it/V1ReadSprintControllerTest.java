@@ -12,8 +12,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.UUID;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -88,6 +88,7 @@ class V1ReadSprintControllerTest extends AbstractIntegrationTest {
             sprintInfoDto.setId(null);
             sprintInfoDto.setStartDate(null);
             sprintInfoDto.setEndDate(null);
+            sprintInfoDto.setDescription(null);
         });
         assertEqualsToFile("/V1ReadSprintControllerTest/expectedSprint.json", sprintInfoDtoList);
     }
