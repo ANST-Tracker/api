@@ -1,0 +1,37 @@
+{
+  "name": "sprint",
+  "startDate": "2025-04-21",
+  "endDate": "2025-05-06",
+  "isActive": true,
+  "description": "description",
+  "defects": [
+    {
+      "simpleId": "GD-3",
+      "name": "Test defect",
+      "priority": "MAJOR",
+      "tags": [],
+      "logs": [],
+      "status": "IN_PROGRESS"
+    }
+  ],
+  "stories": [
+    {
+      "simpleId": "GD-2",
+      "name": "Test StoryTask",
+      "priority": "MAJOR",
+      "tags": [],
+      "logs": [],
+      "status": "IN_PROGRESS",
+      "subtasks": [
+        {
+          "simpleId": "GD-2",
+          "name": "Test Subtask",
+          "priority": "MAJOR",
+          "tags": [],
+          "logs": [],
+          "status": "OPEN"
+        }
+      ]
+    }
+  ]
+}

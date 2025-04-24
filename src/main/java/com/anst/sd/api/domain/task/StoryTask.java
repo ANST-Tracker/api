@@ -38,4 +38,6 @@ public class StoryTask extends AbstractTask {
     private EpicTask epicTask;
     @OneToMany(mappedBy = "storyTask")
     private List<DefectTask> defects;
+    @OneToMany(mappedBy = "storyTask")
+    private List<Subtask> subtasks;
 }

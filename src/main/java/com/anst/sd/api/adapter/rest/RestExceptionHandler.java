@@ -6,6 +6,8 @@ import com.anst.sd.api.app.api.project.ProjectNotFoundException;
 import com.anst.sd.api.app.api.project.ProjectValidationException;
 import com.anst.sd.api.app.api.security.CodeAlreadySentException;
 import com.anst.sd.api.app.api.security.UserCodeNotFoundException;
+import com.anst.sd.api.app.api.sprint.SprintNotFound;
+import com.anst.sd.api.app.api.sprint.SprintValidationException;
 import com.anst.sd.api.app.api.tag.TagNotFoundException;
 import com.anst.sd.api.app.api.tag.TagValidationException;
 import com.anst.sd.api.app.api.task.AbstractTaskNotFound;
@@ -68,6 +70,12 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             AbstractTaskValidationException.class,
             FilterValidationException.class,
             TagValidationException.class,
+            SprintValidationException.class,
+            UsersProjectsValidationException.class,
+            ProjectValidationException.class,
+            AbstractTaskValidationException.class,
+            FilterValidationException.class,
+            TagValidationException.class,
             UsersProjectsValidationException.class,
             CommentValidationException.class,
             LogValidationException.class
@@ -93,6 +101,15 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler({
+            UserNotFoundException.class,
+            ProjectNotFoundException.class,
+            UserCodeNotFoundException.class,
+            TagNotFoundException.class,
+            AbstractTaskNotFound.class,
+            UsersProjectsNotFoundException.class,
+            AbstractTaskNotFound.class,
+            SprintNotFound.class,
+            FilterNotFoundException.class,
             UserNotFoundException.class,
             ProjectNotFoundException.class,
             UserCodeNotFoundException.class,

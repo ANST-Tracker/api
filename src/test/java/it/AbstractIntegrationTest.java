@@ -227,11 +227,28 @@ public abstract class AbstractIntegrationTest {
         return abstractTaskJpaRepository.save(task);
     }
 
+    protected AbstractTask createDefectTask(User user, Project project, Sprint sprint, AbstractTask storyTask) {
+        DefectTask defectTask = new DefectTask();
+        defectTask.setName("Test defect");
+        defectTask.setDescription("This is a test defect");
+        defectTask.setSprint(sprint);
+        defectTask.setType(TaskType.DEFECT);
+        defectTask.setStatus(TaskStatus.IN_PROGRESS);
+        defectTask.setStoryTask((StoryTask) storyTask);
+        fillAbstractTaskFields(defectTask, user, project);
+        defectTask.setSimpleId("GD-3");
+        defectTask.setTester(user);
+        defectTask.setSprint(sprint);
+        defectTask.setPriority(TaskPriority.MAJOR);
+        return abstractTaskJpaRepository.save(defectTask);
+    }
+
     protected Sprint createSprint(Project project) {
         Sprint sprint = new Sprint();
         sprint.setProject(project);
         sprint.setCreated(Instant.now());
         sprint.setName("sprint");
+        sprint.setDescription("description");
         sprint.setStartDate(LocalDate.now().minusDays(1));
         sprint.setEndDate(LocalDate.now().plusDays(14));
         sprint.setIsActive(true);

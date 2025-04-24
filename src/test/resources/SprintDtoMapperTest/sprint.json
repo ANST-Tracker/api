@@ -1,0 +1,34 @@
+{
+  "id": "bcff3729-697a-44ea-bbab-a4f54344f301",
+  "name": "name_6c10e3772f7d",
+  "startDate": "2025-04-17",
+  "endDate": "2025-04-17",
+  "isActive": false,
+  "description": "description_e019fc2ee593",
+  "storyCount": 1,
+  "defectCount": 1,
+  "stories": [
+    {
+      "simpleId": "simpleId_a3f7c6aaa25c",
+      "name": "name_7e4d09cc6360",
+      "status": "OPEN",
+      "priority": "BLOCKER",
+      "subtasks": [
+        {
+          "simpleId": "simpleId_e2baf293ed29",
+          "name": "name_a0dbfb4ad0b9",
+          "status": "OPEN",
+          "priority": "BLOCKER"
+        }
+      ]
+    }
+  ],
+  "defects": [
+    {
+      "name": "name_ad200cd0abe8",
+      "simpleId": "simpleId_21fc62a02e77",
+      "status": "OPEN",
+      "priority": "BLOCKER"
+    }
+  ]
+}

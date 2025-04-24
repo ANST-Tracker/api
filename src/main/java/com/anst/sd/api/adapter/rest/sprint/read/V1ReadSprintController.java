@@ -1,6 +1,8 @@
 package com.anst.sd.api.adapter.rest.sprint.read;
 
 import com.anst.sd.api.adapter.rest.sprint.dto.SprintDtoMapper;
+import com.anst.sd.api.adapter.rest.sprint.dto.SprintRegistryDto;
+import com.anst.sd.api.app.api.sprint.GetSprintInBound;
 import com.anst.sd.api.adapter.rest.sprint.dto.SprintInfoDto;
 import com.anst.sd.api.app.api.sprint.GetSprintsByProjectInbound;
 import com.anst.sd.api.domain.sprint.Sprint;
@@ -22,12 +24,27 @@ import java.util.UUID;
 @Tag(name = "SprintController")
 @Slf4j
 @RestController
-@RequestMapping("/project/{projectId}/sprint")
 @RequiredArgsConstructor
+@RequestMapping("/project/{projectId}/sprint")
 public class V1ReadSprintController {
+    private final GetSprintInBound getSprintInBound;
     private final JwtService jwtService;
     private final SprintDtoMapper sprintDtoMapper;
     private final GetSprintsByProjectInbound getSprintsByProjectInbound;
+
+    @Operation(
+            summary = "Get sprint",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            useReturnTypeSchema = true)
+            }
+    )
+    @GetMapping("/{sprintId}")
+    public ResponseEntity<SprintRegistryDto> getSprint(@PathVariable UUID sprintId) {
+        Sprint sprint = getSprintInBound.get(sprintId, jwtService.getJwtAuth().getUserId());
+        return ResponseEntity.ok(sprintDtoMapper.mapToDto(sprint));
+    }
 
     @Operation(
             summary = "Get all sprints information by user",

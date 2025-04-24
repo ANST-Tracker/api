@@ -2,6 +2,9 @@ package it;
 
 import com.anst.sd.api.adapter.rest.sprint.dto.SprintInfoDto;
 import com.anst.sd.api.domain.project.Project;
+import com.anst.sd.api.domain.sprint.Sprint;
+import com.anst.sd.api.domain.task.AbstractTask;
+import com.anst.sd.api.domain.task.EpicTask;
 import com.anst.sd.api.domain.user.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
@@ -10,13 +13,54 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-public class V1ReadSprintControllerTest extends AbstractIntegrationTest{
+class V1ReadSprintControllerTest extends AbstractIntegrationTest {
     private static final String API_URL = "/project/%s/sprint";
+
+    @Test
+    void getSprint_successfully() throws Exception {
+        User user = createTestUser();
+        Project project = createTestProject(user);
+        Sprint sprint = createSprint(project);
+        EpicTask epicTask = createEpic(user, project);
+        AbstractTask story = createStoryTask(user, project, sprint, epicTask, user, user);
+        createDefectTask(user, project, sprint, story);
+        createSubtask(user, project, user, user, story);
+
+        MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
+                .get(API_URL.formatted(project.getId()) + "/" + sprint.getId())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+        Sprint result = getFromResponse(response, Sprint.class);
+        result.setId(null);
+        assertEqualsToFile("/V1ReadSprintControllerTest/getSprint.json", result);
+    }
+
+    @Test
+    void getSprint_failed_notFound() throws Exception {
+        User user = createTestUser();
+        Project project = createTestProject(user);
+        Sprint sprint = createSprint(project);
+        EpicTask epicTask = createEpic(user, project);
+        AbstractTask story = createStoryTask(user, project, sprint, epicTask, user, user);
+        createDefectTask(user, project, sprint, story);
+        createSubtask(user, project, user, user, story);
+
+        performAuthenticated(user, MockMvcRequestBuilders
+                .get(API_URL.formatted(project.getId()) + "/" + UUID.randomUUID())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
 
     @Test
     void getSprints_successfully() throws Exception {
@@ -44,6 +88,7 @@ public class V1ReadSprintControllerTest extends AbstractIntegrationTest{
             sprintInfoDto.setId(null);
             sprintInfoDto.setStartDate(null);
             sprintInfoDto.setEndDate(null);
+            sprintInfoDto.setDescription(null);
         });
         assertEqualsToFile("/V1ReadSprintControllerTest/expectedSprint.json", sprintInfoDtoList);
     }
