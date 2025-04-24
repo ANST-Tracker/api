@@ -96,6 +96,8 @@ public abstract class AbstractIntegrationTest {
     protected CommentJpaRepository commentJpaRepository;
     @Autowired
     protected NotificationMongoRepository notificationMongoRepository;
+    @Autowired
+    protected LogJpaRepository logJpaRepository;
     protected User user;
     protected User reviewer;
     protected User assignee;
@@ -103,6 +105,9 @@ public abstract class AbstractIntegrationTest {
     protected EpicTask epicTask;
     protected Sprint sprint;
     protected AbstractTask storyTask;
+    protected AbstractTask subTask;
+    protected TimeEstimation timeEstimation;
+    protected Log logTask;
     @Autowired
     protected PasswordEncoder passwordEncoder;
     @Autowired
@@ -112,6 +117,7 @@ public abstract class AbstractIntegrationTest {
     void clearDataBase() {
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        logJpaRepository.deleteAll();
         commentJpaRepository.deleteAll();
         subtaskJpaRepository.deleteAll();
         defectTaskJpaRepository.deleteAll();
@@ -301,6 +307,21 @@ public abstract class AbstractIntegrationTest {
                         "link", "www.google.com"
                 ));
         return notificationMongoRepository.save(notification);
+    }
+
+    protected Log createLog(AbstractTask task, User user, String comment, TimeEstimation estimation, LocalDate date) {
+        Log log = new Log()
+                .setUser(user)
+                .setTask(task)
+                .setComment(comment)
+                .setTimeEstimation(estimation)
+                .setDate(date);
+        return logJpaRepository.save(log);
+    }
+
+    protected TimeEstimation createTimeEstimation(TimeUnit timeUnit, Integer amount) {
+        TimeEstimation timeEstimation = new TimeEstimation();
+        return timeEstimation.setTimeUnit(timeUnit).setAmount(amount);
     }
 
     // ===================================================================================================================
