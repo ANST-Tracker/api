@@ -1,6 +1,5 @@
 package com.anst.sd.api.domain.notification;
 
-import com.anst.sd.api.domain.DomainObject;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -8,6 +7,7 @@ import jakarta.persistence.PrePersist;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.Instant;
@@ -17,7 +17,9 @@ import java.util.Map;
 @Setter
 @Accessors(chain = true)
 @Document(collection = "notification")
-public class Notification extends DomainObject {
+public class Notification {
+    @Id
+    private String id;
     @Column
     private Boolean viewed;
     @Column

@@ -1,6 +1,6 @@
 {
-  "telegramId": "telegramId",
-  "taskName": "taskName",
-  "projectName": "projectName",
-  "deadline": "2024-04-25 22:02:43"
+  "viewed": false,
+  "recipientTelegramId": "recipientTelegramId_0819ce71318b",
+  "creationDateTime": "2025-04-22T15:45:30Z",
+  "text": "testUser назначил на тебя задачу \"Реализовать тестовую задачу\"\nwww.google.com\n"
 }

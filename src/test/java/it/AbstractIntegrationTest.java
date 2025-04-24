@@ -2,12 +2,15 @@ package it;
 
 import com.anst.sd.api.AnstApiTodoApplication;
 import com.anst.sd.api.adapter.persistence.mongo.FilterMongoRepository;
+import com.anst.sd.api.adapter.persistence.mongo.NotificationMongoRepository;
 import com.anst.sd.api.adapter.persistence.mongo.UserCodeMongoRepository;
 import com.anst.sd.api.adapter.persistence.relational.*;
 import com.anst.sd.api.adapter.telegram.CreateUserCodeMessageSupplier;
 import com.anst.sd.api.domain.PermissionCode;
 import com.anst.sd.api.domain.TimeEstimation;
 import com.anst.sd.api.domain.UsersProjects;
+import com.anst.sd.api.domain.notification.Notification;
+import com.anst.sd.api.domain.notification.NotificationTemplate;
 import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.sprint.Sprint;
 import com.anst.sd.api.domain.tag.Tag;
@@ -91,6 +94,8 @@ public abstract class AbstractIntegrationTest {
     protected DefectTaskJpaRepository defectTaskJpaRepository;
     @Autowired
     protected CommentJpaRepository commentJpaRepository;
+    @Autowired
+    protected NotificationMongoRepository notificationMongoRepository;
     protected User user;
     protected User reviewer;
     protected User assignee;
@@ -120,6 +125,7 @@ public abstract class AbstractIntegrationTest {
         tagJpaRepository.deleteAll();
         projectJpaRepository.deleteAll();
         userCodeMongoRepository.deleteAll();
+        notificationMongoRepository.deleteAll();
         deviceJpaRepository.deleteAll();
         userJpaRepository.deleteAll();
     }
@@ -280,6 +286,21 @@ public abstract class AbstractIntegrationTest {
                 .setContent(content)
                 .setTask(task);
         return commentJpaRepository.save(comment);
+    }
+
+    protected Notification createNotification(User user) {
+        Notification notification = new Notification()
+                .setViewed(false)
+                .setRecipientLogin(user.getUsername())
+                .setRecipientTelegramId(user.getTelegramId())
+                .setTemplate(NotificationTemplate.TASK_NEW_ASSIGNEE)
+                .setCreationDateTime(Instant.parse("2025-04-22T12:00:00Z"))
+                .setParams(Map.of(
+                        "userLogin", "testUser",
+                        "taskTitle", "afasf",
+                        "link", "www.google.com"
+                ));
+        return notificationMongoRepository.save(notification);
     }
 
     // ===================================================================================================================
