@@ -78,7 +78,6 @@ public class UpdateAbstractTaskUseCase implements UpdateAbstractTaskInBound {
             original.setTags(tagRepository.findAllByIdInAndProjectId(updated.getTags().stream().map(Tag::getId).toList(),
                     original.getProject().getId()));
         }
-        // TODO: After sprint realization, needs to update sprint parameters in updated request
     }
 
     private void mergeSpecificFields(AbstractTask original, AbstractTask updated) {
@@ -94,12 +93,6 @@ public class UpdateAbstractTaskUseCase implements UpdateAbstractTaskInBound {
             } else {
                 originalStory.setTester(null);
             }
-            if (story.getSprint() != null && story.getSprint().getId() != null) {
-                //TODO
-                originalStory.setSprint(story.getSprint());
-            } else {
-                originalStory.setSprint(null);
-            }
         }
         if (original instanceof DefectTask originalDefect && updated instanceof DefectTask defect) {
             if (defect.getStoryTask() != null && defect.getStoryTask().getId() != null) {
@@ -112,12 +105,6 @@ public class UpdateAbstractTaskUseCase implements UpdateAbstractTaskInBound {
                 originalDefect.setTester(userRepository.getById(defect.getTester().getId()));
             } else {
                 originalDefect.setTester(null);
-            }
-            if (defect.getSprint() != null && defect.getSprint().getId() != null) {
-                //TODO
-                originalDefect.setSprint(defect.getSprint());
-            } else {
-                originalDefect.setSprint(null);
             }
         }
     }

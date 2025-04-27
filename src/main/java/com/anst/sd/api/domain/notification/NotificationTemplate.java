@@ -61,12 +61,20 @@ public enum NotificationTemplate {
             "Пользователь удален из проекта",
             "Пользователь ${userName} удалил из проекта ${projectName} пользователя ${oldUserName}",
             Set.of(USER_NAME, PROJECT_NAME, OLD_USER_NAME)
+    ),
+    TASK_MOVED_TO_NEW_SPRINT(
+            "Задача перемещена в другой спринт",
+            "Пользователь ${userName} перенес задачу ${taskSimpleId} ${taskTitle} в спринт ${sprintName}",
+            Set.of(USER_NAME, TASK_SIMPLE_ID, TASK_TITLE, SPRINT_NAME)
+    ),
+    TASK_TIME_LOG_UPDATED(
+            "Обновлено затраченное время на задачу",
+            """
+            Пользователь ${userName} обновил затраченное время на задачу ${taskSimpleId} ${taskTitle}.
+            Текущее затраченное время - ${usedTime}
+            """,
+            Set.of(USER_NAME, TASK_SIMPLE_ID, TASK_TITLE, USED_TIME)
     );
-    /*
-    Перемещение между спринтами (3 людям на задаче + ПМ)
-    Пользователь изменил затраченное на задачу время. Текущее затраченное время - ... (Оценка - ...) (3 людям на задаче)
-     */
-
 
     private final String title;
     private final String body;
@@ -84,7 +92,9 @@ public enum NotificationTemplate {
         NEW_USER_NAME("newUserName"),
         OLD_USER_NAME("oldUserName"),
         OLD_TASK_STATUS("oldTaskStatus"),
-        NEW_TASK_STATUS("newTaskStatus");
+        NEW_TASK_STATUS("newTaskStatus"),
+        SPRINT_NAME("sprintName"),
+        USED_TIME("usedTime");
 
         private final String key;
     }
