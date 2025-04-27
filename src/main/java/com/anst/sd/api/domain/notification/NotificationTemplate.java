@@ -6,20 +6,67 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Set;
 
-import static com.anst.sd.api.domain.notification.NotificationTemplate.AdditionalTemplateParam.TASK_TITLE;
-import static com.anst.sd.api.domain.notification.NotificationTemplate.AdditionalTemplateParam.USER_LOGIN;
+import static com.anst.sd.api.domain.notification.NotificationTemplate.AdditionalTemplateParam.*;
 
 @Getter
 @AllArgsConstructor
 public enum NotificationTemplate {
-    TASK_NEW_ASSIGNEE(
-        "Назначена новая задача",
-        """
-        ${userLogin} назначил на тебя задачу "${taskTitle}"
-        ${link}
-        """,
-        Set.of(USER_LOGIN, TASK_TITLE)
+    NEW_TASK_IN_PROJECT(
+            "Новая задача в проекте",
+            """
+                    ${userName} создал задачу ${taskTitle} с типом ${taskType} в проекте ${projectName}
+                    """,
+            Set.of(USER_NAME, TASK_TITLE, TASK_TYPE, PROJECT_NAME)
+    ),
+    USER_ADDED_YOU_TO_PROJECT(
+            "Вас добавили в новый проект",
+            """
+                    ${userName} добавил вас в проект ${projectName}
+                    """,
+            Set.of(USER_NAME, PROJECT_NAME)),
+    USER_CREATED_COMMENT(
+            "Пользователь оставил комментарий к задаче",
+            """
+                    В задаче ${taskSimpleId} ${taskTitle} появился новый комментарий от ${userName}
+                    ${commentData}
+                    """,
+            Set.of(TASK_SIMPLE_ID, TASK_TITLE, USER_NAME, COMMENT_DATA)
+    ),
+    NEW_TASK_ASSIGNEE("У задачи изменился исполнитель",
+            """
+                    ${userName} изменил исполнителя задачи ${taskSimpleId} ${taskTitle} на ${newUserName}
+                    """,
+            Set.of(USER_NAME, TASK_SIMPLE_ID, TASK_TITLE, NEW_USER_NAME)),
+    TASK_ASSIGNEE_REMOVED("У задачи удален исполнитель",
+            """
+                    ${userName} удалил исполнителя ${oldUserName} с задачи ${taskSimpleId} ${taskTitle}
+                    """,
+            Set.of(TASK_SIMPLE_ID, TASK_TITLE, USER_NAME, OLD_USER_NAME)),
+    NEW_TASK_REVIEWER("У задачи изменился ревьюер",
+            """
+                    ${userName} изменил ревьюера задачи ${taskSimpleId} ${taskTitle} на ${newUserName}
+                    """,
+            Set.of(USER_NAME, TASK_SIMPLE_ID, TASK_TITLE, NEW_USER_NAME)),
+    TASK_REVIEWER_REMOVED("У задачи удален ревьюер",
+            """
+                    ${userName} удалил ревьюера ${oldUserName} с задачи ${taskSimpleId} ${taskTitle}
+                    """,
+            Set.of(TASK_SIMPLE_ID, TASK_TITLE, USER_NAME, OLD_USER_NAME)),
+    TASK_STATUS_UPDATED(
+            "Обновлен статус задачи",
+            "${userName} изменил статус задачи ${taskSimpleId} ${taskTitle} с ${oldTaskStatus} на ${newTaskStatus}",
+            Set.of(USER_NAME, TASK_SIMPLE_ID, TASK_TITLE, OLD_TASK_STATUS, NEW_TASK_STATUS)
+    ),
+    USER_REMOVED_FROM_PROJECT(
+            "Пользователь удален из проекта",
+            "Пользователь ${userName} удалил из проекта ${projectName} пользователя ${oldUserName}",
+            Set.of(USER_NAME, PROJECT_NAME, OLD_USER_NAME)
     );
+    /*
+    Перемещение между спринтами (3 людям на задаче + ПМ)
+    Пользователь изменил затраченное на задачу время. Текущее затраченное время - ... (Оценка - ...) (3 людям на задаче)
+     */
+
 
     private final String title;
     private final String body;
@@ -28,9 +75,16 @@ public enum NotificationTemplate {
     @RequiredArgsConstructor
     @Getter
     public enum AdditionalTemplateParam {
-        USER_LOGIN("userLogin"),
+        USER_NAME("userName"),
         TASK_TITLE("taskTitle"),
-        LINK("link");
+        TASK_SIMPLE_ID("taskSimpleId"),
+        COMMENT_DATA("commentData"),
+        TASK_TYPE("taskType"),
+        PROJECT_NAME("projectName"),
+        NEW_USER_NAME("newUserName"),
+        OLD_USER_NAME("oldUserName"),
+        OLD_TASK_STATUS("oldTaskStatus"),
+        NEW_TASK_STATUS("newTaskStatus");
 
         private final String key;
     }

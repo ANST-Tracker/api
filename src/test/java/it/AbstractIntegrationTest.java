@@ -200,7 +200,7 @@ public abstract class AbstractIntegrationTest {
         Subtask task = new Subtask();
         task.setName("Test Subtask");
         task.setDescription("This is a test subtask");
-        task.setSimpleId("GD-2");
+        task.setSimpleId("GD-4");
         task.setType(TaskType.SUBTASK);
         task.setStatus(TaskStatus.OPEN);
         task.setReviewer(reviewer);

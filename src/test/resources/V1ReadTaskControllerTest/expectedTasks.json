@@ -1,10 +1,10 @@
 [
   {
-    "simpleId": "GD-2",
-    "name": "Test Subtask",
+    "simpleId": "GD-3",
+    "name": "Epic",
     "type": {
-      "code": "SUBTASK",
-      "value": "Подзадача"
+      "code": "EPIC",
+      "value": "Эпик стори"
     },
     "status": {
       "code": "OPEN",
@@ -18,11 +18,11 @@
     "creatorFullName": "lastName firstName"
   },
   {
-    "simpleId": "GD-3",
-    "name": "Epic",
+    "simpleId": "GD-4",
+    "name": "Test Subtask",
     "type": {
-      "code": "EPIC",
-      "value": "Эпик стори"
+      "code": "SUBTASK",
+      "value": "Подзадача"
     },
     "status": {
       "code": "OPEN",

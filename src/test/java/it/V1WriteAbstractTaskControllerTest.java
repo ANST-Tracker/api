@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static com.anst.sd.api.domain.task.TaskType.SUBTASK;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -70,10 +71,14 @@ class V1WriteAbstractTaskControllerTest extends AbstractIntegrationTest {
     void updateAbstractTask_successfully() throws Exception {
         user = createTestUser();
         project = createTestProject(user);
-        AbstractTask originalTask = createSubtask(user, project, null, null, null);
+        sprint = createSprint(project);
+        epicTask = createEpic(user, project);
+        storyTask = createStoryTask(user, project, sprint, epicTask, reviewer, assignee);
+        AbstractTask originalTask = createSubtask(user, project, null, null, storyTask);
         String simpleId = originalTask.getSimpleId();
         UpdateAbstractTaskDto request = readFromFile("/V1WriteAbstractTaskControllerTest/updateAbstractTask.json",
                 UpdateAbstractTaskDto.class);
+        request.setStoryTaskId(storyTask.getId());
 
         performAuthenticated(user, MockMvcRequestBuilders
                 .put(API_URL + "/" + simpleId)
@@ -81,8 +86,10 @@ class V1WriteAbstractTaskControllerTest extends AbstractIntegrationTest {
                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(MockMvcResultMatchers.status().isOk());
-        AbstractTask updateResult = abstractTaskJpaRepository.findAll().get(0);
 
+        AbstractTask updateResult = abstractTaskJpaRepository.findAll().stream()
+                .filter(task -> SUBTASK.equals(task.getType()))
+                .findFirst().orElseThrow();
         assertNotEquals(originalTask.getName(), updateResult.getName());
         assertNotEquals(originalTask.getDescription(), updateResult.getDescription());
         assertNotEquals(originalTask.getPriority(), updateResult.getPriority());

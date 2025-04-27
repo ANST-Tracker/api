@@ -32,4 +32,5 @@ public class UpdateAbstractTaskDto {
     LocalDate dueDate;
     TimeEstimation timeEstimation;
     List<UUID> tagIds;
+    UUID storyTaskId;
 }
