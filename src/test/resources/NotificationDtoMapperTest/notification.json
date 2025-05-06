@@ -1,12 +1,13 @@
 {
   "viewed": false,
   "recipientLogin": "recipientLogin_94f3be61649b",
-  "recipientTelegramId": "recipientTelegramId_0819ce71318b",
+  "recipientTelegramId": "eridiium",
   "creationDateTime": "2025-04-22T15:45:30Z",
-  "template": "TASK_NEW_ASSIGNEE",
+  "template": "NEW_TASK_IN_PROJECT",
   "params": {
-    "userLogin": "testUser",
+    "userName": "testUser",
     "taskTitle": "Реализовать тестовую задачу",
-    "link": "www.google.com"
+    "taskType": "Эпик",
+    "projectName": "project"
   }
 }

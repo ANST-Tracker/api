@@ -9,6 +9,7 @@ import com.anst.sd.api.domain.task.Log;
 import com.anst.sd.api.security.app.api.AuthException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,8 @@ public class CreateLogUseCase implements CreateLogInBound {
     private final LogRepository logRepository;
     private final UserRepository userRepository;
     private final AbstractTaskRepository abstractTaskRepository;
+    private final TotalLogNotificationGenerator totalLogNotificationGenerator;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     @Transactional
@@ -33,6 +36,9 @@ public class CreateLogUseCase implements CreateLogInBound {
         createLog
                 .setTask(abstractTaskRepository.getByIdAndProjectId(taskId, projectId))
                 .setUser(userRepository.getById(userId));
-        return logRepository.save(createLog);
+        createLog = logRepository.save(createLog);
+        totalLogNotificationGenerator.create(taskId, userId)
+                .forEach(applicationEventPublisher::publishEvent);
+        return createLog;
     }
 }

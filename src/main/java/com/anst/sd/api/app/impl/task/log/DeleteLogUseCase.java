@@ -8,6 +8,7 @@ import com.anst.sd.api.domain.task.Log;
 import com.anst.sd.api.security.app.api.AuthException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,9 @@ import java.util.UUID;
 public class DeleteLogUseCase implements DeleteLogInBound {
     private final ProjectRepository projectRepository;
     private final LogRepository logRepository;
+    private final TotalLogNotificationGenerator totalLogNotificationGenerator;
+    private final ApplicationEventPublisher applicationEventPublisher;
+
 
     @Override
     @Transactional
@@ -34,6 +38,8 @@ public class DeleteLogUseCase implements DeleteLogInBound {
             throw new LogNotFound(id, taskId, projectId, userId);
         }
         logRepository.delete(log.getId());
+        totalLogNotificationGenerator.create(taskId, userId)
+                .forEach(applicationEventPublisher::publishEvent);
         return log;
     }
 }

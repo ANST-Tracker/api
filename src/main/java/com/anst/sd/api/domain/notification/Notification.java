@@ -7,8 +7,8 @@ import jakarta.persistence.PrePersist;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.time.Instant;
 import java.util.Map;
@@ -18,7 +18,7 @@ import java.util.Map;
 @Accessors(chain = true)
 @Document(collection = "notification")
 public class Notification {
-    @Id
+    @MongoId
     private String id;
     @Column
     private Boolean viewed;

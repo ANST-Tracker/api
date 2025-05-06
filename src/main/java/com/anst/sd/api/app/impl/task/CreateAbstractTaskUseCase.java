@@ -8,6 +8,8 @@ import com.anst.sd.api.app.api.task.AbstractTaskRepository;
 import com.anst.sd.api.app.api.task.AbstractTaskValidationException;
 import com.anst.sd.api.app.api.task.CreateAbstractTaskInBound;
 import com.anst.sd.api.app.api.user.UserRepository;
+import com.anst.sd.api.app.impl.notification.NotificationCreatedEvent;
+import com.anst.sd.api.domain.notification.NotificationTemplate;
 import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.sprint.Sprint;
 import com.anst.sd.api.domain.tag.Tag;
@@ -15,12 +17,16 @@ import com.anst.sd.api.domain.task.*;
 import com.anst.sd.api.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+
+import static com.anst.sd.api.domain.notification.NotificationTemplate.AdditionalTemplateParam.*;
 
 @Slf4j
 @Service
@@ -30,6 +36,7 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
     private final TagRepository tagRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
     private final SprintRepository sprintRepository;
 
     @Override
@@ -76,6 +83,7 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
             defectTask.setStoryTask(parentStory);
         }
 
+        sendNotification(task);
         return abstractTaskRepository.save(task);
     }
 
@@ -83,14 +91,12 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
         if (task instanceof Subtask subtask && subtask.getStoryTask() == null) {
             throw new AbstractTaskValidationException();
         }
-
     }
 
     private void validateStoryTask(AbstractTask task) {
         if (task instanceof StoryTask storyTask && storyTask.getEpicTask() == null) {
             throw new AbstractTaskValidationException();
         }
-
     }
 
     private void validateDefectTask(AbstractTask task) {
@@ -103,5 +109,19 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
         if (!projectRepository.existsByIdAndUserId(projectId, userId)) {
             throw new ProjectValidationException(userId, projectId);
         }
+    }
+
+    private void sendNotification(AbstractTask task) {
+        User owner = task.getProject().getHead();
+        NotificationCreatedEvent event = new NotificationCreatedEvent();
+        event.setRecipient(owner);
+        event.setParams(Map.of(
+                TASK_TITLE.getKey(), task.getName(),
+                TASK_TYPE.getKey(), task.getType().getValue(),
+                USER_NAME.getKey(), "%s %s".formatted(task.getCreator().getFirstName(), task.getCreator().getLastName()),
+                PROJECT_NAME.getKey(), task.getProject().getName()
+        ));
+        event.setTemplate(NotificationTemplate.NEW_TASK_IN_PROJECT);
+        applicationEventPublisher.publishEvent(event);
     }
 }

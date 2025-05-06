@@ -31,6 +31,7 @@ public interface AbstractTaskDomainMapper {
     Subtask toSubtask(CreateAbstractTaskDto source);
 
     @Mapping(target = "type", constant = "SUBTASK")
+    @Mapping(target = "storyTask.id", source = "storyTaskId")
     Subtask toSubtask(UpdateAbstractTaskDto source);
 
     @Mapping(target = "type", constant = "DEFECT")

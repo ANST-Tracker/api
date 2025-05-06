@@ -51,6 +51,8 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import static com.anst.sd.api.domain.notification.NotificationTemplate.AdditionalTemplateParam.*;
+import static com.anst.sd.api.domain.notification.NotificationTemplate.AdditionalTemplateParam.PROJECT_NAME;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @SpringBootTest(classes = {AnstApiTodoApplication.class})
@@ -137,15 +139,15 @@ public abstract class AbstractIntegrationTest {
     }
 
     protected User createTestUser() {
-        return createUser("username", "eridiium", "eridiium@gmail.com");
+        return createUser("username", "eridiium", "eridiium@gmail.com" );
     }
 
     protected User createTestReviewer() {
-        return createUser("reviewer", "reviewer", "reviewer@gmail.com");
+        return createUser("reviewer", "reviewer", "reviewer@gmail.com" );
     }
 
     protected User createTestAssignee() {
-        return createUser("assignee", "assignee", "assignee@gmail.com");
+        return createUser("assignee", "assignee", "assignee@gmail.com" );
     }
 
     protected User createUser(String username, String telegramId, String email) {
@@ -154,11 +156,11 @@ public abstract class AbstractIntegrationTest {
         user.setId(UUID.randomUUID());
         user.setPassword(passwordEncoder.encode(USER_PASSWORD));
         user.setTelegramId(telegramId);
-        user.setFirstName("firstName");
-        user.setLastName("lastName");
+        user.setFirstName("firstName" );
+        user.setLastName("lastName" );
         user.setEmail(email);
         user.setPosition(Position.DEVOPS);
-        user.setDepartmentName("HSE");
+        user.setDepartmentName("HSE" );
         user.setRegistrationDate(LocalDate.now());
         user.setTimeZone(1);
         user.setCreated(Instant.now());
@@ -167,11 +169,11 @@ public abstract class AbstractIntegrationTest {
 
     protected Project createTestProject(User headUser) {
         Project project = new Project();
-        project.setName("Project1");
-        project.setDescription("New test project");
+        project.setName("Project1" );
+        project.setDescription("New test project" );
         project.setHead(headUser);
         project.setNextTaskId(1);
-        project.setKey("GD");
+        project.setKey("GD" );
         project.setUsers(List.of(
                 new UsersProjects()
                         .setPermissionCode(PermissionCode.READ_WRITE)
@@ -198,9 +200,9 @@ public abstract class AbstractIntegrationTest {
 
     protected AbstractTask createSubtask(User user, Project project, User reviewer, User assignee, AbstractTask storyTask) {
         Subtask task = new Subtask();
-        task.setName("Test Subtask");
-        task.setDescription("This is a test subtask");
-        task.setSimpleId("GD-2");
+        task.setName("Test Subtask" );
+        task.setDescription("This is a test subtask" );
+        task.setSimpleId("GD-4" );
         task.setType(TaskType.SUBTASK);
         task.setStatus(TaskStatus.OPEN);
         task.setReviewer(reviewer);
@@ -213,9 +215,9 @@ public abstract class AbstractIntegrationTest {
     protected AbstractTask createStoryTask(User user, Project project, Sprint sprint, EpicTask epicTask,
                                            User reviewer, User assignee) {
         StoryTask task = new StoryTask();
-        task.setName("Test StoryTask");
-        task.setDescription("This is a test storytask");
-        task.setSimpleId("GD-2");
+        task.setName("Test StoryTask" );
+        task.setDescription("This is a test storytask" );
+        task.setSimpleId("GD-2" );
         task.setType(TaskType.STORY);
         task.setStatus(TaskStatus.IN_PROGRESS);
         fillAbstractTaskFields(task, user, project);
@@ -229,14 +231,14 @@ public abstract class AbstractIntegrationTest {
 
     protected AbstractTask createDefectTask(User user, Project project, Sprint sprint, AbstractTask storyTask) {
         DefectTask defectTask = new DefectTask();
-        defectTask.setName("Test defect");
-        defectTask.setDescription("This is a test defect");
+        defectTask.setName("Test defect" );
+        defectTask.setDescription("This is a test defect" );
         defectTask.setSprint(sprint);
         defectTask.setType(TaskType.DEFECT);
         defectTask.setStatus(TaskStatus.IN_PROGRESS);
         defectTask.setStoryTask((StoryTask) storyTask);
         fillAbstractTaskFields(defectTask, user, project);
-        defectTask.setSimpleId("GD-3");
+        defectTask.setSimpleId("GD-3" );
         defectTask.setTester(user);
         defectTask.setSprint(sprint);
         defectTask.setPriority(TaskPriority.MAJOR);
@@ -247,21 +249,21 @@ public abstract class AbstractIntegrationTest {
         Sprint sprint = new Sprint();
         sprint.setProject(project);
         sprint.setCreated(Instant.now());
-        sprint.setName("sprint");
-        sprint.setDescription("description");
-        sprint.setStartDate(LocalDate.now().minusDays(1));
-        sprint.setEndDate(LocalDate.now().plusDays(14));
+        sprint.setName("sprint" );
+        sprint.setDescription("description" );
+        sprint.setStartDate(LocalDate.of(2020, 1, 1));
+        sprint.setEndDate(LocalDate.of(2020, 12, 1));
         sprint.setIsActive(true);
         return sprintJpaRepository.save(sprint);
     }
 
     protected EpicTask createEpic(User user, Project project) {
         EpicTask epicTask = new EpicTask();
-        epicTask.setSimpleId("GD-3");
-        epicTask.setName("Epic");
+        epicTask.setSimpleId("GD-3" );
+        epicTask.setName("Epic" );
         epicTask.setType(TaskType.EPIC);
         epicTask.setStatus(TaskStatus.OPEN);
-        epicTask.setDescription("description");
+        epicTask.setDescription("description" );
         epicTask.setTimeEstimation(new TimeEstimation()
                 .setTimeUnit(TimeUnit.HOURS)
                 .setAmount(10));
@@ -271,11 +273,11 @@ public abstract class AbstractIntegrationTest {
 
     protected EpicTask createEpic(User user, Project project, List<Tag> tags) {
         EpicTask epicTask = new EpicTask();
-        epicTask.setSimpleId("GD-3");
-        epicTask.setName("Epic");
+        epicTask.setSimpleId("GD-3" );
+        epicTask.setName("Epic" );
         epicTask.setType(TaskType.EPIC);
         epicTask.setStatus(TaskStatus.OPEN);
-        epicTask.setDescription("description");
+        epicTask.setDescription("description" );
         epicTask.setTags(tags);
         fillAbstractTaskFields(epicTask, user, project);
         return epicTaskJpaRepository.save(epicTask);
@@ -316,13 +318,15 @@ public abstract class AbstractIntegrationTest {
                 .setViewed(false)
                 .setRecipientLogin(user.getUsername())
                 .setRecipientTelegramId(user.getTelegramId())
-                .setTemplate(NotificationTemplate.TASK_NEW_ASSIGNEE)
-                .setCreationDateTime(Instant.parse("2025-04-22T12:00:00Z"))
+                .setTemplate(NotificationTemplate.NEW_TASK_IN_PROJECT)
+                .setCreationDateTime(Instant.parse("2025-04-22T12:00:00Z" ))
                 .setParams(Map.of(
-                        "userLogin", "testUser",
-                        "taskTitle", "afasf",
-                        "link", "www.google.com"
+                        USER_NAME.getKey(), "testUser",
+                        TASK_TITLE.getKey(), "Реализовать тестовую задачу",
+                        TASK_TYPE.getKey(), TaskType.EPIC.getValue(),
+                        PROJECT_NAME.getKey(), "project"
                 ));
+        notification.setTemplate(NotificationTemplate.NEW_TASK_IN_PROJECT);
         return notificationMongoRepository.save(notification);
     }
 
@@ -403,8 +407,8 @@ public abstract class AbstractIntegrationTest {
 
     private boolean isJavaBuiltin(Class<?> clazz) {
         return clazz.isPrimitive()
-                || clazz.getName().startsWith("java.")
-                || clazz.getName().startsWith("javax.")
+                || clazz.getName().startsWith("java." )
+                || clazz.getName().startsWith("javax." )
                 || clazz == String.class
                 || Number.class.isAssignableFrom(clazz)
                 || clazz == Boolean.class
