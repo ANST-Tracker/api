@@ -51,12 +51,28 @@ public class UpdateAbstractTaskUseCase implements UpdateAbstractTaskInBound {
                 .values();
 
         original.setName(updated.getName());
-        original.setDescription(updated.getDescription());
+        if (updated.getDescription() != null) {
+            original.setDescription(updated.getDescription());
+        } else {
+            original.setDescription(null);
+        }
         original.setType(updated.getType());
         original.setPriority(updated.getPriority());
-        original.setStoryPoints(updated.getStoryPoints());
-        original.setDueDate(updated.getDueDate());
-        original.setTimeEstimation(updated.getTimeEstimation());
+        if (updated.getStoryPoints() != null) {
+            original.setStoryPoints(updated.getStoryPoints());
+        } else {
+            original.setStoryPoints(null);
+        }
+        if (updated.getDueDate() != null) {
+            original.setDueDate(updated.getDueDate());
+        } else {
+            original.setDueDate(null);
+        }
+        if (updated.getTimeEstimation() != null) {
+            original.setTimeEstimation(updated.getTimeEstimation());
+        } else {
+            original.setTimeEstimation(null);
+        }
 
         User oldAssignee = original.getAssignee();
         if (updated.getAssignee() != null && updated.getAssignee().getId() != null) {
