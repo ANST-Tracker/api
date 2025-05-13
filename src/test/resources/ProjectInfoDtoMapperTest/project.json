@@ -3,6 +3,8 @@
   "name": "Project1",
   "description": "New test project",
   "head":{
-    "id": "cce819d0-07f5-4a41-8bdb-082b93669b8e"
+    "id": "cce819d0-07f5-4a41-8bdb-082b93669b8e",
+    "firstName": "testName",
+    "lastName": "testName2"
   }
 }

@@ -50,7 +50,7 @@ public class V1ReadProjectControllerTest extends AbstractIntegrationTest{
         ProjectInfoDto responseDto = getFromResponse(response, ProjectInfoDto.class);
         assertEquals(responseDto.getName(), project.getName());
         assertEquals(responseDto.getDescription(), project.getDescription());
-        assertEquals(responseDto.getHeadId(), project.getHead().getId());
+        assertEquals(responseDto.getHead().getId(), project.getHead().getId());
         for(int i = 0;i < countUsersTags-1;i++){
             User userTest = users.get(i);
             UserInfoDto userRes = responseDto.getUsers().get(i);

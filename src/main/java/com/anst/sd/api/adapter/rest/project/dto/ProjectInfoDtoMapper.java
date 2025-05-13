@@ -24,10 +24,8 @@ public abstract class ProjectInfoDtoMapper {
 
     @Mapping(target = "users", source = "users", qualifiedByName = "usersProjectsToUserInfoDto")
     @Mapping(target = "tags", source = "tags")
-    @Mapping(target = "headId", source = "head.id")
     public abstract ProjectInfoDto mapToDto(Project source);
 
-    @Mapping(target = "headId", source = "head.id")
     public abstract List<ProjectInfoDto> mapToDto(List<Project> source);
 
     @Named("usersProjectsToUserInfoDto")

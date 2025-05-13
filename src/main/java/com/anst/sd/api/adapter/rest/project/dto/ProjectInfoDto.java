@@ -22,7 +22,7 @@ public class ProjectInfoDto {
     String name;
     String description;
     @NotNull
-    UUID headId;
+    UserInfoDto head;
     List<TagInfoDto> tags;
     List<UserInfoDto> users;
 }
