@@ -27,21 +27,27 @@ public class UserController {
     private final JwtService jwtService;
     private final UserDtoMapper userDtoMapper;
 
-    @Operation(summary = "Get current user information")
-    @ApiResponse(
-            responseCode = "200",
-            description = "User information received successfully",
-            useReturnTypeSchema = true)
+    @Operation(
+            summary = "Get current user information",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "User information received successfully",
+                            useReturnTypeSchema = true)
+            })
     @GetMapping("/current")
     public UserInfoDto getUser() {
         User result = getUserInBound.get(jwtService.getJwtAuth().getUserId());
         return userDtoMapper.mapToDto(result);
     }
 
-    @Operation(summary = "Get users autocomplete")
-    @ApiResponse(
-            responseCode = "200",
-            useReturnTypeSchema = true)
+    @Operation(
+            summary = "Get users autocomplete",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            useReturnTypeSchema = true)
+            })
     @GetMapping("/autocomplete")
     public List<UserInfoDto> getUsersAutocomplete(@RequestParam String nameFragment) {
         List<User> result = getUsersAutocompleteInbound.get(nameFragment);
