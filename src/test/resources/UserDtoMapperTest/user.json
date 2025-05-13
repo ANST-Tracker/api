@@ -1,9 +1,10 @@
 {
-  "firstName":      "test_dfaa48835ff5",
-  "lastName":       "test_1e5f77749a3a",
-  "username":       "test_d2edef6bb29c",
-  "telegramId":     "test_daf2cc36fbde",
-  "password":       "test_pass1",
+  "firstName": "test_dfaa48835ff5",
+  "lastName": "test_1e5f77749a3a",
+  "username": "test_d2edef6bb29c",
+  "telegramId": "test_daf2cc36fbde",
+  "password": "test_pass1",
   "departmentName": "test_1Depart",
-  "position":        "QA"
+  "position": "QA",
+  "id": "e4d909c2-90d0-fb1c-a068-ffaddf22cbd0"
 }

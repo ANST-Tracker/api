@@ -33,7 +33,8 @@ public class V1ReadProjectControllerTest extends AbstractIntegrationTest{
             User newUser = createUser(
                     "username" + i,
                     "email" + i,
-                    "telegramId" + i);
+                    "telegramId" + i,
+                    null, null);
             createUsersProjects(project, newUser);
             users.add(newUser);
             tags.add(createTag(project,"tag" + i));
@@ -57,9 +58,9 @@ public class V1ReadProjectControllerTest extends AbstractIntegrationTest{
             assertEquals(userTest.getFirstName(), userRes.getFirstName());
             assertEquals(userTest.getLastName(), userRes.getLastName());
             assertEquals(userTest.getPosition(), userRes.getPosition());
-            assertEquals(userTest.getPassword(), userRes.getPassword());
             assertEquals(userTest.getDepartmentName(), userRes.getDepartmentName());
             assertEquals(userTest.getTelegramId(), userRes.getTelegramId());
+            assertEquals(userTest.getId(), userRes.getId());
 
             Tag tagTest = tags.get(i);
             TagInfoDto tagRes = responseDto.getTags().get(i);
@@ -71,7 +72,7 @@ public class V1ReadProjectControllerTest extends AbstractIntegrationTest{
     @Test
     void getProject_NotFound() throws Exception{
         User user = createTestUser();
-        Project project = createTestProject(user);
+        createTestProject(user);
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
                 .get(API_URL + "/e4d909c2-90d0-fb1c-a068-ffaddf22cbd0"))
@@ -85,10 +86,10 @@ public class V1ReadProjectControllerTest extends AbstractIntegrationTest{
         User user = createTestUser();
         int countProjects = 3;
         for(int i = 0;i < countProjects;i++){
-            Project projectIt = createTestProject(user);
+            createTestProject(user);
         }
-        User user2 = createUser("Men", "@men", "men@gmail.com");
-        Project project2 = createTestProject(user2);
+        User user2 = createUser("Men", "@men", "men@gmail.com", null, null);
+        createTestProject(user2);
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
                 .get(API_URL + "/all"))

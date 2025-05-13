@@ -6,7 +6,10 @@ import com.anst.sd.api.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.UUID;
+
+import static java.lang.String.format;
 
 @Component
 @RequiredArgsConstructor
@@ -27,5 +30,10 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User save(User user) {
         return userJpaRepository.save(user);
+    }
+
+    @Override
+    public List<User> findByNameFragment(String nameFragment) {
+        return userJpaRepository.findAllByFullNameContains(format("%%%s%%", nameFragment));
     }
 }

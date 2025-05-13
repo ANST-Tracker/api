@@ -68,7 +68,7 @@ class V1ReadSprintControllerTest extends AbstractIntegrationTest {
         Project project = createTestProject(user);
         createSprint(project);
         createSprint(project);
-        User user1 = createUser("Enemy", "@youEnemy", "kak@mail.com");
+        User user1 = createUser("Enemy", "@youEnemy", "kak@mail.com", null, null);
         Project project1 = createTestProject(user1);
         createSprint(project1);
 
@@ -99,7 +99,7 @@ class V1ReadSprintControllerTest extends AbstractIntegrationTest {
         Project project = createTestProject(user);
         createSprint(project);
         createSprint(project);
-        User user1 = createUser("Enemy", "@youEnemy", "kak@mail.com");
+        User user1 = createUser("Enemy", "@youEnemy", "kak@mail.com", null, null);
         Project project1 = createTestProject(user1);
         createSprint(project1);
 

@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.UUID;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -12,13 +14,13 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserInfoDto {
     @NotNull
+    UUID id;
+    @NotNull
     String firstName;
     @NotNull
     String lastName;
     @NotNull
     String telegramId;
-    @NotNull
-    String password;
     @NotNull
     String departmentName;
     @NotNull

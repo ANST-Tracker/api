@@ -7,12 +7,10 @@ import com.anst.sd.api.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 public class V1WriteUsersProjectsControllerTest extends AbstractIntegrationTest{
@@ -26,13 +24,13 @@ public class V1WriteUsersProjectsControllerTest extends AbstractIntegrationTest{
 
     @Test
     void addUserInProject_successfully() throws Exception {
-        User newUser = createUser("New","@you_chacne", "2342@a");
+        User newUser = createUser("New","@you_chacne", "2342@a", null, null);
         AddUserInProjectDto addUserInProjectDto = new AddUserInProjectDto();
         addUserInProjectDto.setProjectId(project.getId());
         addUserInProjectDto.setUserId(newUser.getId());
         addUserInProjectDto.setPermissionCode("READ_ONLY");
 
-        MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
+        performAuthenticated(user, MockMvcRequestBuilders
                 .post(API_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(addUserInProjectDto)))
@@ -65,7 +63,7 @@ public class V1WriteUsersProjectsControllerTest extends AbstractIntegrationTest{
 
     @Test
     void removeUserFromProject_successfully() throws Exception {
-        User newUser = createUser("New","@you_chacne", "2342@a");
+        User newUser = createUser("New","@you_chacne", "2342@a", null, null);
         UsersProjects newUsersProject= createUsersProjects(project, newUser);
         String removeUserFromProjectUrl = String.format("/projects/%s/users/%s",
                 newUsersProject.getProject().getId(),

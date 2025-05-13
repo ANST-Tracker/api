@@ -3,16 +3,22 @@ package com.anst.sd.api.adapter.rest.user;
 import com.anst.sd.api.adapter.rest.user.dto.UserDtoMapper;
 import com.anst.sd.api.adapter.rest.user.dto.UserInfoDto;
 import com.anst.sd.api.app.api.user.GetUserInBound;
+import com.anst.sd.api.app.api.user.GetUsersAutocompleteInbound;
 import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.security.app.impl.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Tag(name = "UserController")
 @RestController
@@ -20,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user")
 public class UserController {
     private final GetUserInBound getUserInBound;
+    private final GetUsersAutocompleteInbound getUsersAutocompleteInbound;
     private final JwtService jwtService;
     private final UserDtoMapper userDtoMapper;
 
@@ -27,10 +34,22 @@ public class UserController {
     @ApiResponse(
             responseCode = "200",
             description = "User information received successfully",
-            useReturnTypeSchema = true)
+            content = @Content(schema = @Schema(implementation = UserInfoDto.class)))
     @GetMapping("/current")
     public ResponseEntity<UserInfoDto> getUser() {
         User result = getUserInBound.get(jwtService.getJwtAuth().getUserId());
         return ResponseEntity.ok(userDtoMapper.mapToDto(result));
+    }
+
+    @Operation(summary = "Get users autocomplete")
+    @ApiResponse(
+            responseCode = "200",
+            useReturnTypeSchema = true)
+    @GetMapping("/autocomplete")
+    public ResponseEntity<List<UserInfoDto>> getUsersAutocomplete(@RequestParam String nameFragment) {
+        List<User> result = getUsersAutocompleteInbound.get(nameFragment);
+        return ResponseEntity.ok(result.stream()
+                .map(userDtoMapper::mapToDto)
+                .toList());
     }
 }

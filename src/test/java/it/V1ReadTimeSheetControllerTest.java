@@ -108,7 +108,7 @@ public class V1ReadTimeSheetControllerTest extends AbstractIntegrationTest{
     @Test
     void getTimeSheetByProject_notAccess() throws Exception {
         createLog(epicTask, user, "test content", timeEstimation, now);
-        User user1 = createUser("Test", "Test", "Test");
+        User user1 = createUser("Test", "Test", "Test", null, null);
         Project project1 = createTestProject(user1);
 
         performAuthenticated(user, MockMvcRequestBuilders
