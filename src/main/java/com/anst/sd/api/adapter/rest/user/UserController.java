@@ -7,12 +7,9 @@ import com.anst.sd.api.app.api.user.GetUsersAutocompleteInbound;
 import com.anst.sd.api.domain.user.User;
 import com.anst.sd.api.security.app.impl.JwtService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,11 +31,11 @@ public class UserController {
     @ApiResponse(
             responseCode = "200",
             description = "User information received successfully",
-            content = @Content(schema = @Schema(implementation = UserInfoDto.class)))
+            useReturnTypeSchema = true)
     @GetMapping("/current")
-    public ResponseEntity<UserInfoDto> getUser() {
+    public UserInfoDto getUser() {
         User result = getUserInBound.get(jwtService.getJwtAuth().getUserId());
-        return ResponseEntity.ok(userDtoMapper.mapToDto(result));
+        return userDtoMapper.mapToDto(result);
     }
 
     @Operation(summary = "Get users autocomplete")
@@ -46,10 +43,10 @@ public class UserController {
             responseCode = "200",
             useReturnTypeSchema = true)
     @GetMapping("/autocomplete")
-    public ResponseEntity<List<UserInfoDto>> getUsersAutocomplete(@RequestParam String nameFragment) {
+    public List<UserInfoDto> getUsersAutocomplete(@RequestParam String nameFragment) {
         List<User> result = getUsersAutocompleteInbound.get(nameFragment);
-        return ResponseEntity.ok(result.stream()
+        return result.stream()
                 .map(userDtoMapper::mapToDto)
-                .toList());
+                .toList();
     }
 }
