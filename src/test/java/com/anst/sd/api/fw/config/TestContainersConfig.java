@@ -17,17 +17,17 @@ import javax.sql.DataSource;
 @Configuration
 public class TestContainersConfig {
     public static final KafkaContainer kafka = new KafkaContainer(
-        DockerImageName.parse("confluentinc/cp-kafka:7.3.3"))
-        .waitingFor(Wait.forListeningPort());
+            DockerImageName.parse("confluentinc/cp-kafka:7.3.3"))
+            .waitingFor(Wait.forListeningPort());
     public static final MongoDBContainer mongo = new MongoDBContainer(
-        DockerImageName.parse("mongo:5"))
-        .waitingFor(Wait.forListeningPort());
+            DockerImageName.parse("mongo:5"))
+            .waitingFor(Wait.forListeningPort());
     public static final RedisContainer redis = new RedisContainer(
-        DockerImageName.parse("redis:5.0.3-alpine"))
-        .waitingFor(Wait.forListeningPort());
+            DockerImageName.parse("redis:5.0.3-alpine"))
+            .waitingFor(Wait.forListeningPort());
     public static final PostgreSQLContainer postgres = new PostgreSQLContainer<>(
-        DockerImageName.parse("postgres:14.6"))
-        .waitingFor(Wait.forListeningPort());
+            DockerImageName.parse("postgres:14.6"))
+            .waitingFor(Wait.forListeningPort());
 
     static {
         mongo.start();

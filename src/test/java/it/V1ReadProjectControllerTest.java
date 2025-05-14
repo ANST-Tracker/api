@@ -1,7 +1,6 @@
 package it;
 
-import com.anst.sd.api.adapter.rest.project.dto.ProjectInfoDto;
-import com.anst.sd.api.adapter.rest.project.read.dto.ProjectsInfoDto;
+import com.anst.sd.api.adapter.rest.project.read.dto.ProjectInfoDto;
 import com.anst.sd.api.adapter.rest.tag.dto.TagInfoDto;
 import com.anst.sd.api.adapter.rest.user.dto.UserInfoDto;
 import com.anst.sd.api.domain.project.Project;
@@ -18,7 +17,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-public class V1ReadProjectControllerTest extends AbstractIntegrationTest{
+public class V1ReadProjectControllerTest extends AbstractIntegrationTest {
     private static final String API_URL = "/project";
 
     @Test
@@ -27,9 +26,8 @@ public class V1ReadProjectControllerTest extends AbstractIntegrationTest{
         Project project = createTestProject(user);
         List<Tag> tags = new ArrayList<>();
         List<User> users = new ArrayList<>();
-        users.add(user);
         int countUsersTags = 5;
-        for(int i = 1;i < countUsersTags;i++){
+        for (int i = 1; i < countUsersTags; i++) {
             User newUser = createUser(
                     "username" + i,
                     "email" + i,
@@ -37,7 +35,7 @@ public class V1ReadProjectControllerTest extends AbstractIntegrationTest{
                     null, null);
             createUsersProjects(project, newUser);
             users.add(newUser);
-            tags.add(createTag(project,"tag" + i));
+            tags.add(createTag(project, "tag" + i));
         }
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
@@ -51,7 +49,7 @@ public class V1ReadProjectControllerTest extends AbstractIntegrationTest{
         assertEquals(responseDto.getName(), project.getName());
         assertEquals(responseDto.getDescription(), project.getDescription());
         assertEquals(responseDto.getHead().getId(), project.getHead().getId());
-        for(int i = 0;i < countUsersTags-1;i++){
+        for (int i = 0; i < countUsersTags - 1; i++) {
             User userTest = users.get(i);
             UserInfoDto userRes = responseDto.getUsers().get(i);
 
@@ -70,26 +68,24 @@ public class V1ReadProjectControllerTest extends AbstractIntegrationTest{
     }
 
     @Test
-    void getProject_NotFound() throws Exception{
+    void getProject_NotFound() throws Exception {
         User user = createTestUser();
         createTestProject(user);
 
-        MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
+        performAuthenticated(user, MockMvcRequestBuilders
                 .get(API_URL + "/e4d909c2-90d0-fb1c-a068-ffaddf22cbd0"))
                 .andDo(print())
-                .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andReturn();
+
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
     void getProjects_successfully() throws Exception {
         User user = createTestUser();
         int countProjects = 3;
-        for(int i = 0;i < countProjects;i++){
+        for (int i = 0; i < countProjects; i++) {
             createTestProject(user);
         }
-        User user2 = createUser("Men", "@men", "men@gmail.com", null, null);
-        createTestProject(user2);
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
                 .get(API_URL + "/all"))
@@ -98,12 +94,12 @@ public class V1ReadProjectControllerTest extends AbstractIntegrationTest{
                 .andReturn();
 
         List<Project> projects = projectJpaRepository.findAllByUserId(user.getId());
-        List<ProjectsInfoDto> responseDto = getListFromResponse(response, ProjectsInfoDto.class);
+        List<ProjectInfoDto> responseDto = getListFromResponse(response, ProjectInfoDto.class);
         assertEquals(projects.size(), responseDto.size());
-        for(int i = 0;i < countProjects;i++){
+        for (int i = 0; i < countProjects; i++) {
             assertEquals(responseDto.get(i).getName(), projects.get(i).getName());
             assertEquals(responseDto.get(i).getDescription(), projects.get(i).getDescription());
-            assertEquals(responseDto.get(i).getHeadId(), projects.get(i).getHead().getId());
+            assertEquals(responseDto.get(i).getHead().getId(), projects.get(i).getHead().getId());
         }
     }
 }

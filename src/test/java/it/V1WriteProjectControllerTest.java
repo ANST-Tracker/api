@@ -23,11 +23,11 @@ class V1WriteProjectControllerTest extends AbstractIntegrationTest {
         request.setHeadId(project.getHead().getId());
 
         performAuthenticated(user, MockMvcRequestBuilders
-            .put(API_URL + "/" + project.getId())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
-            .andDo(print())
-            .andExpect(MockMvcResultMatchers.status().isOk());
+                .put(API_URL + "/" + project.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
 
         project = projectJpaRepository.findAll().get(0);
         assertEquals(request.getName(), project.getName());
@@ -44,11 +44,11 @@ class V1WriteProjectControllerTest extends AbstractIntegrationTest {
         request.setName("");
 
         performAuthenticated(user, MockMvcRequestBuilders
-            .put(API_URL + "/" + project.getId())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
-            .andDo(print())
-            .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                .put(API_URL + "/" + project.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
@@ -57,11 +57,11 @@ class V1WriteProjectControllerTest extends AbstractIntegrationTest {
         UpdateProjectDto request = readFromFile("/V1WriteProjectControllerTest/updateProjectDto.json", UpdateProjectDto.class);
 
         performAuthenticated(user, MockMvcRequestBuilders
-            .put(API_URL + "/e4d909c2-90d0-fb1c-a068-ffaddf22cbd0")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
-            .andDo(print())
-            .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .put(API_URL + "/e4d909c2-90d0-fb1c-a068-ffaddf22cbd0")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
@@ -71,11 +71,11 @@ class V1WriteProjectControllerTest extends AbstractIntegrationTest {
         userJpaRepository.deleteAll();
 
         performAuthenticated(user, MockMvcRequestBuilders
-            .post(API_URL)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
-            .andDo(print())
-            .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .post(API_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
@@ -84,11 +84,11 @@ class V1WriteProjectControllerTest extends AbstractIntegrationTest {
         CreateProjectDto request = readFromFile("/V1WriteProjectControllerTest/createProjectDto.json", CreateProjectDto.class);
         request.setHeadId(user.getId());
         performAuthenticated(user, MockMvcRequestBuilders
-            .post(API_URL)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
-            .andDo(print())
-            .andExpect(MockMvcResultMatchers.status().isOk());
+                .post(API_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
 
         Project project = projectJpaRepository.findAll().get(0);
         assertEquals(request.getName(), project.getName());
@@ -104,10 +104,10 @@ class V1WriteProjectControllerTest extends AbstractIntegrationTest {
         request.setName("");
 
         performAuthenticated(user, MockMvcRequestBuilders
-            .post(API_URL)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
-            .andDo(print())
-            .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                .post(API_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 }

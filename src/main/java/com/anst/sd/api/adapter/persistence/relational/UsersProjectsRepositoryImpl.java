@@ -34,9 +34,4 @@ public class UsersProjectsRepositoryImpl implements UsersProjectsRepository {
     public void delete(UUID id) {
          usersProjectsJpaRepository.deleteById(id);
     }
-
-    @Override
-    public boolean existsByUserIdAndProjectId(UUID userId, UUID projectId) {
-        return usersProjectsJpaRepository.existsByUserIdAndProjectId(userId, projectId);
-    }
 }

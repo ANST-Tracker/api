@@ -1,5 +1,6 @@
 package com.anst.sd.api.app.impl.usersProjects;
 
+import com.anst.sd.api.app.api.project.ProjectRepository;
 import com.anst.sd.api.app.api.usersProjects.RemoveUserFromProjectInBound;
 import com.anst.sd.api.app.api.usersProjects.UsersProjectsNotFoundException;
 import com.anst.sd.api.app.api.usersProjects.UsersProjectsRepository;
@@ -25,6 +26,7 @@ import static com.anst.sd.api.domain.notification.NotificationTemplate.Additiona
 @AllArgsConstructor
 public class RemoveUserFromProjectUseCase implements RemoveUserFromProjectInBound {
     private final UsersProjectsRepository usersProjectsRepository;
+    private final ProjectRepository projectRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @Override
@@ -32,10 +34,10 @@ public class RemoveUserFromProjectUseCase implements RemoveUserFromProjectInBoun
     public void remove(UUID projectId, UUID userId, UUID adminUserId) {
         log.info("Remove user with id {} to project with id {} by admin with id{}", userId, projectId, adminUserId);
 
-        if (!usersProjectsRepository.existsByUserIdAndProjectId(adminUserId, projectId)) {
+        if (!projectRepository.existsByIdAndUserId(projectId, adminUserId)) {
             throw new UsersProjectsNotFoundException(adminUserId, projectId);
         }
-        if (!usersProjectsRepository.existsByUserIdAndProjectId(userId, projectId)) {
+        if (!projectRepository.existsByIdAndUserId(projectId, userId)) {
             throw new UsersProjectsNotFoundException(userId, projectId);
         }
         UsersProjects usersProjects = usersProjectsRepository.findByUserIdAndProjectId(userId, projectId);

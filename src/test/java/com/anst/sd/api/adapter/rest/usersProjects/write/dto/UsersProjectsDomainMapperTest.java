@@ -10,7 +10,7 @@ public class UsersProjectsDomainMapperTest extends AbstractUnitTest {
     private UsersProjectsDomainMapper mapper;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         mapper = Mappers.getMapper(UsersProjectsDomainMapper.class);
     }
 

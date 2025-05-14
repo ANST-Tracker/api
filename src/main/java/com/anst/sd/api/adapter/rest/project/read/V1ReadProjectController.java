@@ -1,9 +1,7 @@
 package com.anst.sd.api.adapter.rest.project.read;
 
-import com.anst.sd.api.adapter.rest.project.dto.ProjectInfoDto;
-import com.anst.sd.api.adapter.rest.project.dto.ProjectInfoDtoMapper;
-import com.anst.sd.api.adapter.rest.project.read.dto.ProjectsInfoDto;
-import com.anst.sd.api.adapter.rest.project.read.dto.ProjectsInfoDtoMapper;
+import com.anst.sd.api.adapter.rest.project.read.dto.ProjectInfoDto;
+import com.anst.sd.api.adapter.rest.project.read.dto.ProjectInfoDtoMapper;
 import com.anst.sd.api.app.api.project.GetProjectInbound;
 import com.anst.sd.api.app.api.project.GetProjectsByUserInbound;
 import com.anst.sd.api.domain.project.Project;
@@ -31,7 +29,6 @@ public class V1ReadProjectController {
     private final GetProjectInbound getProjectInbound;
     private final GetProjectsByUserInbound getProjectsByUserInBound;
     private final ProjectInfoDtoMapper projectInfoDtoMapper;
-    private final ProjectsInfoDtoMapper projectsInfoDtoMapper;
     private final JwtService jwtService;
 
     @Operation(
@@ -55,8 +52,8 @@ public class V1ReadProjectController {
                             useReturnTypeSchema = true)
             })
     @GetMapping("/all")
-    public ResponseEntity<List<ProjectsInfoDto>> getProjects() {
+    public ResponseEntity<List<ProjectInfoDto>> getProjects() {
         List<Project> projects = getProjectsByUserInBound.get(jwtService.getJwtAuth().getUserId());
-        return ResponseEntity.ok(projectsInfoDtoMapper.mapToDto(projects));
+        return ResponseEntity.ok(projectInfoDtoMapper.mapToDto(projects));
     }
 }

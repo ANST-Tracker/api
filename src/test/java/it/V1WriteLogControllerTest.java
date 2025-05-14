@@ -121,7 +121,7 @@ class V1WriteLogControllerTest extends AbstractIntegrationTest {
         logTask = createLog(subTask, user, "test content", timeEstimation, now);
 
         performAuthenticated(user, MockMvcRequestBuilders
-                .delete(API_URL.formatted(project.getId(), subTask.getSimpleId())+ "/" + logTask.getId())
+                .delete(API_URL.formatted(project.getId(), subTask.getSimpleId()) + "/" + logTask.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
 
@@ -134,7 +134,7 @@ class V1WriteLogControllerTest extends AbstractIntegrationTest {
         logTask = createLog(subTask, user, "test content", timeEstimation, now);
 
         performAuthenticated(reviewer, MockMvcRequestBuilders
-                .delete(API_URL.formatted(project.getId(), subTask.getSimpleId())+ "/" + logTask.getId())
+                .delete(API_URL.formatted(project.getId(), subTask.getSimpleId()) + "/" + logTask.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
 

@@ -62,12 +62,12 @@ class AuthControllerTest extends AbstractIntegrationTest {
         RefreshRequestDto refreshRequestDto = new RefreshRequestDto(jwtResponseDto.getRefreshToken());
 
         mockMvc.perform(MockMvcRequestBuilders
-                .post(API_URL + "/refresh")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(refreshRequestDto)))
-            .andDo(print())
+                        .post(API_URL + "/refresh")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(refreshRequestDto)))
+                .andDo(print())
 
-            .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized());
     }
 
     @Test
@@ -78,7 +78,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
 
         assertEquals(5, code.length());
         UserCode userCode = userCodeMongoRepository.findUserCodeByTelegramId(telegramId)
-            .orElseThrow();
+                .orElseThrow();
         assertEquals(telegramId, userCode.getTelegramId());
         assertEquals(code, userCode.getCode());
         verify(createUserCodeMessageSupplier).send(any());
@@ -104,12 +104,12 @@ class AuthControllerTest extends AbstractIntegrationTest {
         sendGetCodeRequest(telegramId, null);
 
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-                .post(API_URL + "/code/send")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new SendCodeRequestDto(telegramId, null))))
-            .andDo(print())
-            .andExpect(MockMvcResultMatchers.status().isBadRequest())
-            .andReturn();
+                        .post(API_URL + "/code/send")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new SendCodeRequestDto(telegramId, null))))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn();
 
         ErrorInfoDto errorResponse = getFromResponse(mvcResult, ErrorInfoDto.class);
         assertEquals(CLIENT, errorResponse.getType());
@@ -150,7 +150,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
         userCodeMongoRepository.save(userCode);
 
         MvcResult mvcResult = sendVerifyCodeRequest(telegramId, code, null,
-            MockMvcResultMatchers.status().isUnauthorized());
+                MockMvcResultMatchers.status().isUnauthorized());
 
         ErrorInfoDto errorInfoDto = getFromResponse(mvcResult, ErrorInfoDto.class);
         assertEquals(AUTH, errorInfoDto.getType());
@@ -162,7 +162,7 @@ class AuthControllerTest extends AbstractIntegrationTest {
         sendGetCodeRequest(telegramId, null);
 
         MvcResult mvcResult = sendVerifyCodeRequest(telegramId, "wrong", null,
-            MockMvcResultMatchers.status().isUnauthorized());
+                MockMvcResultMatchers.status().isUnauthorized());
 
         ErrorInfoDto errorInfoDto = getFromResponse(mvcResult, ErrorInfoDto.class);
         assertEquals(AUTH, errorInfoDto.getType());
@@ -180,31 +180,31 @@ class AuthControllerTest extends AbstractIntegrationTest {
     private String createToken(String telegramId) throws Exception {
         String code = sendGetCodeRequest(telegramId, null);
         MvcResult mvcResult = sendVerifyCodeRequest(telegramId, code, null,
-            MockMvcResultMatchers.status().isOk());
+                MockMvcResultMatchers.status().isOk());
         JwtResponseDto responseDto = getFromResponse(mvcResult, JwtResponseDto.class);
         return responseDto.getAccessToken();
     }
 
     private String sendGetCodeRequest(String telegramId, String username) throws Exception {
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders
-                .post(API_URL + "/code/send")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new SendCodeRequestDto(telegramId, username))))
-            .andDo(print())
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andReturn();
+                        .post(API_URL + "/code/send")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new SendCodeRequestDto(telegramId, username))))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
         return getFromResponse(mvcResult, String.class);
     }
 
     private MvcResult sendVerifyCodeRequest(String telegramId, String code, String username,
-        ResultMatcher resultMatcher) throws Exception {
+                                            ResultMatcher resultMatcher) throws Exception {
         return mockMvc.perform(MockMvcRequestBuilders
-                .post(API_URL + "/code/verify")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(new VerifyCodeRequestDto(telegramId, code, username))))
-            .andDo(print())
-            .andExpect(resultMatcher)
-            .andReturn();
+                        .post(API_URL + "/code/verify")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new VerifyCodeRequestDto(telegramId, code, username))))
+                .andDo(print())
+                .andExpect(resultMatcher)
+                .andReturn();
     }
 
     private MvcResult loginUser(String telegramId, LoginRequestDto loginRequestDto, ResultMatcher resultMatcher) throws Exception {
@@ -212,8 +212,8 @@ class AuthControllerTest extends AbstractIntegrationTest {
                 .post(API_URL + "/signin")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(loginRequestDto)))
-            .andDo(print())
-            .andExpect(resultMatcher)
-            .andReturn();
+                .andDo(print())
+                .andExpect(resultMatcher)
+                .andReturn();
     }
 }

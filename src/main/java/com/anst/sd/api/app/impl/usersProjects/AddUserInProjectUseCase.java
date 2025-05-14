@@ -39,7 +39,7 @@ public class AddUserInProjectUseCase implements AddUserInProjectInBound {
                 usersProjects.getProject().getId(),
                 adminUserId);
 
-        if (usersProjectsRepository.existsByUserIdAndProjectId(usersProjects.getUser().getId(), usersProjects.getProject().getId())) {
+        if (projectRepository.existsByIdAndUserId(usersProjects.getProject().getId(), usersProjects.getUser().getId())) {
             throw new UsersProjectsValidationException();
         }
 

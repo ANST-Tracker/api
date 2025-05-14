@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-public class V1ReadTimeSheetControllerTest extends AbstractIntegrationTest{
+public class V1ReadTimeSheetControllerTest extends AbstractIntegrationTest {
     private static final String API_URL = "/time-sheet";
     protected LocalDate now;
     protected String start;
@@ -68,7 +68,7 @@ public class V1ReadTimeSheetControllerTest extends AbstractIntegrationTest{
                 .andDo(print()).andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
-        List<TimeSheetDto> result= getListFromResponse(response, TimeSheetDto.class);
+        List<TimeSheetDto> result = getListFromResponse(response, TimeSheetDto.class);
         assertEquals(1, result.size());
         assertEquals(log.getId(), result.get(0).getId());
         assertEquals(log.getTimeEstimation().getTimeUnit(), result.get(0).getTimeEstimation().getTimeUnit());

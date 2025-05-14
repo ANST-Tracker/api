@@ -31,12 +31,12 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
         createSubtask(user, project, user, user, storyTask);
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
-            .post(API_URL + "/find-by-filter")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(createFilter())))
-            .andDo(print())
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andReturn();
+                .post(API_URL + "/find-by-filter")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(createFilter())))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
 
         List<TaskRegistryDto> actualTasks = getListFromResponse(response, TaskRegistryDto.class);
         actualTasks.sort(Comparator.comparing(TaskRegistryDto::getSimpleId));
@@ -68,12 +68,12 @@ class V1ReadTaskControllerTest extends AbstractIntegrationTest {
 
     private TaskFilterDto createFilter() {
         return new TaskFilterDto()
-            .setProjectId(project.getId())
-            .setPayload(new FilterPayload()
-                .setCreatorIds(List.of(user.getId()))
-                    .setAssigneeIds(List.of(user.getId()))
-                .setStatuses(List.of(TaskStatus.OPEN))
-                .setPriorities(List.of(TaskPriority.MAJOR))
-                .setTypes(List.of(TaskType.EPIC, TaskType.STORY, TaskType.SUBTASK)));
+                .setProjectId(project.getId())
+                .setPayload(new FilterPayload()
+                        .setCreatorIds(List.of(user.getId()))
+                        .setAssigneeIds(List.of(user.getId()))
+                        .setStatuses(List.of(TaskStatus.OPEN))
+                        .setPriorities(List.of(TaskPriority.MAJOR))
+                        .setTypes(List.of(TaskType.EPIC, TaskType.STORY, TaskType.SUBTASK)));
     }
 }

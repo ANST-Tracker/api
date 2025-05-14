@@ -26,7 +26,7 @@ public interface AbstractTaskJpaRepository extends JpaRepository<AbstractTask, U
         left join project p on t.project_id = p.id
         left join users_projects u on p.id = u.project_id
         where t.simple_id = :simpleId
-        and u.user_id = :userId
+        and (u.user_id = :userId or p.head_id = :userId)
     """, nativeQuery = true)
     Optional<TaskType> findTypeBySimpleIdAndUserId(String simpleId, UUID userId);
 }

@@ -24,18 +24,18 @@ class TaskRegistryDtoMapperTest extends AbstractUnitTest {
     void mapToDto() {
         StoryTask storyTask = new StoryTask();
         storyTask
-            .setSimpleId("TEST_ID")
-            .setName("TEST_NAME")
-            .setType(TaskType.STORY)
-            .setStatus(TaskStatus.OPEN)
-            .setPriority(TaskPriority.MAJOR)
-            .setAssignee(new User()
-                .setFirstName("John")
-                .setLastName("Smith"))
-            .setCreator(new User()
-                .setFirstName("FirstName")
-                .setLastName("LastName")
-            );
+                .setSimpleId("TEST_ID")
+                .setName("TEST_NAME")
+                .setType(TaskType.STORY)
+                .setStatus(TaskStatus.OPEN)
+                .setPriority(TaskPriority.MAJOR)
+                .setAssignee(new User()
+                        .setFirstName("John")
+                        .setLastName("Smith"))
+                .setCreator(new User()
+                        .setFirstName("FirstName")
+                        .setLastName("LastName")
+                );
 
         TaskRegistryDto dto = mapper.mapToDto(storyTask);
 

@@ -52,7 +52,6 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static com.anst.sd.api.domain.notification.NotificationTemplate.AdditionalTemplateParam.*;
-import static com.anst.sd.api.domain.notification.NotificationTemplate.AdditionalTemplateParam.PROJECT_NAME;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @SpringBootTest(classes = {AnstApiTodoApplication.class})
@@ -179,12 +178,6 @@ public abstract class AbstractIntegrationTest {
         project.setHead(headUser);
         project.setNextTaskId(1);
         project.setKey("GD");
-        project.setUsers(List.of(
-                new UsersProjects()
-                        .setPermissionCode(PermissionCode.READ_WRITE)
-                        .setProject(project)
-                        .setUser(headUser)
-        ));
         return projectJpaRepository.save(project);
     }
 

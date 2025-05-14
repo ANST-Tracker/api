@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 class V1WriteTagControllerTest extends AbstractIntegrationTest {
@@ -44,7 +43,7 @@ class V1WriteTagControllerTest extends AbstractIntegrationTest {
         TagInfoDto responseDto = getFromResponse(response, TagInfoDto.class);
         assertNotNull(responseDto.getId());
         assertEquals(createTagDto.getName(), responseDto.getName());
-        assertEquals(createTagDto.getProjectId(),responseDto.getProjectId());
+        assertEquals(createTagDto.getProjectId(), responseDto.getProjectId());
     }
 
     @Test
@@ -83,7 +82,7 @@ class V1WriteTagControllerTest extends AbstractIntegrationTest {
         TagInfoDto responseDto = getFromResponse(response, TagInfoDto.class);
         assertNotNull(responseDto.getId());
         assertEquals(createTagDto.getName(), responseDto.getName());
-        assertEquals(createTagDto.getProjectId(),responseDto.getProjectId());
+        assertEquals(createTagDto.getProjectId(), responseDto.getProjectId());
     }
 
     @Test

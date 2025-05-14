@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-public class V1WriteUsersProjectsControllerTest extends AbstractIntegrationTest{
+public class V1WriteUsersProjectsControllerTest extends AbstractIntegrationTest {
     private static final String API_URL = "/users-projects";
 
     @BeforeEach
@@ -24,7 +24,7 @@ public class V1WriteUsersProjectsControllerTest extends AbstractIntegrationTest{
 
     @Test
     void addUserInProject_successfully() throws Exception {
-        User newUser = createUser("New","@you_chacne", "2342@a", null, null);
+        User newUser = createUser("New", "@you_chacne", "2342@a", null, null);
         AddUserInProjectDto addUserInProjectDto = new AddUserInProjectDto();
         addUserInProjectDto.setProjectId(project.getId());
         addUserInProjectDto.setUserId(newUser.getId());
@@ -38,7 +38,7 @@ public class V1WriteUsersProjectsControllerTest extends AbstractIntegrationTest{
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
 
-        UsersProjects usersProjects = usersProjectsJpaRepository.findAll().get(1);
+        UsersProjects usersProjects = usersProjectsJpaRepository.findAll().get(0);
         assertNotNull(usersProjects.getId());
         assertEquals(addUserInProjectDto.getUserId(), usersProjects.getUser().getId());
         assertEquals(addUserInProjectDto.getProjectId(), usersProjects.getProject().getId());
@@ -63,8 +63,8 @@ public class V1WriteUsersProjectsControllerTest extends AbstractIntegrationTest{
 
     @Test
     void removeUserFromProject_successfully() throws Exception {
-        User newUser = createUser("New","@you_chacne", "2342@a", null, null);
-        UsersProjects newUsersProject= createUsersProjects(project, newUser);
+        User newUser = createUser("New", "@you_chacne", "2342@a", null, null);
+        UsersProjects newUsersProject = createUsersProjects(project, newUser);
         String removeUserFromProjectUrl = String.format("/projects/%s/users/%s",
                 newUsersProject.getProject().getId(),
                 newUsersProject.getUser().getId());

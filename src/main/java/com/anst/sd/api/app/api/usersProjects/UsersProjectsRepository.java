@@ -13,6 +13,4 @@ public interface UsersProjectsRepository {
     UsersProjects save(UsersProjects usersProjects);
 
     void delete(UUID id);
-
-    boolean existsByUserIdAndProjectId(UUID userId, UUID projectId);
 }

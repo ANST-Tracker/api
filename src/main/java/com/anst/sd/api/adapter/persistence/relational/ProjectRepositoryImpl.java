@@ -13,7 +13,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProjectRepositoryImpl implements ProjectRepository {
     private final ProjectJpaRepository projectJpaRepository;
-    private final UsersProjectsJpaRepository usersProjectsJpaRepository;
 
     @Override
     public Project save(Project project) {
@@ -28,8 +27,8 @@ public class ProjectRepositoryImpl implements ProjectRepository {
 
     @Override
     public Project getByIdAndUserId(UUID projectId, UUID userId) {
-        Project project = usersProjectsJpaRepository.findByUserIdAndProjectId(userId, projectId)
-                .orElseThrow(() -> new ProjectNotFoundException(projectId, userId)).getProject();
+        Project project = projectJpaRepository.findByUserIdAndProjectId(userId, projectId)
+                .orElseThrow(() -> new ProjectNotFoundException(projectId, userId));
 
         if (project == null) {
             throw new ProjectNotFoundException(projectId, userId);
@@ -45,6 +44,6 @@ public class ProjectRepositoryImpl implements ProjectRepository {
 
     @Override
     public boolean existsByIdAndUserId(UUID id, UUID userId) {
-        return projectJpaRepository.existsByIdAndUserId(id, userId);
+        return projectJpaRepository.existsByIdAndUserId(id, userId, userId);
     }
 }

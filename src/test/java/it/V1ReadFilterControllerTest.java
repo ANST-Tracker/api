@@ -25,10 +25,10 @@ class V1ReadFilterControllerTest extends AbstractIntegrationTest {
         createFilter(null);
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
-            .get(API_URL + "/all"))
-            .andDo(print())
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andReturn();
+                .get(API_URL + "/all"))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
 
         List<FilterDto> actualFilters = getListFromResponse(response, FilterDto.class);
         actualFilters.forEach(filter -> {
@@ -43,10 +43,10 @@ class V1ReadFilterControllerTest extends AbstractIntegrationTest {
         user = createTestUser();
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
-            .get(API_URL + "/all"))
-            .andDo(print())
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andReturn();
+                .get(API_URL + "/all"))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
 
         List<FilterDto> actualFilters = getListFromResponse(response, FilterDto.class);
         assertEquals(0, actualFilters.size());
@@ -60,10 +60,10 @@ class V1ReadFilterControllerTest extends AbstractIntegrationTest {
         createFilter(project.getId());
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
-            .get(API_URL + "/by-project/" + project.getId()))
-            .andDo(print())
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andReturn();
+                .get(API_URL + "/by-project/" + project.getId()))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
 
         List<FilterDto> actualFilters = getListFromResponse(response, FilterDto.class);
         actualFilters.forEach(filter -> {
@@ -81,10 +81,10 @@ class V1ReadFilterControllerTest extends AbstractIntegrationTest {
         project = createTestProject(user);
 
         MvcResult response = performAuthenticated(user, MockMvcRequestBuilders
-            .get(API_URL + "/by-project/" + project.getId()))
-            .andDo(print())
-            .andExpect(MockMvcResultMatchers.status().isOk())
-            .andReturn();
+                .get(API_URL + "/by-project/" + project.getId()))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
 
         List<FilterDto> actualFilters = getListFromResponse(response, FilterDto.class);
         assertEquals(0, actualFilters.size());
@@ -98,10 +98,10 @@ class V1ReadFilterControllerTest extends AbstractIntegrationTest {
         CreateFilterDto request = readFromFile("/V1ReadFilterControllerTest/createFilterDto.json", CreateFilterDto.class);
         request.setProjectId(projectId);
         performAuthenticated(user, MockMvcRequestBuilders
-            .post(API_URL)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
-            .andDo(print())
-            .andExpect(MockMvcResultMatchers.status().isOk());
+                .post(API_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }

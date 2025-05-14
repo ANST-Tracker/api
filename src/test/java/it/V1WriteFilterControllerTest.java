@@ -44,12 +44,12 @@ class V1WriteFilterControllerTest extends AbstractIntegrationTest {
         request.setPayload(new FilterPayload());
 
         performAuthenticated(user, MockMvcRequestBuilders
-            .post(API_URL)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
-            .andDo(print())
+                .post(API_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
 
-            .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
     }
 
     @Test
@@ -63,11 +63,11 @@ class V1WriteFilterControllerTest extends AbstractIntegrationTest {
         updateFilterDto.getPayload().setAssigneeIds(null);
 
         performAuthenticated(user, MockMvcRequestBuilders
-            .put(API_URL + "/" + filterId)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(updateFilterDto)))
-            .andDo(print())
-            .andExpect(MockMvcResultMatchers.status().isOk());
+                .put(API_URL + "/" + filterId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updateFilterDto)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
 
         Filter result = filterMongoRepository.findAll().get(0);
         assertEquals(user.getId(), result.getUserId());
@@ -82,12 +82,12 @@ class V1WriteFilterControllerTest extends AbstractIntegrationTest {
         UpdateFilterDto updateFilterDto = readFromFile("/V1WriteFilterControllerTest/abstractDto.json", UpdateFilterDto.class);
 
         performAuthenticated(user, MockMvcRequestBuilders
-            .put(API_URL + "/notFoundId")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(updateFilterDto)))
-            .andDo(print())
+                .put(API_URL + "/notFoundId")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(updateFilterDto)))
+                .andDo(print())
 
-            .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test
@@ -98,9 +98,9 @@ class V1WriteFilterControllerTest extends AbstractIntegrationTest {
         String filterId = filterMongoRepository.findAll().get(0).getId();
 
         performAuthenticated(user, MockMvcRequestBuilders
-            .delete(API_URL + "/" + filterId))
-            .andDo(print())
-            .andExpect(MockMvcResultMatchers.status().isOk());
+                .delete(API_URL + "/" + filterId))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
 
         assertEquals(0, filterMongoRepository.count());
     }
@@ -111,10 +111,10 @@ class V1WriteFilterControllerTest extends AbstractIntegrationTest {
 
     private void createFilter(CreateFilterDto request) throws Exception {
         performAuthenticated(user, MockMvcRequestBuilders
-            .post(API_URL)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(request)))
-            .andDo(print())
-            .andExpect(MockMvcResultMatchers.status().isOk());
+                .post(API_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 }

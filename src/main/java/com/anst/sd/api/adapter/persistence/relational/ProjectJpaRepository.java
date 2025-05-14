@@ -15,18 +15,29 @@ public interface ProjectJpaRepository extends JpaRepository<Project, UUID> {
     @NonNull Optional<Project> findById(@NonNull UUID id);
 
     @Query("""
-        select count(up.id) > 0 from UsersProjects up
-        left join up.project p
+        select count(p.id) > 0 from Project p
+        left join p.users up
         left join up.user u
         where p.id = :id
-        and u.id = :userId
+        and (u.id = :userId or p.head.id = :headId)
         """)
-    boolean existsByIdAndUserId(UUID id, UUID userId);
+    boolean existsByIdAndUserId(UUID id, UUID userId, UUID headId);
 
     @Query("""
-        select up.project from UsersProjects up
-        left join up.user u
-        where up.user.id = :userId    
+        select p from Project p
+        left join p.users up
+        where up.user.id = :userId
+        or p.head.id = :userId
         """)
     List<Project> findAllByUserId(UUID userId);
+
+    @Query("""
+        select p from Project p
+        left join p.users up
+        left join up.user u
+        left join p.head pHead
+        where p.id = :projectId
+        and (up.user.id = :userId or pHead.id = :userId)
+        """)
+    Optional<Project> findByUserIdAndProjectId(UUID userId, UUID projectId);
 }

@@ -10,7 +10,7 @@ public class UserDtoMapperTest extends AbstractUnitTest {
     private UserDtoMapper mapper;
 
     @BeforeEach
-    void setUp(){
+    void setUp() {
         mapper = Mappers.getMapper(UserDtoMapper.class);
     }
 

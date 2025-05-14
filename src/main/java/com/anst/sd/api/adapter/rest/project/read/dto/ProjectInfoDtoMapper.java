@@ -1,4 +1,4 @@
-package com.anst.sd.api.adapter.rest.project.dto;
+package com.anst.sd.api.adapter.rest.project.read.dto;
 
 import com.anst.sd.api.adapter.rest.tag.dto.TagDtoMapper;
 import com.anst.sd.api.adapter.rest.user.dto.UserDtoMapper;
