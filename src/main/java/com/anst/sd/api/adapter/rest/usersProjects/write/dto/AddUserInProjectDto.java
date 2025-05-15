@@ -1,6 +1,5 @@
 package com.anst.sd.api.adapter.rest.usersProjects.write.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +13,5 @@ public class AddUserInProjectDto {
     private UUID userId;
     @NotNull
     private UUID projectId;
-    @NotBlank
     private String permissionCode;
 }
