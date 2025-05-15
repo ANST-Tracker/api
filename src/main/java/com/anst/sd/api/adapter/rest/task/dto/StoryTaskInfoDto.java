@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
+import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -15,4 +16,5 @@ public class StoryTaskInfoDto extends AbstractTaskInfoDto {
     UserInfoDto tester;
     List<TaskPreviewDto> defects;
     TaskPreviewDto epicTask;
+    UUID epicTaskId;
 }
