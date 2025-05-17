@@ -20,8 +20,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -43,12 +45,25 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
     @Transactional
     public AbstractTask create(UUID userId, AbstractTask task) {
         log.info("Creating task with userId {}", userId);
+        if (task == null) {
+            throw new AbstractTaskValidationException("Task must not be null");
+        }
+        if (task.getProject() == null || task.getProject().getId() == null) {
+            throw new AbstractTaskValidationException("Project is required");
+        }
         Project project = projectRepository.getById(task.getProject().getId());
         validateUserHasAccessToProject(userId, project.getId());
         User creator = userRepository.getById(userId);
-        User reviewer = userRepository.getById(task.getReviewer().getId());
-        User assignee = userRepository.getById(task.getAssignee().getId());
-        List<Tag> tags = tagRepository.findAllByIdInAndProjectId(task.getTags().stream().map(Tag::getId).toList(),
+        User reviewer = task.getReviewer() != null && task.getReviewer().getId() != null
+                ? userRepository.getById(task.getReviewer().getId()) : null;
+        User assignee = task.getAssignee() != null && task.getAssignee().getId() != null
+                ? userRepository.getById(task.getAssignee().getId()) : null;
+        List<Tag> tags = CollectionUtils.isEmpty(task.getTags())
+                ? Collections.emptyList() : tagRepository.findAllByIdInAndProjectId(
+                task.getTags().stream()
+                        .filter(t -> t != null && t.getId() != null)
+                        .map(Tag::getId)
+                        .toList(),
                 project.getId());
         BigDecimal orderNumber = abstractTaskRepository.findNextOrderNumber(task.getId());
         task.setAssignee(assignee);
@@ -60,9 +75,13 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
         task.setCreator(creator);
         if (task instanceof Subtask subtask) {
             validateSubtask(subtask);
-            StoryTask parentStory = (StoryTask) abstractTaskRepository.getByIdAndProjectId(subtask.getStoryTask().getId(),
-                    project.getId());
-            subtask.setStoryTask(parentStory);
+            if (subtask.getStoryTask() != null && subtask.getStoryTask().getId() != null) {
+                StoryTask parentStory = (StoryTask) abstractTaskRepository.getByIdAndProjectId(subtask.getStoryTask().getId(),
+                        project.getId());
+                subtask.setStoryTask(parentStory);
+            } else {
+                subtask.setStoryTask(null);
+            }
         }
 
         if (task instanceof StoryTask storyTask) {
