@@ -52,6 +52,7 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
             throw new AbstractTaskValidationException("Project is required");
         }
         Project project = projectRepository.getById(task.getProject().getId());
+        project.setNextTaskId(project.getNextTaskId() + 1);
         validateUserHasAccessToProject(userId, project.getId());
         User creator = userRepository.getById(userId);
         User reviewer = task.getReviewer() != null && task.getReviewer().getId() != null

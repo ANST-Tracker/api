@@ -1,6 +1,7 @@
 package com.anst.sd.api.adapter.rest.task.write;
 
 import com.anst.sd.api.adapter.rest.dto.IdResponseDto;
+import com.anst.sd.api.adapter.rest.dto.TaskIdResponseDto;
 import com.anst.sd.api.adapter.rest.task.dto.AbstractTaskDomainMapper;
 import com.anst.sd.api.adapter.rest.task.write.dto.CreateAbstractTaskDto;
 import com.anst.sd.api.adapter.rest.task.write.dto.UpdateAbstractTaskDto;
@@ -44,14 +45,14 @@ public class V1WriteAbstractTaskController {
             }
     )
     @PostMapping
-    public ResponseEntity<IdResponseDto> create(@Valid @RequestBody CreateAbstractTaskDto request,
-                                                BindingResult bindingResult) {
+    public ResponseEntity<TaskIdResponseDto> create(@Valid @RequestBody CreateAbstractTaskDto request,
+                                                    BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new AbstractTaskValidationException();
         }
         AbstractTask task = abstractTaskDomainMapper.mapToDomain(request);
         AbstractTask result = createAbstractTaskInBound.create(jwtService.getJwtAuth().getUserId(), task);
-        return ResponseEntity.ok(new IdResponseDto(result.getId()));
+        return ResponseEntity.ok(new TaskIdResponseDto(result.getId(), result.getSimpleId()));
     }
 
     @Operation(
