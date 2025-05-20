@@ -11,6 +11,8 @@ import org.mapstruct.Named;
 public interface AbstractTaskDomainMapper {
     @Mapping(target = "type", constant = "EPIC")
     @Mapping(source = "projectId", target = "project.id")
+    @Mapping(source = "assigneeId", target = "assignee.id")
+    @Mapping(source = "reviewerId", target = "reviewer.id")
     EpicTask toEpicTask(CreateAbstractTaskDto source);
 
     @Mapping(target = "type", constant = "EPIC")
@@ -18,6 +20,8 @@ public interface AbstractTaskDomainMapper {
 
     @Mapping(target = "type", constant = "STORY")
     @Mapping(source = "projectId", target = "project.id")
+    @Mapping(source = "assigneeId", target = "assignee.id")
+    @Mapping(source = "reviewerId", target = "reviewer.id")
     StoryTask toStoryTask(CreateAbstractTaskDto source);
 
     @Mapping(target = "type", constant = "STORY")
@@ -36,6 +40,8 @@ public interface AbstractTaskDomainMapper {
 
     @Mapping(target = "type", constant = "DEFECT")
     @Mapping(source = "projectId", target = "project.id")
+    @Mapping(source = "assigneeId", target = "assignee.id")
+    @Mapping(source = "reviewerId", target = "reviewer.id")
     DefectTask toDefectTask(CreateAbstractTaskDto source);
 
     @Mapping(target = "type", constant = "DEFECT")
