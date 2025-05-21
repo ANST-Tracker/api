@@ -22,11 +22,12 @@ public interface AbstractTaskJpaRepository extends JpaRepository<AbstractTask, U
     Optional<AbstractTask> findBySimpleIdAndProjectId(String simpleId, UUID projectId);
 
     @Query(value = """
-        select t.type from abstract_task t
-        left join project p on t.project_id = p.id
-        left join users_projects u on p.id = u.project_id
-        where t.simple_id = :simpleId
-        and (u.user_id = :userId or p.head_id = :userId)
+                    select distinct t.type from abstract_task t
+                    left join project p on t.project_id = p.id
+                    left join users_projects u on p.id = u.project_id
+                    where t.simple_id = :simpleId
+                    and (u.user_id = :userId or p.head_id = :userId)
+                    limit 1                                        
     """, nativeQuery = true)
     Optional<TaskType> findTypeBySimpleIdAndUserId(String simpleId, UUID userId);
 }
