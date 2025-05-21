@@ -1,7 +1,7 @@
 package com.anst.sd.api.adapter.persistence.relational;
 
-import com.anst.sd.api.app.api.usersProjects.UsersProjectsNotFoundException;
-import com.anst.sd.api.app.api.usersProjects.UsersProjectsRepository;
+import com.anst.sd.api.app.api.users_projects.UsersProjectsNotFoundException;
+import com.anst.sd.api.app.api.users_projects.UsersProjectsRepository;
 import com.anst.sd.api.domain.UsersProjects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

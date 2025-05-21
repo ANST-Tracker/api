@@ -4,7 +4,7 @@ import com.anst.sd.api.app.api.project.ProjectRepository;
 import com.anst.sd.api.app.api.tag.CreateTagInBound;
 import com.anst.sd.api.app.api.tag.TagRepository;
 import com.anst.sd.api.app.api.tag.TagValidationException;
-import com.anst.sd.api.app.api.usersProjects.UsersProjectsNotFoundException;
+import com.anst.sd.api.app.api.users_projects.UsersProjectsNotFoundException;
 import com.anst.sd.api.domain.project.Project;
 import com.anst.sd.api.domain.tag.Tag;
 import lombok.RequiredArgsConstructor;

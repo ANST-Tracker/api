@@ -1,4 +1,4 @@
-package com.anst.sd.api.adapter.rest.usersProjects.write.dto;
+package com.anst.sd.api.adapter.rest.users_projects.write.dto;
 
 import com.anst.sd.api.domain.UsersProjects;
 import org.mapstruct.Mapper;

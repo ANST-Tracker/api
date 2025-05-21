@@ -1,4 +1,4 @@
-package com.anst.sd.api.app.api.usersProjects;
+package com.anst.sd.api.app.api.users_projects;
 
 import java.util.UUID;
 

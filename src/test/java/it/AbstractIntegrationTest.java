@@ -155,30 +155,30 @@ public abstract class AbstractIntegrationTest {
     }
 
     protected User createUser(String username, String telegramId, String email, String firstName, String lastName) {
-        User user = new User();
-        user.setUsername(username);
-        user.setId(UUID.randomUUID());
-        user.setPassword(passwordEncoder.encode(USER_PASSWORD));
-        user.setTelegramId(telegramId);
-        user.setFirstName(firstName == null ? "firstName" : firstName);
-        user.setLastName(lastName == null ? "lastName" : lastName);
-        user.setEmail(email);
-        user.setPosition(Position.DEVOPS);
-        user.setDepartmentName("HSE");
-        user.setRegistrationDate(LocalDate.now());
-        user.setTimeZone(1);
-        user.setCreated(Instant.now());
-        return userJpaRepository.save(user);
+        User userTest = new User();
+        userTest.setUsername(username);
+        userTest.setId(UUID.randomUUID());
+        userTest.setPassword(passwordEncoder.encode(USER_PASSWORD));
+        userTest.setTelegramId(telegramId);
+        userTest.setFirstName(firstName == null ? "firstName" : firstName);
+        userTest.setLastName(lastName == null ? "lastName" : lastName);
+        userTest.setEmail(email);
+        userTest.setPosition(Position.DEVOPS);
+        userTest.setDepartmentName("HSE");
+        userTest.setRegistrationDate(LocalDate.now());
+        userTest.setTimeZone(1);
+        userTest.setCreated(Instant.now());
+        return userJpaRepository.save(userTest);
     }
 
     protected Project createTestProject(User headUser) {
-        Project project = new Project();
-        project.setName("Project1");
-        project.setDescription("New test project");
-        project.setHead(headUser);
-        project.setNextTaskId(1);
-        project.setKey("GD");
-        return projectJpaRepository.save(project);
+        Project projectTest = new Project();
+        projectTest.setName("Project1");
+        projectTest.setDescription("New test project");
+        projectTest.setHead(headUser);
+        projectTest.setNextTaskId(1);
+        projectTest.setKey("GD");
+        return projectJpaRepository.save(projectTest);
     }
 
     protected UsersProjects createUsersProjects(Project project, User user) {
@@ -244,41 +244,41 @@ public abstract class AbstractIntegrationTest {
     }
 
     protected Sprint createSprint(Project project) {
-        Sprint sprint = new Sprint();
-        sprint.setProject(project);
-        sprint.setCreated(Instant.now());
-        sprint.setName("sprint");
-        sprint.setDescription("description");
-        sprint.setStartDate(LocalDate.of(2020, 1, 1));
-        sprint.setEndDate(LocalDate.of(2020, 12, 1));
-        sprint.setIsActive(true);
-        return sprintJpaRepository.save(sprint);
+        Sprint task = new Sprint();
+        task.setProject(project);
+        task.setCreated(Instant.now());
+        task.setName("sprint");
+        task.setDescription("description");
+        task.setStartDate(LocalDate.of(2020, 1, 1));
+        task.setEndDate(LocalDate.of(2020, 12, 1));
+        task.setIsActive(true);
+        return sprintJpaRepository.save(task);
     }
 
     protected EpicTask createEpic(User user, Project project) {
-        EpicTask epicTask = new EpicTask();
-        epicTask.setSimpleId("GD-3");
-        epicTask.setName("Epic");
-        epicTask.setType(TaskType.EPIC);
-        epicTask.setStatus(TaskStatus.OPEN);
-        epicTask.setDescription("description");
-        epicTask.setTimeEstimation(new TimeEstimation()
+        EpicTask task = new EpicTask();
+        task.setSimpleId("GD-3");
+        task.setName("Epic");
+        task.setType(TaskType.EPIC);
+        task.setStatus(TaskStatus.OPEN);
+        task.setDescription("description");
+        task.setTimeEstimation(new TimeEstimation()
                 .setTimeUnit(TimeUnit.HOURS)
                 .setAmount(10));
-        fillAbstractTaskFields(epicTask, user, project);
-        return epicTaskJpaRepository.save(epicTask);
+        fillAbstractTaskFields(task, user, project);
+        return epicTaskJpaRepository.save(task);
     }
 
     protected EpicTask createEpic(User user, Project project, List<Tag> tags) {
-        EpicTask epicTask = new EpicTask();
-        epicTask.setSimpleId("GD-3");
-        epicTask.setName("Epic");
-        epicTask.setType(TaskType.EPIC);
-        epicTask.setStatus(TaskStatus.OPEN);
-        epicTask.setDescription("description");
-        epicTask.setTags(tags);
-        fillAbstractTaskFields(epicTask, user, project);
-        return epicTaskJpaRepository.save(epicTask);
+        EpicTask task = new EpicTask();
+        task.setSimpleId("GD-3");
+        task.setName("Epic");
+        task.setType(TaskType.EPIC);
+        task.setStatus(TaskStatus.OPEN);
+        task.setDescription("description");
+        task.setTags(tags);
+        fillAbstractTaskFields(task, user, project);
+        return epicTaskJpaRepository.save(task);
     }
 
     protected <T extends AbstractTask> void fillAbstractTaskFields(T task, User user, Project project) {
@@ -339,8 +339,8 @@ public abstract class AbstractIntegrationTest {
     }
 
     protected TimeEstimation createTimeEstimation(TimeUnit timeUnit, Integer amount) {
-        TimeEstimation timeEstimation = new TimeEstimation();
-        return timeEstimation.setTimeUnit(timeUnit).setAmount(amount);
+        TimeEstimation timeEstimationTest = new TimeEstimation();
+        return timeEstimationTest.setTimeUnit(timeUnit).setAmount(amount);
     }
 
     // ===================================================================================================================

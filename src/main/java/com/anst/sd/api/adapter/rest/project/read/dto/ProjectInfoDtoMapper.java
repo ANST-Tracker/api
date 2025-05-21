@@ -10,8 +10,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring",
         uses = {
@@ -31,11 +31,11 @@ public abstract class ProjectInfoDtoMapper {
     @Named("usersProjectsToUserInfoDto")
     public List<UserInfoDto> usersProjectsToUserInfoDto(List<UsersProjects> usersProjects) {
         if (usersProjects == null) {
-            return null;
+            return Collections.emptyList();
         }
         return usersProjects.stream()
                 .map(UsersProjects::getUser)
-                .map(user -> userDtoMapper.mapToDto(user))
-                .collect(Collectors.toList());
+                .map(userDtoMapper::mapToDto)
+                .toList();
     }
 }

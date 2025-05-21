@@ -1,11 +1,11 @@
-package com.anst.sd.api.adapter.rest.usersProjects.write;
+package com.anst.sd.api.adapter.rest.users_projects.write;
 
 import com.anst.sd.api.adapter.rest.dto.IdResponseDto;
-import com.anst.sd.api.adapter.rest.usersProjects.write.dto.AddUserInProjectDto;
-import com.anst.sd.api.adapter.rest.usersProjects.write.dto.UsersProjectsDomainMapper;
-import com.anst.sd.api.app.api.usersProjects.AddUserInProjectInBound;
-import com.anst.sd.api.app.api.usersProjects.RemoveUserFromProjectInBound;
-import com.anst.sd.api.app.api.usersProjects.UsersProjectsValidationException;
+import com.anst.sd.api.adapter.rest.users_projects.write.dto.AddUserInProjectDto;
+import com.anst.sd.api.adapter.rest.users_projects.write.dto.UsersProjectsDomainMapper;
+import com.anst.sd.api.app.api.users_projects.AddUserInProjectInBound;
+import com.anst.sd.api.app.api.users_projects.RemoveUserFromProjectInBound;
+import com.anst.sd.api.app.api.users_projects.UsersProjectsValidationException;
 import com.anst.sd.api.domain.UsersProjects;
 import com.anst.sd.api.security.app.impl.JwtService;
 import io.swagger.v3.oas.annotations.Operation;

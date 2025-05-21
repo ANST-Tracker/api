@@ -3,7 +3,7 @@ package com.anst.sd.api.app.impl.project;
 import com.anst.sd.api.app.api.project.GetProjectInbound;
 import com.anst.sd.api.app.api.project.ProjectRepository;
 import com.anst.sd.api.app.api.tag.TagRepository;
-import com.anst.sd.api.app.api.usersProjects.UsersProjectsRepository;
+import com.anst.sd.api.app.api.users_projects.UsersProjectsRepository;
 import com.anst.sd.api.domain.project.Project;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

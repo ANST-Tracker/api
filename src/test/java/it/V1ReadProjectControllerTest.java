@@ -17,7 +17,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-public class V1ReadProjectControllerTest extends AbstractIntegrationTest {
+class V1ReadProjectControllerTest extends AbstractIntegrationTest {
     private static final String API_URL = "/project";
 
     @Test

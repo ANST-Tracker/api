@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
-public class TagDomainMapperTest extends AbstractUnitTest {
+class TagDomainMapperTest extends AbstractUnitTest {
     private TagDomainMapper mapper;
 
     @BeforeEach

@@ -1,12 +1,14 @@
 package com.anst.sd.api.adapter.rest.usersProjects.write.dto;
 
 import com.anst.sd.api.AbstractUnitTest;
+import com.anst.sd.api.adapter.rest.users_projects.write.dto.AddUserInProjectDto;
+import com.anst.sd.api.adapter.rest.users_projects.write.dto.UsersProjectsDomainMapper;
 import com.anst.sd.api.domain.UsersProjects;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
-public class UsersProjectsDomainMapperTest extends AbstractUnitTest {
+class UsersProjectsDomainMapperTest extends AbstractUnitTest {
     private UsersProjectsDomainMapper mapper;
 
     @BeforeEach
