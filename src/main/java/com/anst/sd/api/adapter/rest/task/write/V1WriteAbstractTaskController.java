@@ -66,7 +66,7 @@ public class V1WriteAbstractTaskController {
             }
     )
     @PutMapping("/{simpleId}")
-    public ResponseEntity<IdResponseDto> update(@PathVariable String simpleId,
+    public ResponseEntity<TaskIdResponseDto> update(@PathVariable String simpleId,
                                                 @Valid @RequestBody UpdateAbstractTaskDto request,
                                                 BindingResult bindingResult
     ) {
@@ -75,7 +75,7 @@ public class V1WriteAbstractTaskController {
         }
         AbstractTask task = abstractTaskDomainMapper.mapToDomain(request);
         AbstractTask result = updateAbstractTaskInBound.update(jwtService.getJwtAuth().getUserId(), simpleId, task);
-        return ResponseEntity.ok(new IdResponseDto(result.getId()));
+        return ResponseEntity.ok(new TaskIdResponseDto(result.getId(), result.getSimpleId()));
     }
 
     @Operation(
