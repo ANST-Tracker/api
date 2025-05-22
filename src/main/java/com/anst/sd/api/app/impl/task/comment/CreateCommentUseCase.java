@@ -15,7 +15,10 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -51,10 +54,11 @@ public class CreateCommentUseCase implements CreateCommentInbound {
 
     private void sendNotification(Comment comment) {
         Collection<User> usersForNotification = Stream.of(
-                    userRepository.getById(comment.getTask().getAssignee().getId()),
-                    userRepository.getById(comment.getTask().getCreator().getId()),
-                    userRepository.getById(comment.getTask().getReviewer().getId()))
+                        comment.getTask().getAssignee(),
+                        comment.getTask().getCreator(),
+                        comment.getTask().getReviewer())
                 .filter(Objects::nonNull)
+                .map(user -> userRepository.getById(user.getId()))
                 .filter(user -> !Objects.equals(comment.getAuthor().getId(), user.getId()))
                 .collect(Collectors.toMap(User::getId, user -> user, (a, b) -> a))
                 .values();
