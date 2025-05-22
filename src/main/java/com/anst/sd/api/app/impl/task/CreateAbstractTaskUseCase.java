@@ -114,7 +114,10 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
     }
 
     private void validateStoryTask(AbstractTask task) {
+        log.info("taskInfo = {}", task);
+        log.info("task instanceOf storyTask = {}", task instanceof StoryTask);
         if (task instanceof StoryTask storyTask && storyTask.getEpicTask() == null) {
+            log.info("storyTask.getEpicTask = {}", storyTask.getEpicTask());
             throw new AbstractTaskValidationException();
         }
     }
