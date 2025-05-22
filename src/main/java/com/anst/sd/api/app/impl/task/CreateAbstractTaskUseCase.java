@@ -86,13 +86,14 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
         }
 
         if (task instanceof StoryTask storyTask) {
-            log.info("storyTask.getEpicTask = {}", storyTask.getEpicTask());
+            validateStoryTask(storyTask);
             EpicTask parentEpic = (EpicTask) abstractTaskRepository.getByIdAndProjectId(storyTask.getEpicTask().getId(),
                     project.getId());
             storyTask.setEpicTask(parentEpic);
-            Sprint sprint = sprintRepository.getByIdAndProjectId(storyTask.getSprint().getId(), project.getId());
-            storyTask.setSprint(sprint);
-            validateStoryTask(storyTask);
+            if (storyTask.getSprint() != null && storyTask.getSprint().getId() != null) {
+                Sprint sprint = sprintRepository.getByIdAndProjectId(storyTask.getSprint().getId(), project.getId());
+                storyTask.setSprint(sprint);
+            }
         }
 
         if (task instanceof DefectTask defectTask) {
@@ -115,10 +116,7 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
     }
 
     private void validateStoryTask(AbstractTask task) {
-        log.info("taskInfo = {}", task);
-        log.info("task instanceOf storyTask = {}", task instanceof StoryTask);
         if (task instanceof StoryTask storyTask && storyTask.getEpicTask() == null) {
-            log.info("storyTask.getEpicTask = {}", storyTask.getEpicTask());
             throw new AbstractTaskValidationException();
         }
     }
