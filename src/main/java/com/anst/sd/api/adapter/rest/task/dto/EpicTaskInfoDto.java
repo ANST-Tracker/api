@@ -11,6 +11,5 @@ import java.util.List;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EpicTaskInfoDto extends AbstractTaskInfoDto {
-    SprintDto sprint;
     List<TaskPreviewDto> stories;
 }

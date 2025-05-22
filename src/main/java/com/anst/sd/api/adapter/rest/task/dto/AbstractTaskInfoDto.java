@@ -14,6 +14,7 @@ import java.util.UUID;
 public class AbstractTaskInfoDto {
     UUID id;
     String simpleId;
+    SprintDto sprint;
     String name;
     String description;
     SimpleDictionary type;

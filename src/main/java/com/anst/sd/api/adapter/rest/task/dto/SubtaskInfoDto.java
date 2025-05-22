@@ -9,6 +9,5 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class SubtaskInfoDto extends AbstractTaskInfoDto {
-    SprintDto sprint;
     TaskPreviewDto storyTask;
 }
