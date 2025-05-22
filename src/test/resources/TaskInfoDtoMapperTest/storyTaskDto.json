@@ -1,10 +1,6 @@
 {
   "id": "c329c4a9-ca39-4e12-90cd-1d9f92d67dd5",
   "simpleId": "GD-1",
-  "sprint": {
-    "id": "c9015c0e-aa78-4ad0-80a5-0af99d14ea5d",
-    "name": "name"
-  },
   "name": "name",
   "description": "description",
   "type": {
@@ -57,6 +53,10 @@
   "status": {
     "code": "OPEN",
     "value": "Открыта"
+  },
+  "sprint": {
+    "id": "c9015c0e-aa78-4ad0-80a5-0af99d14ea5d",
+    "name": "name"
   },
   "tester": {
     "id": "c0285579-367b-47b1-914a-f620ee02ec5e",

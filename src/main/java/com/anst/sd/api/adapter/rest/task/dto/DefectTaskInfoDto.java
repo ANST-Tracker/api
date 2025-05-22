@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class DefectTaskInfoDto extends AbstractTaskInfoDto {
+    SprintDto sprint;
     UserInfoDto tester;
     TaskPreviewDto storyTask;
 }
