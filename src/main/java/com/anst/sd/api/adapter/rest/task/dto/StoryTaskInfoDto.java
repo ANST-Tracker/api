@@ -12,6 +12,7 @@ import java.util.UUID;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class StoryTaskInfoDto extends AbstractTaskInfoDto {
+    UUID id;
     SprintDto sprint;
     UserInfoDto tester;
     List<TaskPreviewDto> defects;
