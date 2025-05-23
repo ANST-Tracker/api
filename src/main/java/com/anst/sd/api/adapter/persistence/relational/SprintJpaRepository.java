@@ -1,22 +1,25 @@
 package com.anst.sd.api.adapter.persistence.relational;
 
 import com.anst.sd.api.domain.sprint.Sprint;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface SprintJpaRepository extends JpaRepository<Sprint, UUID> {
 
     @EntityGraph(attributePaths = {"defects"})
-    Sprint findWithDefectsByIdAndProjectId(UUID sprintId, UUID projectId);
+    Optional<Sprint> findWithDefectsByIdAndProjectId(UUID sprintId, UUID projectId);
 
     @EntityGraph(attributePaths = {"stories"})
-    Sprint findWithStoriesByIdAndProjectId(UUID sprintId, UUID projectId);
+    Optional<Sprint> findWithStoriesByIdAndProjectId(UUID sprintId, UUID projectId);
 
     @Query("""
         select s from Sprint s
@@ -26,9 +29,13 @@ public interface SprintJpaRepository extends JpaRepository<Sprint, UUID> {
     List<Sprint> findAllByProjectId(UUID projectId);
 
     default Sprint getByIdAndProjectId(UUID sprintId, UUID projectId) {
-        Sprint sprintWithStories = findWithStoriesByIdAndProjectId(sprintId, projectId);
-        Sprint sprintWithDefects = findWithDefectsByIdAndProjectId(sprintId, projectId);
-        sprintWithStories.setDefects(sprintWithDefects.getDefects());
-        return sprintWithStories;
+        Sprint sprint = findWithStoriesByIdAndProjectId(sprintId, projectId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Sprint not found with id =" + sprintId + " and projectId =" + projectId));
+        findWithDefectsByIdAndProjectId(sprintId, projectId)
+                .map(Sprint::getDefects)
+                .ifPresentOrElse(sprint::setDefects, () -> sprint.setDefects(Collections.emptyList())
+                );
+        return sprint;
     }
 }
