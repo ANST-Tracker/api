@@ -9,5 +9,10 @@
   },
   "tags": [ ],
   "logs": [ ],
-  "status": "OPEN"
+  "status": "OPEN",
+  "storyTask": {
+    "tags": [],
+    "logs": [],
+    "status": "OPEN"
+  }
 }

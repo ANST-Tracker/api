@@ -75,6 +75,7 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
         task.setOrderNumber(orderNumber.add(BigDecimal.ONE));
         task.setCreator(creator);
         if (task instanceof Subtask subtask) {
+            validateSubtask(subtask);
             if (subtask.getStoryTask() != null && subtask.getStoryTask().getId() != null) {
                 StoryTask parentStory = (StoryTask) abstractTaskRepository.getByIdAndProjectId(subtask.getStoryTask().getId(),
                         project.getId());
@@ -82,7 +83,6 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
             } else {
                 subtask.setStoryTask(null);
             }
-            validateSubtask(subtask);
         }
 
         if (task instanceof StoryTask storyTask) {
@@ -90,6 +90,10 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
             EpicTask parentEpic = (EpicTask) abstractTaskRepository.getByIdAndProjectId(storyTask.getEpicTask().getId(),
                     project.getId());
             storyTask.setEpicTask(parentEpic);
+            User tester = storyTask.getTester() != null && storyTask.getTester().getId() != null
+                    ? userRepository.getById(storyTask.getTester().getId())
+                    : null;
+            storyTask.setTester(tester);
             if (storyTask.getSprint() != null && storyTask.getSprint().getId() != null) {
                 Sprint sprint = sprintRepository.getByIdAndProjectId(storyTask.getSprint().getId(), project.getId());
                 storyTask.setSprint(sprint);
@@ -97,12 +101,16 @@ public class CreateAbstractTaskUseCase implements CreateAbstractTaskInBound {
         }
 
         if (task instanceof DefectTask defectTask) {
-            Sprint sprint = sprintRepository.getById(defectTask.getSprint().getId());
+            validateDefectTask(defectTask);
+            User tester = defectTask.getTester() != null && defectTask.getTester().getId() != null
+                    ? userRepository.getById(defectTask.getTester().getId())
+                    : null;
+            defectTask.setTester(tester);
+            Sprint sprint = sprintRepository.getByIdAndProjectId(defectTask.getSprint().getId(), project.getId());
             StoryTask parentStory = (StoryTask) abstractTaskRepository.getByIdAndProjectId(defectTask.getStoryTask().getId(),
                     project.getId());
             defectTask.setSprint(sprint);
             defectTask.setStoryTask(parentStory);
-            validateDefectTask(defectTask);
         }
 
         sendNotification(task);
