@@ -1,10 +1,10 @@
-package com.anst.sd.api.app.impl.usersProjects;
+package com.anst.sd.api.app.impl.users_projects;
 
 import com.anst.sd.api.app.api.project.ProjectRepository;
 import com.anst.sd.api.app.api.user.UserRepository;
-import com.anst.sd.api.app.api.usersProjects.AddUserInProjectInBound;
-import com.anst.sd.api.app.api.usersProjects.UsersProjectsRepository;
-import com.anst.sd.api.app.api.usersProjects.UsersProjectsValidationException;
+import com.anst.sd.api.app.api.users_projects.AddUserInProjectInBound;
+import com.anst.sd.api.app.api.users_projects.UsersProjectsRepository;
+import com.anst.sd.api.app.api.users_projects.UsersProjectsValidationException;
 import com.anst.sd.api.app.impl.notification.NotificationCreatedEvent;
 import com.anst.sd.api.domain.UsersProjects;
 import com.anst.sd.api.domain.notification.NotificationTemplate;

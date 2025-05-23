@@ -13,8 +13,11 @@ import java.util.List;
 public interface UserJpaRepository extends JpaRepository<User, UUID> {
     Optional<User> findByUsername(String username);
 
-    //TODO: After UsersProjects need to create a query, which gets an userId with projectId from UsersProjects entity.
-    Optional<User> findById(UUID id);
+    @Query("""
+        select up.user from UsersProjects up
+        where up.user.id = :userId and up.project.id = :projectId
+        """)
+    Optional<User> findById(UUID userId, UUID projectId);
 
     @Query("""
         select u from User u

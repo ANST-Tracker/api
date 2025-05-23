@@ -3,7 +3,7 @@ package com.anst.sd.api.app.impl.tag;
 import com.anst.sd.api.app.api.project.ProjectRepository;
 import com.anst.sd.api.app.api.tag.DeleteTagInBound;
 import com.anst.sd.api.app.api.tag.TagRepository;
-import com.anst.sd.api.app.api.usersProjects.UsersProjectsNotFoundException;
+import com.anst.sd.api.app.api.users_projects.UsersProjectsNotFoundException;
 import com.anst.sd.api.domain.tag.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

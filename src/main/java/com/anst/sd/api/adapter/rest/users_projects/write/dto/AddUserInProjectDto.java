@@ -1,4 +1,4 @@
-package com.anst.sd.api.adapter.rest.usersProjects.write.dto;
+package com.anst.sd.api.adapter.rest.users_projects.write.dto;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;

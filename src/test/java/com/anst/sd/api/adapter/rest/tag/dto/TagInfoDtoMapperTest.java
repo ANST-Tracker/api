@@ -9,7 +9,7 @@ import org.mapstruct.factory.Mappers;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TagInfoDtoMapperTest extends AbstractUnitTest {
+class TagInfoDtoMapperTest extends AbstractUnitTest {
     private TagDtoMapper mapper;
 
     @BeforeEach

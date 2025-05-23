@@ -34,7 +34,7 @@ public class DeleteLogUseCase implements DeleteLogInBound {
         }
         Log log = logRepository.findByIdAndTaskAndProjectIdAndUserId(
                 id, taskId, projectId, userId);
-        if  (!logRepository.existsById(log.getId())) {
+        if  (Boolean.FALSE.equals(logRepository.existsById(log.getId()))) {
             throw new LogNotFound(id, taskId, projectId, userId);
         }
         logRepository.delete(log.getId());

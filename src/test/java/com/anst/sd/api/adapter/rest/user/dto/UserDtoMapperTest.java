@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
-public class UserDtoMapperTest extends AbstractUnitTest {
+class UserDtoMapperTest extends AbstractUnitTest {
     private UserDtoMapper mapper;
 
     @BeforeEach

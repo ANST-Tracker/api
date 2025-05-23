@@ -1,6 +1,6 @@
 package it;
 
-import com.anst.sd.api.adapter.rest.usersProjects.write.dto.AddUserInProjectDto;
+import com.anst.sd.api.adapter.rest.users_projects.write.dto.AddUserInProjectDto;
 import com.anst.sd.api.domain.PermissionCode;
 import com.anst.sd.api.domain.UsersProjects;
 import com.anst.sd.api.domain.user.User;
@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-public class V1WriteUsersProjectsControllerTest extends AbstractIntegrationTest {
+class V1WriteUsersProjectsControllerTest extends AbstractIntegrationTest {
     private static final String API_URL = "/users-projects";
 
     @BeforeEach
