@@ -10,10 +10,10 @@
   "tags": [ ],
   "logs": [ ],
   "status": "OPEN",
-  "sprint": {},
+  "sprint": { },
   "epicTask": {
-    "tags": [],
-    "logs": [],
+    "tags": [ ],
+    "logs": [ ],
     "status": "OPEN"
   }
 }
