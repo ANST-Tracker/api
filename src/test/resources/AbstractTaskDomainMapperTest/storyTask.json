@@ -9,5 +9,11 @@
   },
   "tags": [ ],
   "logs": [ ],
-  "status": "OPEN"
+  "status": "OPEN",
+  "sprint": {},
+  "epicTask": {
+    "tags": [],
+    "logs": [],
+    "status": "OPEN"
+  }
 }

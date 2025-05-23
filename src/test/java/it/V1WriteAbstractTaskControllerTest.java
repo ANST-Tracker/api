@@ -53,6 +53,41 @@ class V1WriteAbstractTaskControllerTest extends AbstractIntegrationTest {
     }
 
     @Test
+    void createStoryTask_successfully() throws Exception {
+        CreateAbstractTaskDto request = readFromFile("/V1WriteAbstractTaskControllerTest/createStoryTask.json",
+                CreateAbstractTaskDto.class);
+        user = createTestUser();
+        reviewer = createTestReviewer();
+        assignee = createTestAssignee();
+        project = createTestProject(user);
+        sprint = createSprint(project);
+        epicTask = createEpic(user, project);
+        storyTask = createStoryTask(user, project, sprint, epicTask, reviewer, assignee);
+        request.setProjectId(project.getId());
+        request.setReviewerId(reviewer.getId());
+        request.setAssigneeId(assignee.getId());
+        request.setEpicTaskId(epicTask.getId());
+        request.setSprintId(sprint.getId());
+
+        performAuthenticated(user, MockMvcRequestBuilders
+                .post(API_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        AbstractTask result = abstractTaskJpaRepository.findAll().stream()
+                .filter(task -> "Under Test".equals(task.getName()))
+                .findFirst().orElseThrow();
+        assertEquals(request.getPriority(), result.getPriority());
+        assertEquals(request.getStoryPoints(), result.getStoryPoints());
+        assertEquals(request.getType(), result.getType());
+        assertNotNull(result.getProject());
+        assertNotNull(result.getCreator());
+        assertNotNull(result.getAssignee());
+    }
+
+    @Test
     void createAbstractTask_invalidDto_returnsBadRequest() throws Exception {
         CreateAbstractTaskDto request = readFromFile("/V1WriteAbstractTaskControllerTest/createAbstractTask.json",
                 CreateAbstractTaskDto.class);

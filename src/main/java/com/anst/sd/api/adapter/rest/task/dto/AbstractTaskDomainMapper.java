@@ -23,6 +23,7 @@ public interface AbstractTaskDomainMapper {
     @Mapping(source = "assigneeId", target = "assignee.id")
     @Mapping(source = "reviewerId", target = "reviewer.id")
     @Mapping(source = "epicTaskId", target = "epicTask.id")
+    @Mapping(source = "sprintId", target = "sprint.id")
     StoryTask toStoryTask(CreateAbstractTaskDto source);
 
     @Mapping(target = "type", constant = "STORY")
