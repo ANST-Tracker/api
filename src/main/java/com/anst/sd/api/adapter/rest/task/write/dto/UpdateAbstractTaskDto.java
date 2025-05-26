@@ -29,6 +29,7 @@ public class UpdateAbstractTaskDto {
     UUID reviewerId;
     UUID testerId;
     UUID sprintId;
+    UUID epicTaskId;
     LocalDate dueDate;
     TimeEstimation timeEstimation;
     List<UUID> tagIds;

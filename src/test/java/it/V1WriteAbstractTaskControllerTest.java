@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static com.anst.sd.api.domain.task.TaskType.SUBTASK;
+import static com.anst.sd.api.domain.task.TaskType.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -129,6 +129,58 @@ class V1WriteAbstractTaskControllerTest extends AbstractIntegrationTest {
         assertNotEquals(originalTask.getDescription(), updateResult.getDescription());
         assertNotEquals(originalTask.getPriority(), updateResult.getPriority());
         assertNotEquals(originalTask.getTimeEstimation(), updateResult.getTimeEstimation());
+    }
+
+    @Test
+    void updateEpic_successfully() throws Exception {
+        user = createTestUser();
+        project = createTestProject(user);
+        AbstractTask originalTask = createEpic(user, project);
+        String simpleId = originalTask.getSimpleId();
+        UpdateAbstractTaskDto request = readFromFile("/V1WriteAbstractTaskControllerTest/updateEpicTask.json",
+                UpdateAbstractTaskDto.class);
+
+        performAuthenticated(user, MockMvcRequestBuilders
+                .put(API_URL + "/" + simpleId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        AbstractTask updateResult = abstractTaskJpaRepository.findAll().stream()
+                .filter(task -> EPIC.equals(task.getType()))
+                .findFirst().orElseThrow();
+        assertNotEquals(originalTask.getName(), updateResult.getName());
+        assertNotEquals(originalTask.getDescription(), updateResult.getDescription());
+        assertNotEquals(originalTask.getPriority(), updateResult.getPriority());
+        assertNotEquals(originalTask.getTimeEstimation(), updateResult.getTimeEstimation());
+    }
+
+    @Test
+    void updateStory_successfully() throws Exception {
+        user = createTestUser();
+        project = createTestProject(user);
+        sprint = createSprint(project);
+        epicTask = createEpic(user, project);
+        AbstractTask originalTask = createStoryTask(user, project, sprint, epicTask, null, null);
+        String simpleId = originalTask.getSimpleId();
+        UpdateAbstractTaskDto request = readFromFile("/V1WriteAbstractTaskControllerTest/updateStoryTask.json",
+                UpdateAbstractTaskDto.class);
+        request.setEpicTaskId(epicTask.getId());
+
+        performAuthenticated(user, MockMvcRequestBuilders
+                .put(API_URL + "/" + simpleId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        AbstractTask updateResult = abstractTaskJpaRepository.findAll().stream()
+                .filter(task -> STORY.equals(task.getType()))
+                .findFirst().orElseThrow();
+        assertNotEquals(originalTask.getName(), updateResult.getName());
+        assertNotEquals(originalTask.getDescription(), updateResult.getDescription());
+        assertNotEquals(originalTask.getPriority(), updateResult.getPriority());
     }
 
     @Test

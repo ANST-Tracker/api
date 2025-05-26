@@ -4,5 +4,11 @@
   "type": "STORY",
   "tags": [ ],
   "logs": [ ],
-  "status": "OPEN"
+  "status": "OPEN",
+  "tester": {},
+  "epicTask": {
+    "tags": [],
+    "logs": [],
+    "status": "OPEN"
+  }
 }
