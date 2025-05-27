@@ -11,8 +11,8 @@
   "logs": [ ],
   "status": "OPEN",
   "storyTask": {
-    "tags": [],
-    "logs": [],
+    "tags": [ ],
+    "logs": [ ],
     "status": "OPEN"
   }
 }
