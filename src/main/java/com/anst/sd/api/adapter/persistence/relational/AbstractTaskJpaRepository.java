@@ -4,6 +4,7 @@ import com.anst.sd.api.domain.task.AbstractTask;
 import com.anst.sd.api.domain.task.TaskType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -15,7 +16,14 @@ public interface AbstractTaskJpaRepository extends JpaRepository<AbstractTask, U
     @Query("SELECT COALESCE(MAX(t.orderNumber), 0) FROM AbstractTask t")
     BigDecimal findNextOrderNumber(UUID taskId);
 
-    Optional<AbstractTask> findBySimpleId(String simpleId);
+    @Query("""
+                select distinct t
+                  from AbstractTask t
+                  join t.project p
+                  left join p.users u
+                 where t.simpleId = :simpleId
+            """)
+    Optional<AbstractTask> findBySimpleId(@Param("simpleId") String simpleId);
 
     Optional<AbstractTask> findByIdAndProjectId(UUID taskId, UUID projectId);
 

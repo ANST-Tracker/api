@@ -48,6 +48,7 @@ public interface AbstractTaskDomainMapper {
     @Mapping(source = "assigneeId", target = "assignee.id")
     @Mapping(source = "reviewerId", target = "reviewer.id")
     @Mapping(source = "storyTaskId", target = "storyTask.id")
+    @Mapping(source = "sprintId", target = "sprint.id")
     DefectTask toDefectTask(CreateAbstractTaskDto source);
 
     @Mapping(target = "type", constant = "DEFECT")
