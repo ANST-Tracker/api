@@ -10,6 +10,7 @@ import java.util.List;
 public interface LogDtoMapper {
     @Mapping(source = "task.simpleId", target = "taskSimpleId")
     @Mapping(source = "task.name", target = "taskName")
+    @Mapping(source = "task.project.id", target = "projectId")
     TimeSheetDto mapToDto(Log log);
 
     List<TimeSheetDto> mapToDto(List<Log> logs);

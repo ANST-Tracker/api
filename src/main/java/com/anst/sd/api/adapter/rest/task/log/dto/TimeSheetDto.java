@@ -18,5 +18,6 @@ public class TimeSheetDto {
     String taskSimpleId;
     String taskName;
     String comment;
+    UUID projectId;
     UUID id;
 }

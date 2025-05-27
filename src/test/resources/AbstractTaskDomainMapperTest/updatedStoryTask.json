@@ -5,10 +5,10 @@
   "tags": [ ],
   "logs": [ ],
   "status": "OPEN",
-  "tester": {},
+  "tester": { },
   "epicTask": {
-    "tags": [],
-    "logs": [],
+    "tags": [ ],
+    "logs": [ ],
     "status": "OPEN"
   }
 }
